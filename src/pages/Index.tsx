@@ -1,11 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { MainContent } from "@/components/layout/MainContent";
 
 const Index = () => {
+  const [activeSection, setActiveSection] = useState("upload");
+  const [hasData, setHasData] = useState(false);
+
+  const handleFileUpload = (files: File[]) => {
+    console.log("Files uploaded:", files);
+    // Simulate processing and show analysis after upload
+    setTimeout(() => {
+      setHasData(true);
+      setActiveSection("dashboard");
+    }, 2000);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background font-inter">
+      <div className="flex">
+        <Sidebar 
+          activeSection={activeSection} 
+          onSectionChange={setActiveSection} 
+        />
+        <MainContent 
+          activeSection={activeSection}
+          hasData={hasData}
+          onFileUpload={handleFileUpload}
+        />
       </div>
     </div>
   );

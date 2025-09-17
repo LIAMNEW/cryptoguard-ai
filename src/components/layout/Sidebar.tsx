@@ -1,0 +1,104 @@
+import { useState } from "react";
+import { 
+  Shield, 
+  Upload, 
+  BarChart3, 
+  Network, 
+  AlertTriangle, 
+  FileText, 
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Activity
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+interface SidebarProps {
+  activeSection: string;
+  onSectionChange: (section: string) => void;
+}
+
+const navigation = [
+  { id: "upload", label: "Upload Data", icon: Upload },
+  { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+  { id: "network", label: "Network", icon: Network },
+  { id: "anomalies", label: "Anomalies", icon: AlertTriangle },
+  { id: "reports", label: "Reports", icon: FileText },
+];
+
+export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <div className={cn(
+      "glass-card h-screen transition-all duration-300 flex flex-col",
+      collapsed ? "w-16" : "w-64"
+    )}>
+      {/* Header */}
+      <div className="p-4 border-b border-glass-border">
+        <div className="flex items-center justify-between">
+          {!collapsed && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-quantum-green flex items-center justify-center">
+                <Shield className="w-5 h-5 text-background" />
+              </div>
+              <div>
+                <h2 className="text-quantum font-bold text-lg">QuantumGuard</h2>
+                <p className="text-xs text-muted-foreground">AI Analytics</p>
+              </div>
+            </div>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setCollapsed(!collapsed)}
+            className="text-muted-foreground hover:text-quantum-green"
+          >
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </Button>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
+        {navigation.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeSection === item.id;
+          
+          return (
+            <Button
+              key={item.id}
+              variant={isActive ? "default" : "ghost"}
+              className={cn(
+                "w-full justify-start gap-3 transition-all duration-200",
+                isActive && "bg-quantum-green text-background glow-effect",
+                !isActive && "text-muted-foreground hover:text-quantum-green hover:bg-glass-background"
+              )}
+              onClick={() => onSectionChange(item.id)}
+            >
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              {!collapsed && <span>{item.label}</span>}
+            </Button>
+          );
+        })}
+      </nav>
+
+      {/* System Status */}
+      <div className="p-4 border-t border-glass-border">
+        <div className={cn(
+          "flex items-center gap-2 text-sm",
+          collapsed ? "justify-center" : ""
+        )}>
+          <Activity className="w-4 h-4 text-quantum-green animate-pulse" />
+          {!collapsed && (
+            <div>
+              <p className="text-quantum-green font-medium">System Online</p>
+              <p className="text-xs text-muted-foreground">All services operational</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

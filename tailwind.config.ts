@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -56,6 +59,17 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+        },
+        quantum: {
+          green: "hsl(var(--quantum-green))",
+          "green-light": "hsl(var(--quantum-green-light))",
+          "green-dark": "hsl(var(--quantum-green-dark))",
+          "green-glow": "hsl(var(--quantum-green-glow))",
+        },
+        glass: {
+          background: "hsl(var(--glass-background))",
+          border: "hsl(var(--glass-border))",
+          highlight: "hsl(var(--glass-highlight))",
         },
       },
       borderRadius: {
