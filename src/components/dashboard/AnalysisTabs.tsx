@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { NetworkGraph } from "./NetworkGraph";
 import { TransactionTimeline } from "./TransactionTimeline";
+import { AIChat } from "./AIChat";
 import { 
   Network, 
   Shield, 
@@ -256,6 +257,9 @@ export function AnalysisTabs() {
               </div>
             </div>
           </Card>
+          
+          {/* AI Assistant Chat */}
+          <AIChat />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4 animate-fade-in">
