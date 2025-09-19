@@ -9,11 +9,7 @@ import {
   Send, 
   Bot, 
   User, 
-  Key, 
-  Eye, 
-  EyeOff,
-  Loader2,
-  AlertTriangle 
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -25,8 +21,6 @@ interface Message {
 }
 
 export function AIChat() {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('openai_api_key') || '');
-  const [showApiKey, setShowApiKey] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -41,26 +35,8 @@ export function AIChat() {
     scrollToBottom();
   }, [messages]);
 
-  const saveApiKey = () => {
-    if (apiKey.trim()) {
-      localStorage.setItem('openai_api_key', apiKey.trim());
-      toast({
-        title: "API Key Saved",
-        description: "Your OpenAI API key has been saved securely in local storage.",
-      });
-    }
-  };
-
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
-    if (!apiKey.trim()) {
-      toast({
-        title: "API Key Required",
-        description: "Please enter your OpenAI API key first.",
-        variant: "destructive",
-      });
-      return;
-    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -77,7 +53,7 @@ export function AIChat() {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -108,7 +84,7 @@ export function AIChat() {
       const data = await response.json();
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.choices[0].message.content,
+        content: data.choices[0].message.content.replace(/\*\*/g, ''),
         role: 'assistant',
         timestamp: new Date(),
       };
@@ -118,7 +94,7 @@ export function AIChat() {
       console.error('Error calling OpenAI API:', error);
       toast({
         title: "AI Request Failed",
-        description: "Failed to get response from OpenAI. Please check your API key and try again.",
+        description: "Failed to get response from OpenAI. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -137,49 +113,8 @@ export function AIChat() {
     <Card className="glass-card p-6">
       <h3 className="text-lg font-semibold text-foreground mb-4">QuantumGuard AI Assistant</h3>
       
-      {/* API Key Setup */}
-      {!apiKey && (
-        <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm font-medium text-foreground">OpenAI API Key Required</span>
-          </div>
-          <p className="text-xs text-muted-foreground mb-3">
-            Enter your OpenAI API key to enable AI-powered blockchain analysis assistance.
-          </p>
-        </div>
-      )}
-
-      <div className="space-y-4 mb-6">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              type={showApiKey ? "text" : "password"}
-              placeholder="Enter your OpenAI API key (sk-...)"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="pl-10 pr-10 bg-glass-background border-glass-border"
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-              onClick={() => setShowApiKey(!showApiKey)}
-            >
-              {showApiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </Button>
-          </div>
-          <Button 
-            onClick={saveApiKey}
-            className="bg-quantum-green hover:bg-quantum-green/90 text-background"
-          >
-            Save Key
-          </Button>
-        </div>
-      </div>
-
       {/* Chat Interface */}
+
       <div className="space-y-4">
         <ScrollArea className="h-96 w-full">
           <div className="space-y-4 pr-4">
@@ -247,11 +182,11 @@ export function AIChat() {
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             className="min-h-[60px] max-h-32 bg-glass-background border-glass-border resize-none"
-            disabled={!apiKey.trim() || isLoading}
+            disabled={isLoading}
           />
           <Button
             onClick={sendMessage}
-            disabled={!inputMessage.trim() || !apiKey.trim() || isLoading}
+            disabled={!inputMessage.trim() || isLoading}
             className="bg-quantum-green hover:bg-quantum-green/90 text-background h-[60px] px-4"
           >
             {isLoading ? (
