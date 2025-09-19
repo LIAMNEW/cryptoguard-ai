@@ -3,6 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { NetworkGraph } from "./NetworkGraph";
+import { TransactionTimeline } from "./TransactionTimeline";
 import { 
   Network, 
   Shield, 
@@ -116,15 +118,10 @@ export function AnalysisTabs() {
         <TabsContent value="network" className="space-y-4 animate-fade-in">
           <Card className="glass-card p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Transaction Network Visualization</h3>
-            <div className="h-96 bg-glass-background rounded-lg border border-glass-border flex items-center justify-center">
-              <div className="text-center space-y-4">
-                <Network className="w-16 h-16 text-quantum-green mx-auto animate-pulse" />
-                <p className="text-muted-foreground">Interactive network graph will render here</p>
-                <p className="text-sm text-muted-foreground">
-                  Showing connections between {analysisData.transactionsAnalyzed} transactions
-                </p>
-              </div>
-            </div>
+            <NetworkGraph />
+            <p className="text-sm text-muted-foreground mt-2">
+              Showing connections between {analysisData.transactionsAnalyzed} transactions
+            </p>
           </Card>
         </TabsContent>
 
@@ -223,15 +220,7 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="timeline" className="space-y-4 animate-fade-in">
-          <Card className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Transaction Timeline</h3>
-            <div className="h-64 bg-glass-background rounded-lg border border-glass-border flex items-center justify-center">
-              <div className="text-center space-y-4">
-                <Clock className="w-16 h-16 text-quantum-green mx-auto animate-pulse" />
-                <p className="text-muted-foreground">Interactive timeline chart will render here</p>
-              </div>
-            </div>
-          </Card>
+          <TransactionTimeline />
         </TabsContent>
 
         <TabsContent value="insights" className="space-y-4 animate-fade-in">
