@@ -12,7 +12,7 @@ interface UploadedFile {
 }
 
 interface FileUploadProps {
-  onFileUpload: (files: File[]) => void;
+  onFileUpload: (transactions: any[]) => Promise<void>;
 }
 
 export function FileUpload({ onFileUpload }: FileUploadProps) {
@@ -38,7 +38,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     handleFiles(files);
   }, []);
 
-  const handleFiles = (files: File[]) => {
+  const handleFiles = async (files: File[]) => {
     const validFiles = files.filter(file => {
       const validTypes = ['.csv', '.xlsx', '.json'];
       const extension = '.' + file.name.split('.').pop()?.toLowerCase();
@@ -58,38 +58,83 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
     setUploadedFiles(prev => [...prev, ...newUploads]);
 
-    // Simulate file processing
-    newUploads.forEach((upload, index) => {
-      simulateUpload(upload, index);
-    });
-
-    onFileUpload(validFiles);
+    // Process each file
+    for (const upload of newUploads) {
+      await processFile(upload);
+    }
   };
 
-  const simulateUpload = (upload: UploadedFile, index: number) => {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 20;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-        setUploadedFiles(prev => 
-          prev.map(file => 
-            file.file === upload.file 
-              ? { ...file, status: "success", progress: 100 }
-              : file
-          )
-        );
-      } else {
-        setUploadedFiles(prev => 
-          prev.map(file => 
-            file.file === upload.file 
-              ? { ...file, progress }
-              : file
-          )
-        );
+  const processFile = async (upload: UploadedFile) => {
+    try {
+      // Update progress
+      setUploadedFiles(prev => 
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, progress: 20 }
+            : file
+        )
+      );
+
+      // Parse file content
+      const text = await upload.file.text();
+      let transactions = [];
+      
+      if (upload.file.name.endsWith('.csv')) {
+        transactions = parseCSV(text);
+      } else if (upload.file.name.endsWith('.json')) {
+        transactions = JSON.parse(text);
       }
-    }, 200);
+
+      // Update progress
+      setUploadedFiles(prev => 
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, progress: 60 }
+            : file
+        )
+      );
+
+      // Upload to backend
+      await onFileUpload(transactions);
+
+      // Mark as complete
+      setUploadedFiles(prev => 
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, status: "success", progress: 100 }
+            : file
+        )
+      );
+    } catch (error) {
+      setUploadedFiles(prev => 
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, status: "error", error: 'Failed to process file' }
+            : file
+        )
+      );
+    }
+  };
+
+  const parseCSV = (text: string) => {
+    const lines = text.split('\n').filter(line => line.trim());
+    if (lines.length < 2) return [];
+    
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    return lines.slice(1).map((line, index) => {
+      const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+      const obj: any = {};
+      headers.forEach((header, i) => {
+        if (values[i]) {
+          obj[header] = values[i];
+        }
+      });
+      // Generate ID if not present
+      if (!obj.transaction_id) {
+        obj.transaction_id = `tx_${Date.now()}_${index}`;
+      }
+      return obj;
+    }).filter(obj => obj.from_address && obj.to_address && obj.amount);
   };
 
   const removeFile = (fileToRemove: File) => {

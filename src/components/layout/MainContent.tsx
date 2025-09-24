@@ -7,7 +7,7 @@ import { Shield, Zap, Globe } from "lucide-react";
 interface MainContentProps {
   activeSection: string;
   hasData: boolean;
-  onFileUpload: (files: File[]) => void;
+  onFileUpload: (transactions: any[]) => Promise<void>;
 }
 
 export function MainContent({ activeSection, hasData, onFileUpload }: MainContentProps) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { NetworkGraph } from "./NetworkGraph";
 import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
+import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
   Network, 
   Shield, 
@@ -21,13 +22,42 @@ import {
 
 export function AnalysisTabs() {
   const [activeTab, setActiveTab] = useState("network");
+  const [analysisData, setAnalysisData] = useState({
+    totalTransactions: 0,
+    averageRiskScore: 0,
+    anomaliesFound: 0,
+    highRiskTransactions: 0
+  });
+  const [anomalies, setAnomalies] = useState([]);
+  const [riskData, setRiskData] = useState({ low: 0, medium: 0, high: 0, critical: 0 });
+  const [networkData, setNetworkData] = useState({ nodes: [], links: [] });
+  const [timelineData, setTimelineData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for demonstration
-  const analysisData = {
-    riskScore: 73,
-    anomaliesFound: 12,
-    transactionsAnalyzed: 1547,
-    highRiskTransactions: 8
+  useEffect(() => {
+    loadAnalysisData();
+  }, []);
+
+  const loadAnalysisData = async () => {
+    try {
+      const [overview, anomaliesData, risk, network, timeline] = await Promise.all([
+        getAnalysisOverview(),
+        getAnomaliesData(),
+        getRiskData(),
+        getNetworkData(),
+        getTimelineData()
+      ]);
+      
+      setAnalysisData(overview);
+      setAnomalies(anomaliesData);
+      setRiskData(risk);
+      setNetworkData(network);
+      setTimelineData(timeline);
+    } catch (error) {
+      console.error('Failed to load analysis data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,7 +70,7 @@ export function AnalysisTabs() {
               <Shield className="w-5 h-5 text-quantum-green" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{analysisData.riskScore}</p>
+              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.averageRiskScore}</p>
               <p className="text-sm text-muted-foreground">Risk Score</p>
             </div>
           </div>
@@ -52,7 +82,7 @@ export function AnalysisTabs() {
               <AlertTriangle className="w-5 h-5 text-red-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{analysisData.anomaliesFound}</p>
+              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.anomaliesFound}</p>
               <p className="text-sm text-muted-foreground">Anomalies Found</p>
             </div>
           </div>
@@ -64,7 +94,7 @@ export function AnalysisTabs() {
               <Activity className="w-5 h-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{analysisData.transactionsAnalyzed}</p>
+              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.totalTransactions.toLocaleString()}</p>
               <p className="text-sm text-muted-foreground">Transactions</p>
             </div>
           </div>
@@ -76,7 +106,7 @@ export function AnalysisTabs() {
               <Target className="w-5 h-5 text-yellow-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-foreground">{analysisData.highRiskTransactions}</p>
+              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.highRiskTransactions}</p>
               <p className="text-sm text-muted-foreground">High Risk</p>
             </div>
           </div>
@@ -119,9 +149,9 @@ export function AnalysisTabs() {
         <TabsContent value="network" className="space-y-4 animate-fade-in">
           <Card className="glass-card p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Transaction Network Visualization</h3>
-            <NetworkGraph />
+            <NetworkGraph nodes={networkData.nodes} links={networkData.links} />
             <p className="text-sm text-muted-foreground mt-2">
-              Showing connections between {analysisData.transactionsAnalyzed} transactions
+              Showing connections between {analysisData.totalTransactions} transactions
             </p>
           </Card>
         </TabsContent>
@@ -138,10 +168,10 @@ export function AnalysisTabs() {
                 <div className="w-full bg-glass-border rounded-full h-3">
                   <div 
                     className="bg-gradient-to-r from-quantum-green via-yellow-500 to-red-500 h-3 rounded-full"
-                    style={{ width: `${analysisData.riskScore}%` }}
+                    style={{ width: `${analysisData.averageRiskScore}%` }}
                   />
                 </div>
-                <p className="text-2xl font-bold text-foreground">{analysisData.riskScore}/100</p>
+                <p className="text-2xl font-bold text-foreground">{analysisData.averageRiskScore}/100</p>
               </div>
             </Card>
 
@@ -221,7 +251,7 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="timeline" className="space-y-4 animate-fade-in">
-          <TransactionTimeline />
+          <TransactionTimeline data={timelineData} />
         </TabsContent>
 
         <TabsContent value="insights" className="space-y-4 animate-fade-in">
