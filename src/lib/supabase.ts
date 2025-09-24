@@ -1,9 +1,26 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Debug: Check what environment variables are available
+console.log('Available env vars:', import.meta.env);
+console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL);
+console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY);
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+
+// Validate that we have the required environment variables
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase configuration missing. Please ensure your Supabase integration is properly set up.');
+  console.error('Missing:', {
+    url: !supabaseUrl ? 'VITE_SUPABASE_URL' : null,
+    key: !supabaseAnonKey ? 'VITE_SUPABASE_ANON_KEY' : null
+  });
+}
+
+// Create a mock client if environment variables are missing (for development)
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 export interface Transaction {
   transaction_id: string;
@@ -54,8 +71,12 @@ export interface AnomalyData {
   timestamp: string;
 }
 
-// API functions
+// API functions with error handling
 export async function uploadTransactions(transactions: Transaction[]) {
+  if (!supabase) {
+    throw new Error('Supabase client not initialized. Please check your Supabase connection.');
+  }
+  
   const { data, error } = await supabase.functions.invoke('analyze-transactions', {
     body: { transactions }
   })
@@ -65,6 +86,16 @@ export async function uploadTransactions(transactions: Transaction[]) {
 }
 
 export async function getAnalysisOverview(): Promise<AnalysisOverview> {
+  if (!supabase) {
+    // Return mock data when Supabase is not available
+    return {
+      totalTransactions: 0,
+      averageRiskScore: 0,
+      anomaliesFound: 0,
+      highRiskTransactions: 0
+    };
+  }
+  
   const { data, error } = await supabase.functions.invoke('get-analysis-data', {
     body: { type: 'overview' }
   })
@@ -74,6 +105,10 @@ export async function getAnalysisOverview(): Promise<AnalysisOverview> {
 }
 
 export async function getNetworkData(): Promise<{ nodes: NetworkNode[], links: NetworkLink[] }> {
+  if (!supabase) {
+    return { nodes: [], links: [] };
+  }
+  
   const { data, error } = await supabase.functions.invoke('get-analysis-data', {
     body: { type: 'network' }
   })
@@ -83,6 +118,10 @@ export async function getNetworkData(): Promise<{ nodes: NetworkNode[], links: N
 }
 
 export async function getTimelineData(): Promise<TimelineData[]> {
+  if (!supabase) {
+    return [];
+  }
+  
   const { data, error } = await supabase.functions.invoke('get-analysis-data', {
     body: { type: 'timeline' }
   })
@@ -92,6 +131,10 @@ export async function getTimelineData(): Promise<TimelineData[]> {
 }
 
 export async function getAnomaliesData(): Promise<AnomalyData[]> {
+  if (!supabase) {
+    return [];
+  }
+  
   const { data, error } = await supabase.functions.invoke('get-analysis-data', {
     body: { type: 'anomalies' }
   })
@@ -101,6 +144,10 @@ export async function getAnomaliesData(): Promise<AnomalyData[]> {
 }
 
 export async function getRiskData() {
+  if (!supabase) {
+    return { low: 0, medium: 0, high: 0, critical: 0 };
+  }
+  
   const { data, error } = await supabase.functions.invoke('get-analysis-data', {
     body: { type: 'risk' }
   })
