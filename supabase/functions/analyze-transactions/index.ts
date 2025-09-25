@@ -88,8 +88,9 @@ serve(async (req) => {
       },
     )
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: errorMessage }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,
@@ -154,7 +155,7 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
     transaction_id: transaction.id,
     risk_score: riskScore,
     anomaly_detected: anomalyDetected,
-    anomaly_type: anomalyType || null,
+    anomaly_type: anomalyType || undefined,
     network_cluster: `cluster_${Math.floor(riskScore / 25) + 1}`
   }
 }

@@ -1,26 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
-
-// Debug: Check what environment variables are available
-console.log('Available env vars:', import.meta.env);
-console.log('VITE_SUPABASE_URL:', import.meta.env.VITE_SUPABASE_URL);
-console.log('VITE_SUPABASE_ANON_KEY:', import.meta.env.VITE_SUPABASE_ANON_KEY);
-
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-
-// Validate that we have the required environment variables
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase configuration missing. Please ensure your Supabase integration is properly set up.');
-  console.error('Missing:', {
-    url: !supabaseUrl ? 'VITE_SUPABASE_URL' : null,
-    key: !supabaseAnonKey ? 'VITE_SUPABASE_ANON_KEY' : null
-  });
-}
-
-// Create a mock client if environment variables are missing (for development)
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Transaction {
   transaction_id: string;
@@ -73,10 +51,6 @@ export interface AnomalyData {
 
 // API functions with error handling
 export async function uploadTransactions(transactions: Transaction[]) {
-  if (!supabase) {
-    throw new Error('Supabase client not initialized. Please check your Supabase connection.');
-  }
-  
   const { data, error } = await supabase.functions.invoke('analyze-transactions', {
     body: { transactions }
   })
@@ -86,72 +60,70 @@ export async function uploadTransactions(transactions: Transaction[]) {
 }
 
 export async function getAnalysisOverview(): Promise<AnalysisOverview> {
-  if (!supabase) {
-    // Return mock data when Supabase is not available
-    return {
-      totalTransactions: 0,
-      averageRiskScore: 0,
-      anomaliesFound: 0,
-      highRiskTransactions: 0
-    };
-  }
-  
   const { data, error } = await supabase.functions.invoke('get-analysis-data', {
-    body: { type: 'overview' }
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
   
   if (error) throw error
-  return data
+  
+  const response = await fetch(`https://zytdnqlnsahydanaeupc.supabase.co/functions/v1/get-analysis-data?type=overview`, {
+    headers: {
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg`,
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg'
+    }
+  })
+  
+  if (!response.ok) throw new Error('Failed to fetch overview data')
+  return await response.json()
 }
 
 export async function getNetworkData(): Promise<{ nodes: NetworkNode[], links: NetworkLink[] }> {
-  if (!supabase) {
-    return { nodes: [], links: [] };
-  }
-  
-  const { data, error } = await supabase.functions.invoke('get-analysis-data', {
-    body: { type: 'network' }
+  const response = await fetch(`https://zytdnqlnsahydanaeupc.supabase.co/functions/v1/get-analysis-data?type=network`, {
+    headers: {
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg`,
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg'
+    }
   })
   
-  if (error) throw error
-  return data
+  if (!response.ok) throw new Error('Failed to fetch network data')
+  return await response.json()
 }
 
 export async function getTimelineData(): Promise<TimelineData[]> {
-  if (!supabase) {
-    return [];
-  }
-  
-  const { data, error } = await supabase.functions.invoke('get-analysis-data', {
-    body: { type: 'timeline' }
+  const response = await fetch(`https://zytdnqlnsahydanaeupc.supabase.co/functions/v1/get-analysis-data?type=timeline`, {
+    headers: {
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg`,
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg'
+    }
   })
   
-  if (error) throw error
-  return data
+  if (!response.ok) throw new Error('Failed to fetch timeline data')
+  return await response.json()
 }
 
 export async function getAnomaliesData(): Promise<AnomalyData[]> {
-  if (!supabase) {
-    return [];
-  }
-  
-  const { data, error } = await supabase.functions.invoke('get-analysis-data', {
-    body: { type: 'anomalies' }
+  const response = await fetch(`https://zytdnqlnsahydanaeupc.supabase.co/functions/v1/get-analysis-data?type=anomalies`, {
+    headers: {
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg`,
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg'
+    }
   })
   
-  if (error) throw error
-  return data
+  if (!response.ok) throw new Error('Failed to fetch anomalies data')
+  return await response.json()
 }
 
 export async function getRiskData() {
-  if (!supabase) {
-    return { low: 0, medium: 0, high: 0, critical: 0 };
-  }
-  
-  const { data, error } = await supabase.functions.invoke('get-analysis-data', {
-    body: { type: 'risk' }
+  const response = await fetch(`https://zytdnqlnsahydanaeupc.supabase.co/functions/v1/get-analysis-data?type=risk`, {
+    headers: {
+      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg`,
+      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg'
+    }
   })
   
-  if (error) throw error
-  return data
+  if (!response.ok) throw new Error('Failed to fetch risk data')
+  return await response.json()
 }
