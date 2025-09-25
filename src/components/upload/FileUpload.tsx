@@ -66,6 +66,8 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
   const processFile = async (upload: UploadedFile) => {
     try {
+      console.log('Processing file:', upload.file.name);
+      
       // Update progress
       setUploadedFiles(prev => 
         prev.map(file => 
@@ -79,10 +81,32 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       const text = await upload.file.text();
       let transactions = [];
       
+      console.log('File content preview:', text.substring(0, 500));
+      
       if (upload.file.name.endsWith('.csv')) {
         transactions = parseCSV(text);
       } else if (upload.file.name.endsWith('.json')) {
-        transactions = JSON.parse(text);
+        try {
+          const parsed = JSON.parse(text);
+          if (Array.isArray(parsed)) {
+            transactions = parsed;
+          } else if (parsed && typeof parsed === 'object' && parsed.transactions) {
+            transactions = parsed.transactions;
+          } else {
+            // Wrap single object in array
+            transactions = [parsed];
+          }
+        } catch (e) {
+          console.error('Failed to parse JSON:', e);
+          throw new Error('Invalid JSON format');
+        }
+      }
+
+      console.log('Parsed transactions count:', transactions.length);
+      console.log('Sample transaction:', transactions[0]);
+
+      if (transactions.length === 0) {
+        throw new Error('No valid transactions found in file. Please check the format.');
       }
 
       // Update progress
@@ -95,6 +119,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       );
 
       // Upload to backend
+      console.log('Uploading transactions to backend...');
       await onFileUpload(transactions);
 
       // Mark as complete
@@ -106,10 +131,11 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         )
       );
     } catch (error) {
+      console.error('File processing error:', error);
       setUploadedFiles(prev => 
         prev.map(file => 
           file.file === upload.file 
-            ? { ...file, status: "error", error: 'Failed to process file' }
+            ? { ...file, status: "error", error: error instanceof Error ? error.message : 'Failed to process file' }
             : file
         )
       );
@@ -117,24 +143,77 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
   };
 
   const parseCSV = (text: string) => {
+    console.log('Parsing CSV text length:', text.length);
     const lines = text.split('\n').filter(line => line.trim());
-    if (lines.length < 2) return [];
+    console.log('CSV lines count:', lines.length);
     
-    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-    return lines.slice(1).map((line, index) => {
-      const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+    if (lines.length < 2) {
+      console.log('Not enough lines in CSV');
+      return [];
+    }
+    
+    // Better CSV parsing that handles quoted fields
+    const parseCSVLine = (line: string) => {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result.map(field => field.replace(/^"|"$/g, ''));
+    };
+    
+    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
+    console.log('CSV headers:', headers);
+    
+    const transactions = lines.slice(1).map((line, index) => {
+      const values = parseCSVLine(line);
       const obj: any = {};
+      
       headers.forEach((header, i) => {
         if (values[i]) {
           obj[header] = values[i];
         }
       });
-      // Generate ID if not present
-      if (!obj.transaction_id) {
-        obj.transaction_id = `tx_${Date.now()}_${index}`;
+      
+      // Map common field variations to expected format
+      const transaction: any = {
+        transaction_id: obj.transaction_id || obj.txid || obj.id || obj.hash || `tx_${Date.now()}_${index}`,
+        from_address: obj.from_address || obj.from || obj.sender || obj.source_address || obj.from_addr,
+        to_address: obj.to_address || obj.to || obj.recipient || obj.destination_address || obj.to_addr,
+        amount: parseFloat(obj.amount || obj.value || obj.sum || obj.total || '0'),
+        timestamp: obj.timestamp || obj.time || obj.date || obj.created_at || new Date().toISOString(),
+        transaction_hash: obj.transaction_hash || obj.hash || obj.txhash,
+        block_number: obj.block_number ? parseInt(obj.block_number) : undefined,
+        gas_fee: obj.gas_fee ? parseFloat(obj.gas_fee) : undefined,
+        transaction_type: obj.transaction_type || obj.type || 'transfer'
+      };
+      
+      // Ensure timestamp is in ISO format
+      if (transaction.timestamp && !transaction.timestamp.includes('T')) {
+        try {
+          transaction.timestamp = new Date(transaction.timestamp).toISOString();
+        } catch (e) {
+          transaction.timestamp = new Date().toISOString();
+        }
       }
-      return obj;
-    }).filter(obj => obj.from_address && obj.to_address && obj.amount);
+      
+      return transaction;
+    }).filter(tx => tx.from_address && tx.to_address && tx.amount > 0);
+    
+    console.log('Parsed transactions:', transactions.length);
+    console.log('Sample transaction:', transactions[0]);
+    return transactions;
   };
 
   const removeFile = (fileToRemove: File) => {

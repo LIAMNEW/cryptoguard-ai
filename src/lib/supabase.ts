@@ -60,15 +60,6 @@ export async function uploadTransactions(transactions: Transaction[]) {
 }
 
 export async function getAnalysisOverview(): Promise<AnalysisOverview> {
-  const { data, error } = await supabase.functions.invoke('get-analysis-data', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  
-  if (error) throw error
-  
   const response = await fetch(`https://zytdnqlnsahydanaeupc.supabase.co/functions/v1/get-analysis-data?type=overview`, {
     headers: {
       'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5dGRucWxuc2FoeWRhbmFldXBjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2ODIyNzksImV4cCI6MjA3NDI1ODI3OX0.v3m5dbl3QAQthY-NwEsMtSImWXgoiMBKLp_WTz9-AUg`,
