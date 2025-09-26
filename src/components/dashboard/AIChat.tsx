@@ -2,200 +2,194 @@ import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Send, 
-  Bot, 
-  User, 
-  Loader2
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Brain, Send, User, Bot, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
-  content: string;
   role: 'user' | 'assistant';
+  content: string;
   timestamp: Date;
 }
 
 export function AIChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: 'Hello! I\'m QuantumGuard AI, your blockchain transaction analysis assistant. I can help you understand patterns, anomalies, and compliance requirements in your transaction data. What would you like to know?',
+      timestamp: new Date()
+    }
+  ]);
+  const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToBottom();
+    // Scroll to bottom when new messages are added
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+    }
   }, [messages]);
 
-  const sendMessage = async () => {
-    if (!inputMessage.trim()) return;
+  const sendMessage = async (message: string) => {
+    if (!message.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: inputMessage.trim(),
       role: 'user',
-      timestamp: new Date(),
+      content: message,
+      timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInputMessage('');
+    setInputMessage("");
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are QuantumGuard AI, an expert blockchain transaction analyst and compliance specialist. You help analyze cryptocurrency transactions for fraud detection, risk assessment, and regulatory compliance. Provide detailed, technical insights about blockchain forensics, AUSTRAC compliance, money laundering patterns, and suspicious transaction behaviors. Be precise and professional in your responses.'
-            },
-            ...messages.map(msg => ({
-              role: msg.role,
-              content: msg.content
-            })),
-            {
-              role: 'user',
-              content: userMessage.content
-            }
-          ],
-          temperature: 0.7,
-          max_tokens: 1500,
-        }),
+      // Prepare conversation history (last 10 messages for context)
+      const conversationHistory = messages.slice(-10).map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      const { data, error } = await supabase.functions.invoke('ai-chat', {
+        body: {
+          message,
+          conversationHistory
+        }
       });
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+      if (error) {
+        throw error;
       }
 
-      const data = await response.json();
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.choices[0].message.content.replace(/\*\*/g, ''),
         role: 'assistant',
-        timestamp: new Date(),
+        content: data.response,
+        timestamp: new Date()
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+
     } catch (error) {
-      console.error('Error calling OpenAI API:', error);
-      toast({
-        title: "AI Request Failed",
-        description: "Failed to get response from OpenAI. Please try again.",
-        variant: "destructive",
-      });
+      console.error('AI Chat error:', error);
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'I apologize, but I encountered an error processing your request. Please try again. If the issue persists, check that the OpenAI API key is properly configured.',
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage(inputMessage);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      sendMessage(inputMessage);
     }
   };
 
-  return (
-    <Card className="glass-card p-6">
-      <h3 className="text-lg font-semibold text-foreground mb-4">QuantumGuard AI Assistant</h3>
-      
-      {/* Chat Interface */}
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
-      <div className="space-y-4">
-        <ScrollArea className="h-96 w-full">
-          <div className="space-y-4 pr-4">
-            {messages.length === 0 && (
-              <div className="text-center py-8">
-                <Bot className="w-12 h-12 text-quantum-green mx-auto mb-3 opacity-50" />
-                <p className="text-muted-foreground text-sm">
-                  Ask QuantumGuard AI about blockchain analysis, compliance, or transaction patterns
-                </p>
-              </div>
-            )}
-            
-            {messages.map((message) => (
-              <div key={message.id} className="flex items-start gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.role === 'user' 
-                    ? 'bg-blue-500/20' 
-                    : 'bg-quantum-green/20'
-                }`}>
-                  {message.role === 'user' ? (
-                    <User className="w-4 h-4 text-blue-400" />
-                  ) : (
-                    <Bot className="w-4 h-4 text-quantum-green" />
-                  )}
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      {message.role === 'user' ? 'You' : 'QuantumGuard AI'}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">
-                      {message.timestamp.toLocaleTimeString()}
-                    </span>
-                  </div>
-                  <div className="prose prose-sm prose-invert max-w-none">
-                    <p className="text-sm text-foreground whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {isLoading && (
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-quantum-green/20 flex items-center justify-center">
+  return (
+    <Card className="glass-card p-6 h-[600px] flex flex-col">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-lg bg-quantum-green/20 flex items-center justify-center">
+          <Brain className="w-5 h-5 text-quantum-green" />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">QuantumGuard AI Assistant</h3>
+          <p className="text-sm text-muted-foreground">Powered by GPT-5 for advanced analysis</p>
+        </div>
+      </div>
+
+      <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
+        <div className="space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              {message.role === 'assistant' && (
+                <div className="w-8 h-8 rounded-full bg-quantum-green/20 flex items-center justify-center flex-shrink-0">
                   <Bot className="w-4 h-4 text-quantum-green" />
                 </div>
+              )}
+              
+              <div
+                className={`max-w-[80%] rounded-lg p-3 ${
+                  message.role === 'user'
+                    ? 'bg-quantum-green text-background ml-auto'
+                    : 'bg-glass-background border border-glass-border'
+                }`}
+              >
+                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p className={`text-xs mt-1 ${
+                  message.role === 'user' ? 'text-background/70' : 'text-muted-foreground'
+                }`}>
+                  {formatTime(message.timestamp)}
+                </p>
+              </div>
+
+              {message.role === 'user' && (
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-blue-400" />
+                </div>
+              )}
+            </div>
+          ))}
+          
+          {isLoading && (
+            <div className="flex gap-3 justify-start">
+              <div className="w-8 h-8 rounded-full bg-quantum-green/20 flex items-center justify-center flex-shrink-0">
+                <Bot className="w-4 h-4 text-quantum-green" />
+              </div>
+              <div className="bg-glass-background border border-glass-border rounded-lg p-3">
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-quantum-green" />
-                  <span className="text-sm text-muted-foreground">QuantumGuard AI is thinking...</span>
+                  <p className="text-sm text-muted-foreground">QuantumGuard AI is analyzing...</p>
                 </div>
               </div>
-            )}
-            
-            <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
-
-        {/* Message Input */}
-        <div className="flex gap-2">
-          <Textarea
-            placeholder="Ask about transaction patterns, compliance requirements, or risk assessment..."
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className="min-h-[60px] max-h-32 bg-glass-background border-glass-border resize-none"
-            disabled={isLoading}
-          />
-          <Button
-            onClick={sendMessage}
-            disabled={!inputMessage.trim() || isLoading}
-            className="bg-quantum-green hover:bg-quantum-green/90 text-background h-[60px] px-4"
-          >
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Send className="w-4 h-4" />
-            )}
-          </Button>
+            </div>
+          )}
         </div>
+      </ScrollArea>
+
+      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
+        <Input
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Ask about transaction patterns, compliance, or anomalies..."
+          disabled={isLoading}
+          className="flex-1 bg-glass-background border-glass-border focus:border-quantum-green"
+        />
+        <Button
+          type="submit"
+          disabled={isLoading || !inputMessage.trim()}
+          className="bg-quantum-green hover:bg-quantum-green/90 text-background"
+        >
+          <Send className="w-4 h-4" />
+        </Button>
+      </form>
+
+      <div className="mt-2 text-xs text-muted-foreground">
+        Ask about transaction analysis, money laundering patterns, compliance requirements, or specific anomalies in your data.
       </div>
     </Card>
   );
