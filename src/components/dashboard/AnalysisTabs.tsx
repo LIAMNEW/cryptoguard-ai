@@ -203,49 +203,100 @@ export function AnalysisTabs() {
           <Card className="glass-card p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Detected Anomalies</h3>
             <div className="space-y-4">
-              {[
-                {
-                  id: 1,
-                  type: "Unusual Amount",
-                  description: "Transaction amount 500% above average",
-                  severity: "High",
-                  confidence: 94
-                },
-                {
-                  id: 2,
-                  type: "Frequency Spike",
-                  description: "15 transactions in 2 minutes",
-                  severity: "Critical",
-                  confidence: 98
-                },
-                {
-                  id: 3,
-                  type: "Geographic Anomaly",
-                  description: "Transactions from unusual location",
-                  severity: "Medium",
-                  confidence: 76
-                }
-              ].map((anomaly) => (
-                <div key={anomaly.id} className="p-4 rounded-lg bg-glass-background border border-glass-border">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-red-400" />
-                        <span className="font-medium">{anomaly.type}</span>
-                        <Badge variant={anomaly.severity === "Critical" ? "destructive" : 
-                                      anomaly.severity === "High" ? "destructive" : "secondary"}>
-                          {anomaly.severity}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{anomaly.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium">{anomaly.confidence}%</p>
-                      <p className="text-xs text-muted-foreground">Confidence</p>
-                    </div>
-                  </div>
+              {loading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin w-6 h-6 border-2 border-quantum-green border-t-transparent rounded-full mx-auto mb-2"></div>
+                  <p className="text-muted-foreground">Loading anomalies...</p>
                 </div>
-              ))}
+              ) : anomalies.length === 0 ? (
+                <div className="text-center py-8">
+                  <Shield className="w-12 h-12 text-quantum-green mx-auto mb-4" />
+                  <p className="text-foreground font-medium">No anomalies detected</p>
+                  <p className="text-muted-foreground text-sm">All transactions appear normal</p>
+                </div>
+              ) : (
+                anomalies.map((anomaly: any) => {
+                  const getAnomalyIcon = (type: string) => {
+                    switch (type) {
+                      case 'high_value': return '💰';
+                      case 'unusual_amount': return '📊';
+                      case 'rapid_transactions': return '⚡';
+                      case 'circular': return '🔄';
+                      case 'chain_transactions': return '🔗';
+                      case 'high_velocity': return '🚀';
+                      case 'round_amount': return '🎯';
+                      case 'unusual_time': return '🕐';
+                      default: return '⚠️';
+                    }
+                  };
+
+                  const getSeverityVariant = (severity: string) => {
+                    switch (severity.toLowerCase()) {
+                      case 'critical': return 'destructive';
+                      case 'high': return 'destructive';
+                      case 'medium': return 'secondary';
+                      default: return 'outline';
+                    }
+                  };
+
+                  const formatAmount = (amount: number) => {
+                    return new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0
+                    }).format(amount);
+                  };
+
+                  return (
+                    <div key={anomaly.id} className="p-4 rounded-lg bg-glass-background border border-glass-border hover:border-quantum-green/50 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-2 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{getAnomalyIcon(anomaly.type)}</span>
+                            <span className="font-medium capitalize">{anomaly.type.replace(/_/g, ' ')}</span>
+                            <Badge variant={getSeverityVariant(anomaly.severity)}>
+                              {anomaly.severity}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{anomaly.description}</p>
+                          {anomaly.transaction && (
+                            <div className="mt-3 p-3 rounded bg-glass-card border border-glass-border/50">
+                              <div className="text-xs space-y-1">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Transaction ID:</span>
+                                  <span className="font-mono text-foreground">{anomaly.transaction.transaction_id}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Amount:</span>
+                                  <span className="font-semibold text-foreground">{formatAmount(anomaly.transaction.amount)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">From:</span>
+                                  <span className="font-mono text-xs text-foreground">{anomaly.transaction.from_address.slice(0, 10)}...</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">To:</span>
+                                  <span className="font-mono text-xs text-foreground">{anomaly.transaction.to_address.slice(0, 10)}...</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">Time:</span>
+                                  <span className="text-xs text-foreground">{new Date(anomaly.transaction.timestamp).toLocaleString()}</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-right ml-4">
+                          <p className="text-sm font-medium text-foreground">{anomaly.riskScore}</p>
+                          <p className="text-xs text-muted-foreground">Risk Score</p>
+                          <p className="text-xs text-muted-foreground mt-1">{new Date(anomaly.timestamp).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </Card>
         </TabsContent>

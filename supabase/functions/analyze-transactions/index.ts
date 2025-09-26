@@ -105,19 +105,48 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
   let anomalyDetected = false
   let anomalyType = ''
 
-  // Amount-based risk assessment
-  if (transaction.amount > 100000) {
-    riskScore += 30
+  // Get dataset statistics for dynamic thresholds
+  const { data: allTransactions } = await supabase
+    .from('transactions')
+    .select('amount, timestamp')
+    .order('created_at', { ascending: false })
+    .limit(1000) // Get recent transactions for context
+
+  let avgAmount = 0
+  let maxAmount = 0
+  if (allTransactions && allTransactions.length > 0) {
+    avgAmount = allTransactions.reduce((sum: number, tx: any) => sum + Number(tx.amount), 0) / allTransactions.length
+    maxAmount = Math.max(...allTransactions.map((tx: any) => Number(tx.amount)))
+  }
+
+  // Dynamic amount-based risk assessment
+  const amountRatio = transaction.amount / (avgAmount || 1000)
+  if (amountRatio > 5) { // 5x above average
+    riskScore += 40
     anomalyDetected = true
     anomalyType = 'high_value'
-  } else if (transaction.amount > 50000) {
+  } else if (amountRatio > 3) { // 3x above average
+    riskScore += 25
+    anomalyDetected = true
+    anomalyType = 'unusual_amount'
+  } else if (amountRatio > 2) { // 2x above average
     riskScore += 15
+  }
+
+  // Round amounts detection (potential structuring)
+  const isRoundAmount = transaction.amount % 1000 === 0 && transaction.amount >= 10000
+  if (isRoundAmount) {
+    riskScore += 10
+    anomalyDetected = true
+    anomalyType = anomalyType ? `${anomalyType},round_amount` : 'round_amount'
   }
 
   // Time-based analysis (unusual hours)
   const hour = new Date(transaction.timestamp).getUTCHours()
   if (hour < 6 || hour > 22) {
     riskScore += 10
+    anomalyDetected = true
+    anomalyType = anomalyType ? `${anomalyType},unusual_time` : 'unusual_time'
   }
 
   // Frequency analysis - check for rapid transactions from same address
@@ -128,10 +157,12 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
     .gte('timestamp', new Date(Date.now() - 3600000).toISOString()) // Last hour
     .order('timestamp', { ascending: false })
 
-  if (recentTxs && recentTxs.length > 10) {
-    riskScore += 25
+  if (recentTxs && recentTxs.length > 5) {
+    riskScore += 30
     anomalyDetected = true
     anomalyType = anomalyType ? `${anomalyType},rapid_transactions` : 'rapid_transactions'
+  } else if (recentTxs && recentTxs.length > 3) {
+    riskScore += 15
   }
 
   // Network analysis - check for circular transactions
@@ -143,9 +174,37 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
     .gte('timestamp', new Date(Date.now() - 86400000).toISOString()) // Last 24 hours
 
   if (circularCheck && circularCheck.length > 0) {
-    riskScore += 20
+    riskScore += 25
     anomalyDetected = true
     anomalyType = anomalyType ? `${anomalyType},circular` : 'circular'
+  }
+
+  // Chain detection - check for immediate subsequent transactions
+  const { data: chainTxs } = await supabase
+    .from('transactions')
+    .select('*')
+    .eq('from_address', transaction.to_address)
+    .gte('timestamp', new Date(new Date(transaction.timestamp).getTime() + 60000).toISOString()) // Within 1 minute after
+    .lte('timestamp', new Date(new Date(transaction.timestamp).getTime() + 600000).toISOString()) // Within 10 minutes after
+
+  if (chainTxs && chainTxs.length > 2) {
+    riskScore += 20
+    anomalyDetected = true
+    anomalyType = anomalyType ? `${anomalyType},chain_transactions` : 'chain_transactions'
+  }
+
+  // Velocity analysis - multiple large transactions in short time
+  const { data: velocityCheck } = await supabase
+    .from('transactions')
+    .select('amount')
+    .eq('from_address', transaction.from_address)
+    .gte('timestamp', new Date(Date.now() - 1800000).toISOString()) // Last 30 minutes
+    .gt('amount', avgAmount * 2) // Large transactions only
+
+  if (velocityCheck && velocityCheck.length > 2) {
+    riskScore += 25
+    anomalyDetected = true
+    anomalyType = anomalyType ? `${anomalyType},high_velocity` : 'high_velocity'
   }
 
   // Cap risk score at 100
