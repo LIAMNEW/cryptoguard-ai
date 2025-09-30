@@ -47,6 +47,16 @@ export function AIChat() {
     setInputMessage("");
     setIsLoading(true);
 
+    // Add placeholder for assistant response
+    const assistantId = (Date.now() + 1).toString();
+    const assistantMessage: Message = {
+      id: assistantId,
+      role: 'assistant',
+      content: '',
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, assistantMessage]);
+
     try {
       // Prepare conversation history (last 10 messages for context)
       const conversationHistory = messages.slice(-10).map(msg => ({
@@ -54,37 +64,65 @@ export function AIChat() {
         content: msg.content
       }));
 
-      const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
           message,
           conversationHistory
-        }
+        }),
       });
 
-      if (error) {
-        throw error;
+      if (!response.ok) throw new Error('Failed to get AI response');
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedResponse = '';
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+              
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices?.[0]?.delta?.content || '';
+                if (content) {
+                  accumulatedResponse += content;
+                  // Update the assistant message in real-time
+                  setMessages(prev => prev.map(msg => 
+                    msg.id === assistantId 
+                      ? { ...msg, content: accumulatedResponse }
+                      : msg
+                  ));
+                }
+              } catch (e) {
+                // Skip invalid JSON
+              }
+            }
+          }
+        }
       }
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.response,
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
 
     } catch (error) {
       console.error('AI Chat error:', error);
       
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: 'I apologize, but I encountered an error processing your request. Please try again. If the issue persists, check that the OpenAI API key is properly configured.',
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => prev.map(msg => 
+        msg.id === assistantId 
+          ? { ...msg, content: 'I apologize, but I encountered an error processing your request. Please try again. If the issue persists, check that the OpenAI API key is properly configured.' }
+          : msg
+      ));
     } finally {
       setIsLoading(false);
     }
@@ -114,7 +152,7 @@ export function AIChat() {
         </div>
         <div>
           <h3 className="text-lg font-semibold text-foreground">QuantumGuard AI Assistant</h3>
-          <p className="text-sm text-muted-foreground">Powered by GPT-5 for advanced analysis</p>
+          <p className="text-sm text-muted-foreground">Powered by GPT-4o Mini • Streaming responses</p>
         </div>
       </div>
 
@@ -138,7 +176,16 @@ export function AIChat() {
                     : 'bg-glass-background border border-glass-border'
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p className="text-sm whitespace-pre-wrap">
+                  {message.content}
+                  {message.role === 'assistant' && !message.content && isLoading && (
+                    <span className="inline-flex items-center gap-1">
+                      <span className="animate-pulse">●</span>
+                      <span className="animate-pulse" style={{ animationDelay: '0.2s' }}>●</span>
+                      <span className="animate-pulse" style={{ animationDelay: '0.4s' }}>●</span>
+                    </span>
+                  )}
+                </p>
                 <p className={`text-xs mt-1 ${
                   message.role === 'user' ? 'text-background/70' : 'text-muted-foreground'
                 }`}>

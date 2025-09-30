@@ -106,10 +106,11 @@ When discussing specific patterns or anomalies, reference the actual data from t
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-2025-08-07',
+        model: 'gpt-4o-mini',
         messages: messages,
-        max_completion_tokens: 1500,
-        stream: false
+        max_completion_tokens: 800,
+        stream: true,
+        temperature: 0.7
       }),
     });
 
@@ -119,16 +120,14 @@ When discussing specific patterns or anomalies, reference the actual data from t
       throw new Error(`OpenAI API error: ${response.status} - ${errorData}`);
     }
 
-    const data = await response.json();
-    console.log('OpenAI response received successfully');
-
-    const aiResponse = data.choices[0].message.content;
-
-    return new Response(JSON.stringify({ 
-      response: aiResponse,
-      context: analysisContext 
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    // Return the streaming response directly
+    return new Response(response.body, {
+      headers: { 
+        ...corsHeaders, 
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+      },
     });
 
   } catch (error) {
