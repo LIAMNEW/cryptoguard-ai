@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { QuantumSafeStatus } from "@/components/security/QuantumSafeStatus";
 
 interface SidebarProps {
   activeSection: string;
@@ -86,6 +87,13 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           );
         })}
       </nav>
+
+      {/* Security Status */}
+      {!collapsed && (
+        <div className="px-4 pb-3">
+          <QuantumSafeStatus />
+        </div>
+      )}
 
       {/* System Status */}
       <div className="p-4 border-t border-glass-border">

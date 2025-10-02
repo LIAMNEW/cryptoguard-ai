@@ -1,13 +1,28 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MainContent } from "@/components/layout/MainContent";
 import { uploadTransactions } from "@/lib/supabase";
 import { logAuditEvent } from "@/lib/auditLog";
+import { initializeQuantumSafeKeys } from "@/lib/quantumCrypto";
 import { toast } from "sonner";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("upload");
   const [hasData, setHasData] = useState(false);
+
+  // Initialize quantum-safe encryption keys on mount
+  useEffect(() => {
+    const initKeys = async () => {
+      try {
+        await initializeQuantumSafeKeys();
+        console.log('🔐 Quantum-safe encryption initialized');
+      } catch (error) {
+        console.error('Failed to initialize quantum-safe keys:', error);
+        toast.error('Failed to initialize security features');
+      }
+    };
+    initKeys();
+  }, []);
 
   const handleFileUpload = useCallback(async (transactions: any[]) => {
     try {

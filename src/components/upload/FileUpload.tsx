@@ -1,8 +1,11 @@
 import { useState, useCallback } from "react";
-import { Upload, File, CheckCircle, AlertCircle, X } from "lucide-react";
+import { Upload, File, CheckCircle, AlertCircle, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { encryptWithQuantumSafe, getPublicKey } from "@/lib/quantumCrypto";
+import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
 
 interface UploadedFile {
   file: File;
@@ -118,9 +121,36 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         )
       );
 
-      // Upload to backend
-      console.log('Uploading transactions to backend...');
-      await onFileUpload(transactions);
+      // Encrypt transactions with quantum-safe cryptography
+      console.log('Encrypting transactions with quantum-safe cryptography...');
+      const publicKey = getPublicKey();
+      
+      if (!publicKey) {
+        throw new Error('Quantum-safe encryption not initialized. Please refresh the page.');
+      }
+
+      const encryptedData = await encryptWithQuantumSafe(transactions, publicKey);
+      
+      setUploadedFiles(prev => 
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, progress: 80 }
+            : file
+        )
+      );
+
+      // Upload encrypted data to backend
+      console.log('Uploading encrypted transactions to backend...');
+      await onFileUpload([{
+        encrypted: true,
+        quantumSafe: true,
+        data: encryptedData,
+        metadata: {
+          originalCount: transactions.length,
+          encryptedAt: new Date().toISOString(),
+          algorithm: 'CRYSTALS-Kyber-1024 + AES-256-GCM'
+        }
+      }]);
 
       // Mark as complete
       setUploadedFiles(prev => 
@@ -230,6 +260,9 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
   return (
     <div className="space-y-6">
+      {/* Quantum-Safe Security Indicator */}
+      <QuantumSafeIndicator />
+      
       {/* Upload Zone */}
       <Card className={cn(
         "glass-card p-8 border-2 border-dashed transition-all duration-300 cursor-pointer",
@@ -245,18 +278,30 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
           onDrop={handleDrop}
           onClick={() => document.getElementById('file-input')?.click()}
         >
-          <Upload className={cn(
-            "w-16 h-16 mx-auto mb-4 transition-colors",
-            dragActive ? "text-quantum-green" : "text-muted-foreground"
-          )} />
+          <div className="relative inline-block mb-4">
+            <Upload className={cn(
+              "w-16 h-16 mx-auto transition-colors",
+              dragActive ? "text-quantum-green" : "text-muted-foreground"
+            )} />
+            <Shield className="w-6 h-6 absolute -top-1 -right-1 text-quantum-green" />
+          </div>
           <h3 className="text-xl font-semibold text-foreground mb-2">
             Upload Transaction Data
           </h3>
-          <p className="text-muted-foreground mb-4">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Badge variant="outline" className="border-quantum-green text-quantum-green">
+              <Shield className="w-3 h-3 mr-1" />
+              Quantum-Safe Encrypted
+            </Badge>
+          </div>
+          <p className="text-muted-foreground mb-2">
             Drag and drop your files here, or click to browse
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mb-2">
             Supports CSV, XLSX, and JSON files up to 50MB
+          </p>
+          <p className="text-xs text-quantum-green/70">
+            🔐 All uploads protected with CRYSTALS-Kyber post-quantum encryption
           </p>
           <input
             id="file-input"
@@ -281,16 +326,23 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
                   <p className="text-sm font-medium text-foreground truncate">
                     {upload.file.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                   <p className="text-xs text-muted-foreground">
                     {formatFileSize(upload.file.size)}
                   </p>
                   {upload.status === "uploading" && (
-                    <div className="w-full bg-glass-border rounded-full h-1.5 mt-1">
-                      <div 
-                        className="bg-quantum-green h-1.5 rounded-full transition-all duration-300"
-                        style={{ width: `${upload.progress}%` }}
-                      />
-                    </div>
+                    <>
+                      <div className="w-full bg-glass-border rounded-full h-1.5 mt-1">
+                        <div 
+                          className="bg-quantum-green h-1.5 rounded-full transition-all duration-300"
+                          style={{ width: `${upload.progress}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-quantum-green mt-1">
+                        {upload.progress < 30 ? "📄 Parsing..." : 
+                         upload.progress < 70 ? "🔐 Encrypting..." : 
+                         "📤 Uploading..."}
+                      </p>
+                    </>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
