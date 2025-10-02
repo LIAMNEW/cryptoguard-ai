@@ -14,5 +14,15 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    dedupe: ['react', 'react-dom'],
+  },
+  optimizeDeps: {
+    include: ['mlkem', 'react', 'react-dom'],
+    exclude: [],
+  },
+  build: {
+    commonjsOptions: {
+      include: [/mlkem/, /node_modules/],
+    },
   },
 }));
