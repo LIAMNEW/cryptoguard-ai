@@ -1,6 +1,7 @@
 import { Shield, Lock, Key, AlertTriangle, CheckCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { QuantumCryptoTest } from "@/components/security/QuantumCryptoTest";
 
 export default function SecurityInfo() {
   return (
@@ -18,6 +19,9 @@ export default function SecurityInfo() {
             Military-grade, post-quantum cryptography protecting your transaction data
           </p>
         </div>
+
+        {/* Quantum Crypto Test */}
+        <QuantumCryptoTest />
 
         {/* Threat Overview */}
         <Card className="glass-card p-6">
