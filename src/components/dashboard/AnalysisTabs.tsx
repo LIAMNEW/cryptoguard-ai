@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -61,58 +61,63 @@ export function AnalysisTabs() {
     }
   };
 
+  // Memoize the overview cards to prevent unnecessary re-renders
+  const OverviewCards = memo(() => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Card className="glass-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-quantum-green/20 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-quantum-green" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.averageRiskScore}</p>
+            <p className="text-sm text-muted-foreground">Risk Score</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="glass-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+            <AlertTriangle className="w-5 h-5 text-red-400" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.anomaliesFound}</p>
+            <p className="text-sm text-muted-foreground">Anomalies Found</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="glass-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+            <Activity className="w-5 h-5 text-blue-400" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.totalTransactions.toLocaleString()}</p>
+            <p className="text-sm text-muted-foreground">Transactions</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="glass-card p-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+            <Target className="w-5 h-5 text-yellow-400" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.highRiskTransactions}</p>
+            <p className="text-sm text-muted-foreground">High Risk</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  ));
+
   return (
     <div className="space-y-6">
       {/* Analysis Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="glass-card p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-quantum-green/20 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-quantum-green" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.averageRiskScore}</p>
-              <p className="text-sm text-muted-foreground">Risk Score</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="glass-card p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-red-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.anomaliesFound}</p>
-              <p className="text-sm text-muted-foreground">Anomalies Found</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="glass-card p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-              <Activity className="w-5 h-5 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.totalTransactions.toLocaleString()}</p>
-              <p className="text-sm text-muted-foreground">Transactions</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="glass-card p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
-              <Target className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.highRiskTransactions}</p>
-              <p className="text-sm text-muted-foreground">High Risk</p>
-            </div>
-          </div>
-        </Card>
-      </div>
+      <OverviewCards />
 
       {/* Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

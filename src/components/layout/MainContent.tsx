@@ -1,9 +1,11 @@
 import { FileUpload } from "@/components/upload/FileUpload";
 import { AnalysisTabs } from "@/components/dashboard/AnalysisTabs";
 import { SavedAnalysesDashboard } from "@/components/dashboard/SavedAnalysesDashboard";
+import { AuditLogsViewer } from "@/components/dashboard/AuditLogsViewer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, Globe } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface MainContentProps {
   activeSection: string;
@@ -32,6 +34,9 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
 
       case "saved":
         return <SavedAnalysesDashboard />;
+
+      case "audit":
+        return <AuditLogsViewer />;
 
       case "dashboard":
       case "network":
@@ -110,6 +115,16 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
               <Badge variant="outline" className="border-quantum-green text-quantum-green">
                 AI-Powered Analytics
               </Badge>
+            </div>
+            
+            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-4">
+              <Link to="/terms" className="hover:text-quantum-green transition-colors">
+                Terms of Service
+              </Link>
+              <span>•</span>
+              <Link to="/privacy" className="hover:text-quantum-green transition-colors">
+                Privacy Policy
+              </Link>
             </div>
           </Card>
         )}

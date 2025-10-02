@@ -9,7 +9,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Activity
+  Activity,
+  ScrollText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const navigation = [
   { id: "anomalies", label: "Anomalies", icon: AlertTriangle },
   { id: "reports", label: "Reports", icon: FileText },
   { id: "saved", label: "Saved Analyses", icon: Settings },
+  { id: "audit", label: "Audit Logs", icon: ScrollText },
 ];
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {

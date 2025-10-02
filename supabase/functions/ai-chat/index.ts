@@ -7,6 +7,51 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Rate limiting helper
+async function checkRateLimit(supabase: any, identifier: string): Promise<{ allowed: boolean; remaining: number }> {
+  const endpoint = 'ai-chat'
+  const maxRequests = 50
+  const windowMs = 60000
+  const windowStart = new Date(Date.now() - windowMs)
+  
+  try {
+    const { data: existing } = await supabase
+      .from('rate_limits')
+      .select('request_count, window_start')
+      .eq('identifier', identifier)
+      .eq('endpoint', endpoint)
+      .gte('window_start', windowStart.toISOString())
+      .maybeSingle()
+
+    if (existing && existing.request_count >= maxRequests) {
+      return { allowed: false, remaining: 0 }
+    }
+
+    if (existing) {
+      await supabase
+        .from('rate_limits')
+        .update({ request_count: existing.request_count + 1 })
+        .eq('identifier', identifier)
+        .eq('endpoint', endpoint)
+        .eq('window_start', existing.window_start)
+
+      return { allowed: true, remaining: maxRequests - existing.request_count - 1 }
+    }
+
+    await supabase.from('rate_limits').insert({
+      identifier,
+      endpoint,
+      request_count: 1,
+      window_start: new Date(),
+    })
+
+    return { allowed: true, remaining: maxRequests - 1 }
+  } catch (error) {
+    console.error('Rate limit check error:', error)
+    return { allowed: true, remaining: maxRequests }
+  }
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -14,6 +59,31 @@ serve(async (req) => {
   }
 
   try {
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+    
+    // Rate limiting check
+    const authHeader = req.headers.get('authorization')
+    const identifier = authHeader?.split(' ')[1] || req.headers.get('x-forwarded-for') || 'anonymous'
+    
+    const rateLimit = await checkRateLimit(supabaseAdmin, identifier)
+    if (!rateLimit.allowed) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Please try again in a minute.' }),
+        {
+          status: 429,
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json',
+            'X-RateLimit-Remaining': '0'
+          },
+        }
+      )
+    }
+
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     
     console.log('OpenAI API Key status:', openAIApiKey ? 'Present' : 'Missing');
@@ -27,29 +97,26 @@ serve(async (req) => {
     
     console.log('Received message:', message);
     
-    // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     // Get recent analysis data to provide context
     const [overviewResponse, anomaliesResponse, riskResponse] = await Promise.all([
       fetch(`${supabaseUrl}/functions/v1/get-analysis-data?type=overview`, {
         headers: {
-          'Authorization': `Bearer ${supabaseKey}`,
-          'apikey': supabaseKey
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'apikey': supabaseAnonKey
         }
       }),
       fetch(`${supabaseUrl}/functions/v1/get-analysis-data?type=anomalies`, {
         headers: {
-          'Authorization': `Bearer ${supabaseKey}`,
-          'apikey': supabaseKey
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'apikey': supabaseAnonKey
         }
       }),
       fetch(`${supabaseUrl}/functions/v1/get-analysis-data?type=risk`, {
         headers: {
-          'Authorization': `Bearer ${supabaseKey}`,
-          'apikey': supabaseKey
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'apikey': supabaseAnonKey
         }
       })
     ]);
@@ -126,7 +193,8 @@ When discussing specific patterns or anomalies, reference the actual data from t
         ...corsHeaders, 
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
+        'Connection': 'keep-alive',
+        'X-RateLimit-Remaining': String(rateLimit.remaining)
       },
     });
 

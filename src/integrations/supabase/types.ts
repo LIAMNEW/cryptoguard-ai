@@ -52,6 +52,42 @@ export type Database = {
           },
         ]
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       network_edges: {
         Row: {
           created_at: string
@@ -118,6 +154,75 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          identifier: string
+          request_count: number
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          identifier: string
+          request_count?: number
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          identifier?: string
+          request_count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
+      saved_analyses: {
+        Row: {
+          analysis_date: string
+          anomalies_count: number
+          average_risk_score: number | null
+          created_at: string
+          description: string | null
+          high_risk_count: number
+          id: string
+          name: string
+          snapshot_data: Json
+          total_transactions: number
+          updated_at: string
+        }
+        Insert: {
+          analysis_date?: string
+          anomalies_count?: number
+          average_risk_score?: number | null
+          created_at?: string
+          description?: string | null
+          high_risk_count?: number
+          id?: string
+          name: string
+          snapshot_data: Json
+          total_transactions?: number
+          updated_at?: string
+        }
+        Update: {
+          analysis_date?: string
+          anomalies_count?: number
+          average_risk_score?: number | null
+          created_at?: string
+          description?: string | null
+          high_risk_count?: number
+          id?: string
+          name?: string
+          snapshot_data?: Json
+          total_transactions?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
@@ -165,6 +270,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_audit_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       update_risk_levels: {
         Args: Record<PropertyKey, never>
         Returns: undefined
