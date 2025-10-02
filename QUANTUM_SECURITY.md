@@ -1,12 +1,21 @@
-# Quantum-Safe Security Implementation
+# Quantum-Ready Security Infrastructure
 
-## Overview
+## Current Implementation
 
-QuantumGuard AI implements post-quantum cryptography (PQC) to protect transaction data against attacks from both classical and quantum computers. This document explains the technical implementation.
+QuantumGuard AI uses a layered security approach with quantum-ready infrastructure:
 
-## Cryptographic Stack
+### Active Security Layers
 
-### 1. CRYSTALS-Kyber-1024 (ML-KEM)
+1. **TLS 1.3 Encryption (In Transit)**
+   - All data transmission uses HTTPS with TLS 1.3
+   - Modern cipher suites including ChaCha20-Poly1305 and AES-256-GCM
+   - Perfect Forward Secrecy (PFS) via ECDHE key exchange
+   - Protects data between client and server
+
+2. **Quantum-Ready Infrastructure**
+   - ML-KEM (CRYSTALS-Kyber) library integrated and ready
+   - Can be activated for end-to-end encryption when needed
+   - NIST FIPS 203 compliant post-quantum algorithms available
 - **Purpose**: Post-quantum key encapsulation mechanism
 - **Standard**: NIST FIPS 203 (ML-KEM)
 - **Security Level**: NIST Level 5 (highest available)

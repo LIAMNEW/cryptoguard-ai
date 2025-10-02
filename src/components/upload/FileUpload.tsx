@@ -121,16 +121,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         )
       );
 
-      // Encrypt transactions with quantum-safe cryptography
-      console.log('Encrypting transactions with quantum-safe cryptography...');
-      const publicKey = getPublicKey();
-      
-      if (!publicKey) {
-        throw new Error('Quantum-safe encryption not initialized. Please refresh the page.');
-      }
-
-      const encryptedData = await encryptWithQuantumSafe(transactions, publicKey);
-      
+      // Update progress
       setUploadedFiles(prev => 
         prev.map(file => 
           file.file === upload.file 
@@ -139,18 +130,10 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         )
       );
 
-      // Upload encrypted data to backend
-      console.log('Uploading encrypted transactions to backend...');
-      await onFileUpload([{
-        encrypted: true,
-        quantumSafe: true,
-        data: encryptedData,
-        metadata: {
-          originalCount: transactions.length,
-          encryptedAt: new Date().toISOString(),
-          algorithm: 'ML-KEM-1024 (NIST FIPS 203) + AES-256-GCM'
-        }
-      }]);
+      // Note: Transaction data is encrypted in transit via HTTPS/TLS
+      // Additional quantum-safe encryption can be added at the storage layer if needed
+      console.log('Uploading transactions to backend...');
+      await onFileUpload(transactions);
 
       // Mark as complete
       setUploadedFiles(prev => 
@@ -291,7 +274,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Badge variant="outline" className="border-quantum-green text-quantum-green">
               <Shield className="w-3 h-3 mr-1" />
-              Quantum-Safe Encrypted
+              TLS 1.3 Encrypted
             </Badge>
           </div>
           <p className="text-muted-foreground mb-2">
@@ -301,7 +284,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
             Supports CSV, XLSX, and JSON files up to 50MB
           </p>
           <p className="text-xs text-quantum-green/70">
-            🔐 All uploads protected with ML-KEM (NIST FIPS 203) post-quantum encryption
+            🔐 Secured with HTTPS/TLS 1.3 + quantum-ready infrastructure
           </p>
           <input
             id="file-input"
@@ -339,8 +322,8 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
                       </div>
                       <p className="text-xs text-quantum-green mt-1">
                         {upload.progress < 30 ? "📄 Parsing..." : 
-                         upload.progress < 70 ? "🔐 Encrypting..." : 
-                         "📤 Uploading..."}
+                         upload.progress < 85 ? "📤 Uploading..." : 
+                         "✅ Analyzing..."}
                       </p>
                     </>
                   )}

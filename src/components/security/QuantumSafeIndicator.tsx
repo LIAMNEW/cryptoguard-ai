@@ -20,14 +20,14 @@ export function QuantumSafeIndicator() {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <h4 className="text-lg font-semibold text-foreground">
-              Quantum-Safe Encryption Active
+              Quantum-Ready Infrastructure
             </h4>
             <Badge variant="outline" className="border-quantum-green text-quantum-green">
-              Protected
+              HTTPS + TLS 1.3
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            Your transaction data is protected with military-grade, quantum-resistant cryptography
+            Your data is protected with TLS 1.3 encryption in transit and quantum-safe algorithms ready for deployment
           </p>
           
           <div className="grid gap-3">
