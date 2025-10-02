@@ -148,7 +148,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         metadata: {
           originalCount: transactions.length,
           encryptedAt: new Date().toISOString(),
-          algorithm: 'CRYSTALS-Kyber-1024 + AES-256-GCM'
+          algorithm: 'ML-KEM-1024 (NIST FIPS 203) + AES-256-GCM'
         }
       }]);
 
@@ -301,7 +301,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
             Supports CSV, XLSX, and JSON files up to 50MB
           </p>
           <p className="text-xs text-quantum-green/70">
-            🔐 All uploads protected with CRYSTALS-Kyber post-quantum encryption
+            🔐 All uploads protected with ML-KEM (NIST FIPS 203) post-quantum encryption
           </p>
           <input
             id="file-input"

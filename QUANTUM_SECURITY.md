@@ -33,7 +33,7 @@ const { publicKey, privateKey } = await generateQuantumSafeKeyPair();
 ### Encryption Process
 1. **Key Encapsulation**: Use recipient's public key to generate shared secret
    ```typescript
-   const { ciphertext: encapsulatedKey, sharedSecret } = await kyber.encapsulate(publicKey);
+   const [encapsulatedKey, sharedSecret] = await mlkem.encap(publicKey);
    ```
 
 2. **Key Derivation**: Derive AES-256 key from shared secret
@@ -53,7 +53,7 @@ const { publicKey, privateKey } = await generateQuantumSafeKeyPair();
 ### Decryption Process
 1. **Key Decapsulation**: Use private key to recover shared secret
    ```typescript
-   const sharedSecret = await kyber.decapsulate(encapsulatedKey, privateKey);
+   const sharedSecret = await mlkem.decap(encapsulatedKey, privateKey);
    ```
 
 2. **Data Decryption**: Decrypt with recovered AES key
@@ -114,7 +114,7 @@ const { publicKey, privateKey } = await generateQuantumSafeKeyPair();
 - **Recommendation**: Suitable for all use cases
 
 ### Implementation
-- **Library**: `crystals-kyber` NPM package
+- **Library**: `mlkem` NPM package (v2.x implements ML-KEM / NIST FIPS 203)
 - **Web Crypto API**: Native browser cryptography
 - **Browser Support**: Modern browsers (Chrome, Firefox, Safari, Edge)
 

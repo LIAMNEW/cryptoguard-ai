@@ -1,4 +1,4 @@
-import { Kyber1024 } from 'crystals-kyber';
+import { MlKem1024 } from 'mlkem';
 
 /**
  * Quantum-Safe Cryptography Module
@@ -22,8 +22,8 @@ export interface KeyPair {
  * Generate a quantum-safe key pair using CRYSTALS-Kyber-1024
  */
 export async function generateQuantumSafeKeyPair(): Promise<KeyPair> {
-  const kyber = new Kyber1024();
-  const [publicKey, privateKey] = await kyber.generateKeyPair();
+  const mlkem = new MlKem1024();
+  const [publicKey, privateKey] = await mlkem.generateKeyPair();
   return { publicKey, privateKey };
 }
 
@@ -38,14 +38,14 @@ export async function encryptWithQuantumSafe(
   recipientPublicKey: Uint8Array
 ): Promise<EncryptedData> {
   try {
-    const kyber = new Kyber1024();
+    const mlkem = new MlKem1024();
     
     // Convert data to string if it's an object
     const dataString = typeof data === 'string' ? data : JSON.stringify(data);
     const dataBytes = new TextEncoder().encode(dataString);
 
     // Step 1: Key encapsulation - generate shared secret using recipient's public key
-    const { ciphertext: encapsulatedKey, sharedSecret } = await kyber.encapsulate(recipientPublicKey);
+    const [encapsulatedKey, sharedSecret] = await mlkem.encap(recipientPublicKey);
 
     // Step 2: Derive AES key from shared secret using Web Crypto API
     const aesKey = await crypto.subtle.importKey(
@@ -93,11 +93,11 @@ export async function decryptWithQuantumSafe(
   privateKey: Uint8Array
 ): Promise<string> {
   try {
-    const kyber = new Kyber1024();
+    const mlkem = new MlKem1024();
 
     // Step 1: Decapsulate to recover shared secret
-    const encapsulatedKey = base64ToArrayBuffer(encryptedData.encapsulatedKey);
-    const sharedSecret = await kyber.decapsulate(encapsulatedKey, privateKey);
+    const encapsulatedKey = new Uint8Array(base64ToArrayBuffer(encryptedData.encapsulatedKey));
+    const sharedSecret = await mlkem.decap(encapsulatedKey, privateKey);
 
     // Step 2: Derive AES key from shared secret
     const aesKey = await crypto.subtle.importKey(
