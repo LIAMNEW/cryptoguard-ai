@@ -25,6 +25,7 @@ const navigation = [
   { id: "network", label: "Network", icon: Network },
   { id: "anomalies", label: "Anomalies", icon: AlertTriangle },
   { id: "reports", label: "Reports", icon: FileText },
+  { id: "saved", label: "Saved Analyses", icon: Settings },
 ];
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {

@@ -1,5 +1,6 @@
 import { FileUpload } from "@/components/upload/FileUpload";
 import { AnalysisTabs } from "@/components/dashboard/AnalysisTabs";
+import { SavedAnalysesDashboard } from "@/components/dashboard/SavedAnalysesDashboard";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, Globe } from "lucide-react";
@@ -28,6 +29,9 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
             <FileUpload onFileUpload={onFileUpload} />
           </div>
         );
+
+      case "saved":
+        return <SavedAnalysesDashboard />;
 
       case "dashboard":
       case "network":

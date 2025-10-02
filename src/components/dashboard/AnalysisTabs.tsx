@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { NetworkGraph } from "./NetworkGraph";
 import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
+import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
   Network, 
@@ -376,27 +377,13 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="export" className="space-y-4 animate-fade-in">
-          <Card className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Export & Reports</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Button className="bg-quantum-green hover:bg-quantum-green/90 text-background">
-                <Download className="w-4 h-4 mr-2" />
-                Download PDF Report
-              </Button>
-              <Button variant="outline" className="border-quantum-green text-quantum-green hover:bg-quantum-green/10">
-                <Download className="w-4 h-4 mr-2" />
-                Export CSV Data
-              </Button>
-              <Button variant="outline" className="border-quantum-green text-quantum-green hover:bg-quantum-green/10">
-                <Download className="w-4 h-4 mr-2" />
-                Export JSON Data
-              </Button>
-              <Button variant="outline" className="border-quantum-green text-quantum-green hover:bg-quantum-green/10">
-                <Download className="w-4 h-4 mr-2" />
-                Save Analysis Session
-              </Button>
-            </div>
-          </Card>
+          <ReportGenerator 
+            analysisData={analysisData}
+            anomalies={anomalies}
+            riskData={riskData}
+            networkData={networkData}
+            timelineData={timelineData}
+          />
         </TabsContent>
       </Tabs>
     </div>

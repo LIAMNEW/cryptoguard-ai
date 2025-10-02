@@ -2,3 +2,6 @@ project_id = "zytdnqlnsahydanaeupc"
 
 [functions.ai-chat]
 verify_jwt = false
+
+[functions.send-risk-alert]
+verify_jwt = false
