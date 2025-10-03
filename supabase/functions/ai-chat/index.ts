@@ -155,7 +155,14 @@ ${analysisContext}
 
 Provide detailed, technical insights about blockchain forensics, AUSTRAC compliance, money laundering patterns, and suspicious transaction behaviors. Be precise and professional in your responses. Use the current analysis data to provide specific insights about the user's transaction data.
 
-When discussing specific patterns or anomalies, reference the actual data from the current analysis. Provide actionable recommendations for compliance and risk mitigation.`
+When discussing specific patterns or anomalies, reference the actual data from the current analysis. Provide actionable recommendations for compliance and risk mitigation.
+
+FORMATTING RULES:
+- Do NOT use markdown formatting (no asterisks, no bold, no italics)
+- Use plain text only
+- Use numbered lists (1., 2., 3.) for main points
+- Use indented dashes (-) for sub-points
+- Keep responses clear and well-structured without special formatting`
       },
       ...conversationHistory,
       {
