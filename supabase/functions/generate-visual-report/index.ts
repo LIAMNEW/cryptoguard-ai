@@ -45,9 +45,7 @@ serve(async (req) => {
       model: 'gpt-image-1',
       prompt: prompt,
       n: 1,
-      size: '1024x1024',
-      quality: 'high',
-      response_format: 'b64_json'
+      size: '1024x1024'
     };
     
     console.log('OpenAI request body:', JSON.stringify(requestBody));
@@ -70,17 +68,17 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    console.log('OpenAI response data keys:', Object.keys(data));
+    console.log('OpenAI response received, checking for image URL');
     
-    const imageBase64 = data.data?.[0]?.b64_json;
+    // gpt-image-1 returns url, not b64_json
+    const imageUrl = data.data?.[0]?.url;
 
-    if (!imageBase64) {
-      console.error('No image in response, full data:', JSON.stringify(data));
-      throw new Error('No image generated - response missing b64_json data');
+    if (!imageUrl) {
+      console.error('No image URL in response, full data:', JSON.stringify(data));
+      throw new Error('No image generated - response missing url');
     }
 
-    const imageUrl = `data:image/png;base64,${imageBase64}`;
-    console.log('Visual report generated successfully, image size:', imageBase64.length, 'bytes');
+    console.log('Visual report generated successfully, image URL:', imageUrl);
 
     return new Response(
       JSON.stringify({ 
