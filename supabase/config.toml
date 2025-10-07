@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.voice-chat]
 verify_jwt = false
+
+[functions.generate-visual-report]
+verify_jwt = false
+
+[functions.analyze-document]
+verify_jwt = false

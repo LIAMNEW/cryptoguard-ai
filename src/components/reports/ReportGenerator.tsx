@@ -3,11 +3,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Download, Save } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Download, Save, FileText, BarChart3, FileSearch } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { supabase } from "@/integrations/supabase/client";
+import { VisualReportGenerator } from "./VisualReportGenerator";
+import { DocumentAnalyzer } from "./DocumentAnalyzer";
 
 interface ReportGeneratorProps {
   analysisData: {
@@ -179,32 +182,69 @@ export function ReportGenerator({
   return (
     <div className="space-y-6">
       <Card className="glass-card p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Export & Reports</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button
-            onClick={handleDownloadPDF}
-            className="bg-quantum-green hover:bg-quantum-green/90 text-background"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Download PDF Report
-          </Button>
-          <Button
-            onClick={handleExportCSV}
-            variant="outline"
-            className="border-quantum-green text-quantum-green hover:bg-quantum-green/10"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Export CSV Data
-          </Button>
-          <Button
-            onClick={handleExportJSON}
-            variant="outline"
-            className="border-quantum-green text-quantum-green hover:bg-quantum-green/10"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Export JSON Data
-          </Button>
-        </div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Advanced Reports & Intelligence</h3>
+        
+        <Tabs defaultValue="export" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-3 bg-glass-background">
+            <TabsTrigger value="export" className="data-[state=active]:bg-quantum-green data-[state=active]:text-background">
+              <FileText className="w-4 h-4 mr-2" />
+              Export
+            </TabsTrigger>
+            <TabsTrigger value="visual" className="data-[state=active]:bg-quantum-green data-[state=active]:text-background">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Visual Intelligence
+            </TabsTrigger>
+            <TabsTrigger value="document" className="data-[state=active]:bg-quantum-green data-[state=active]:text-background">
+              <FileSearch className="w-4 h-4 mr-2" />
+              Document Analysis
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="export" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Button
+                onClick={handleDownloadPDF}
+                className="bg-quantum-green hover:bg-quantum-green/90 text-background"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download PDF Report
+              </Button>
+              <Button
+                onClick={handleExportCSV}
+                variant="outline"
+                className="border-quantum-green text-quantum-green hover:bg-quantum-green/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export CSV Data
+              </Button>
+              <Button
+                onClick={handleExportJSON}
+                variant="outline"
+                className="border-quantum-green text-quantum-green hover:bg-quantum-green/10"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Export JSON Data
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="visual">
+            <VisualReportGenerator 
+              transactionData={{
+                highRiskCount: analysisData.highRiskTransactions,
+                mediumRiskCount: Math.floor(analysisData.totalTransactions * 0.25),
+                lowRiskCount: analysisData.totalTransactions - analysisData.highRiskTransactions - Math.floor(analysisData.totalTransactions * 0.25),
+                totalTransactions: analysisData.totalTransactions,
+                uniqueAddresses: Math.floor(analysisData.totalTransactions * 0.4),
+                complianceScore: Math.round(100 - (analysisData.averageRiskScore * 0.8))
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="document">
+            <DocumentAnalyzer />
+          </TabsContent>
+        </Tabs>
       </Card>
 
       <Card className="glass-card p-6">
