@@ -350,35 +350,18 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4 animate-fade-in">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Advanced Analytics</h3>
-              <div className="h-64 bg-glass-background rounded-lg border border-glass-border flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <BarChart3 className="w-16 h-16 text-quantum-green mx-auto animate-pulse" />
-                  <p className="text-muted-foreground">Advanced analytics charts will render here</p>
-                </div>
+          <Card className="glass-card p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <BarChart3 className="w-6 h-6 text-quantum-green" />
+              <div>
+                <h3 className="text-lg font-semibold text-foreground">AI-Powered Analytics</h3>
+                <p className="text-sm text-muted-foreground">Generate custom graphs instantly with AI</p>
               </div>
-            </Card>
-
-            <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Clustering Analysis</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Cluster 1: Regular Activity</span>
-                  <span className="text-sm text-quantum-green">85% (1,315 tx)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Cluster 2: Suspicious Patterns</span>
-                  <span className="text-sm text-yellow-400">10% (155 tx)</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Cluster 3: High Risk</span>
-                  <span className="text-sm text-red-400">5% (77 tx)</span>
-                </div>
-              </div>
-            </Card>
-          </div>
+            </div>
+            <p className="text-muted-foreground text-center py-8">
+              Switch to the <span className="text-quantum-green font-semibold">Export</span> tab to access the AI Analytics Graph Generator
+            </p>
+          </Card>
         </TabsContent>
 
         <TabsContent value="export" className="space-y-4 animate-fade-in">

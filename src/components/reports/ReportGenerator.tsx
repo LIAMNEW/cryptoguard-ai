@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { supabase } from "@/integrations/supabase/client";
-import { VisualReportGenerator } from "./VisualReportGenerator";
+import { AIGraphGenerator } from "./AIGraphGenerator";
 import { DocumentAnalyzer } from "./DocumentAnalyzer";
 
 interface ReportGeneratorProps {
@@ -229,14 +229,15 @@ export function ReportGenerator({
           </TabsContent>
 
           <TabsContent value="visual">
-            <VisualReportGenerator 
+            <AIGraphGenerator 
               transactionData={{
-                highRiskCount: analysisData.highRiskTransactions,
-                mediumRiskCount: Math.floor(analysisData.totalTransactions * 0.25),
-                lowRiskCount: analysisData.totalTransactions - analysisData.highRiskTransactions - Math.floor(analysisData.totalTransactions * 0.25),
                 totalTransactions: analysisData.totalTransactions,
-                uniqueAddresses: Math.floor(analysisData.totalTransactions * 0.4),
-                complianceScore: Math.round(100 - (analysisData.averageRiskScore * 0.8))
+                averageRiskScore: analysisData.averageRiskScore,
+                anomaliesFound: analysisData.anomaliesFound,
+                highRiskTransactions: analysisData.highRiskTransactions,
+                lowRisk: analysisData.totalTransactions - analysisData.highRiskTransactions - Math.floor(analysisData.totalTransactions * 0.25),
+                mediumRisk: Math.floor(analysisData.totalTransactions * 0.25),
+                highRisk: analysisData.highRiskTransactions
               }}
             />
           </TabsContent>
