@@ -41,37 +41,46 @@ serve(async (req) => {
 
     console.log('Generating visual report with OpenAI, prompt:', prompt);
 
+    const requestBody = {
+      model: 'gpt-image-1',
+      prompt: prompt,
+      n: 1,
+      size: '1024x1024',
+      quality: 'high',
+      response_format: 'b64_json'
+    };
+    
+    console.log('OpenAI request body:', JSON.stringify(requestBody));
+
     const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'gpt-image-1',
-        prompt: prompt,
-        n: 1,
-        size: '1024x1024',
-        quality: 'high',
-        response_format: 'b64_json'
-      })
+      body: JSON.stringify(requestBody)
     });
 
+    console.log('OpenAI response status:', response.status);
+    
     if (!response.ok) {
       const error = await response.text();
-      console.error('OpenAI API error:', error);
-      throw new Error(`Failed to generate visual: ${error}`);
+      console.error('OpenAI API error response:', error);
+      throw new Error(`OpenAI API error (${response.status}): ${error}`);
     }
 
     const data = await response.json();
+    console.log('OpenAI response data keys:', Object.keys(data));
+    
     const imageBase64 = data.data?.[0]?.b64_json;
 
     if (!imageBase64) {
-      throw new Error('No image generated');
+      console.error('No image in response, full data:', JSON.stringify(data));
+      throw new Error('No image generated - response missing b64_json data');
     }
 
     const imageUrl = `data:image/png;base64,${imageBase64}`;
-    console.log('Visual report generated successfully');
+    console.log('Visual report generated successfully, image size:', imageBase64.length, 'bytes');
 
     return new Response(
       JSON.stringify({ 
