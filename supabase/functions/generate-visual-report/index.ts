@@ -14,9 +14,9 @@ serve(async (req) => {
   try {
     const { reportData, reportType } = await req.json();
     
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-    if (!OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY not configured');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY not configured');
     }
 
     // Create a descriptive prompt for the visual report
@@ -39,51 +39,51 @@ serve(async (req) => {
       16:9 aspect ratio.`;
     }
 
-    console.log('Generating visual report with OpenAI, prompt:', prompt);
+    console.log('Generating visual report with Lovable AI, prompt:', prompt);
 
-    const requestBody = {
-      model: 'gpt-image-1',
-      prompt: prompt,
-      n: 1,
-      size: '1024x1024'
-    };
-    
-    console.log('OpenAI request body:', JSON.stringify(requestBody));
-
-    const response = await fetch('https://api.openai.com/v1/images/generations', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash-image-preview',
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        modalities: ['image', 'text']
+      })
     });
 
-    console.log('OpenAI response status:', response.status);
+    console.log('Lovable AI response status:', response.status);
     
     if (!response.ok) {
       const error = await response.text();
-      console.error('OpenAI API error response:', error);
-      throw new Error(`OpenAI API error (${response.status}): ${error}`);
+      console.error('Lovable AI API error response:', error);
+      throw new Error(`Lovable AI API error (${response.status}): ${error}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI response received, checking for image URL');
+    console.log('Lovable AI response received, checking for image');
     
-    // gpt-image-1 returns url, not b64_json
-    const imageUrl = data.data?.[0]?.url;
+    // Extract base64 image from response
+    const imageBase64 = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
 
-    if (!imageUrl) {
-      console.error('No image URL in response, full data:', JSON.stringify(data));
-      throw new Error('No image generated - response missing url');
+    if (!imageBase64) {
+      console.error('No image in response, full data:', JSON.stringify(data));
+      throw new Error('No image generated - response missing image data');
     }
 
-    console.log('Visual report generated successfully, image URL:', imageUrl);
+    console.log('Visual report generated successfully');
 
     return new Response(
       JSON.stringify({ 
         success: true,
-        imageUrl,
+        imageUrl: imageBase64,
         reportType 
       }),
       {
