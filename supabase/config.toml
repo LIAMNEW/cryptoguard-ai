@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.send-risk-alert]
 verify_jwt = false
+
+[functions.fetch-blockchain-data]
+verify_jwt = false
