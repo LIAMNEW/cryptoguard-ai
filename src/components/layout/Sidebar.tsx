@@ -24,7 +24,7 @@ interface SidebarProps {
 const navigation = [
   { id: "upload", label: "Upload Data", icon: Upload },
   { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-  { id: "blockchain", label: "Live Blockchain Address Analysis", icon: Activity },
+  { id: "blockchain", label: "Live Blockchain Analysis", icon: Activity },
   { id: "network", label: "Network", icon: Network },
   { id: "anomalies", label: "Anomalies", icon: AlertTriangle },
   { id: "reports", label: "Reports", icon: FileText },
