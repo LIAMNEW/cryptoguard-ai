@@ -77,27 +77,6 @@ const Index = () => {
               <RiskAlertMonitor />
             </div>
           </div>
-
-          {/* Blockchain Integration Panel */}
-          <div className="p-4 border-b border-border bg-card/30 backdrop-blur">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <BlockchainSourceManager />
-              <div className="md:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Cross-Chain Analysis</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Pull transactions directly from Ethereum and Bitcoin networks. 
-                      All fetched transactions are automatically analyzed for risks and anomalies 
-                      using the AI-powered detection system.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
           
           <MainContent
             activeSection={activeSection}
