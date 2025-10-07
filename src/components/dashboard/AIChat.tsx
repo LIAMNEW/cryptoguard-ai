@@ -3,8 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Brain, Send, User, Bot, Loader2 } from "lucide-react";
+import { Brain, Send, User, Bot, Loader2, Mic, MicOff, Volume2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { AudioRecorder, encodeAudioForAPI, playAudioData, clearAudioQueue } from "@/utils/voiceChat";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -14,6 +16,7 @@ interface Message {
 }
 
 export function AIChat() {
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -24,7 +27,14 @@ export function AIChat() {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isVoiceMode, setIsVoiceMode] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+  const recorderRef = useRef<AudioRecorder | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const currentTranscriptRef = useRef<string>('');
 
   useEffect(() => {
     // Scroll to bottom when new messages are added
@@ -32,6 +42,162 @@ export function AIChat() {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
   }, [messages]);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup on unmount
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+      if (recorderRef.current) {
+        recorderRef.current.stop();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
+
+  const startVoiceChat = async () => {
+    try {
+      // Request microphone permission first
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Initialize audio context
+      audioContextRef.current = new AudioContext({ sampleRate: 24000 });
+
+      // Connect to WebSocket edge function
+      const wsUrl = `wss://zytdnqlnsahydanaeupc.supabase.co/functions/v1/voice-chat`;
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
+
+      ws.onopen = async () => {
+        console.log('Voice chat WebSocket connected');
+        setIsVoiceMode(true);
+        
+        toast({
+          title: "Voice mode activated",
+          description: "You can now speak to QuantumGuard AI",
+        });
+
+        // Wait for session.created event before starting recording
+        setTimeout(async () => {
+          // Start recording and streaming audio
+          recorderRef.current = new AudioRecorder((audioData) => {
+            if (ws.readyState === WebSocket.OPEN) {
+              const base64Audio = encodeAudioForAPI(audioData);
+              ws.send(JSON.stringify({
+                type: 'input_audio_buffer.append',
+                audio: base64Audio
+              }));
+            }
+          });
+
+          await recorderRef.current.start();
+          setIsRecording(true);
+        }, 1000);
+      };
+
+      ws.onmessage = async (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log('Voice chat event:', data.type);
+
+          if (data.type === 'response.audio.delta' && data.delta) {
+            // Play audio response
+            setIsSpeaking(true);
+            const binaryString = atob(data.delta);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            if (audioContextRef.current) {
+              await playAudioData(audioContextRef.current, bytes);
+            }
+          } else if (data.type === 'response.audio.done') {
+            setIsSpeaking(false);
+          } else if (data.type === 'conversation.item.input_audio_transcription.completed') {
+            // User's speech transcription
+            const transcript = data.transcript;
+            if (transcript) {
+              setMessages(prev => [...prev, {
+                id: Date.now().toString(),
+                role: 'user',
+                content: transcript,
+                timestamp: new Date()
+              }]);
+            }
+          } else if (data.type === 'response.audio_transcript.delta') {
+            // AI's response transcript (build up)
+            currentTranscriptRef.current += data.delta;
+          } else if (data.type === 'response.audio_transcript.done') {
+            // Complete AI transcript
+            if (currentTranscriptRef.current) {
+              setMessages(prev => [...prev, {
+                id: Date.now().toString(),
+                role: 'assistant',
+                content: currentTranscriptRef.current,
+                timestamp: new Date()
+              }]);
+              currentTranscriptRef.current = '';
+            }
+          } else if (data.type === 'error') {
+            console.error('Voice chat error:', data);
+            toast({
+              title: "Voice error",
+              description: data.error?.message || "An error occurred",
+              variant: "destructive"
+            });
+          }
+        } catch (error) {
+          console.error('Error processing voice message:', error);
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        toast({
+          title: "Connection error",
+          description: "Failed to connect to voice service",
+          variant: "destructive"
+        });
+        stopVoiceChat();
+      };
+
+      ws.onclose = () => {
+        console.log('Voice chat WebSocket closed');
+        stopVoiceChat();
+      };
+
+    } catch (error) {
+      console.error('Error starting voice chat:', error);
+      toast({
+        title: "Microphone access denied",
+        description: "Please allow microphone access to use voice features",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const stopVoiceChat = () => {
+    if (recorderRef.current) {
+      recorderRef.current.stop();
+      recorderRef.current = null;
+    }
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    clearAudioQueue();
+    setIsVoiceMode(false);
+    setIsRecording(false);
+    setIsSpeaking(false);
+    currentTranscriptRef.current = '';
+  };
 
   const sendMessage = async (message: string) => {
     if (!message.trim() || isLoading) return;
@@ -217,26 +383,60 @@ export function AIChat() {
         </div>
       </ScrollArea>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
-        <Input
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask about transaction patterns, compliance, or anomalies..."
-          disabled={isLoading}
-          className="flex-1 bg-glass-background border-glass-border focus:border-quantum-green"
-        />
+      <div className="flex gap-2 mt-4">
+        {!isVoiceMode ? (
+          <form onSubmit={handleSubmit} className="flex gap-2 flex-1">
+            <Input
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask about transaction patterns, compliance, or anomalies..."
+              disabled={isLoading}
+              className="flex-1 bg-glass-background border-glass-border focus:border-quantum-green"
+            />
+            <Button
+              type="submit"
+              disabled={isLoading || !inputMessage.trim()}
+              className="bg-quantum-green hover:bg-quantum-green/90 text-background"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
+          </form>
+        ) : (
+          <div className="flex-1 flex items-center justify-center gap-4 p-4 bg-glass-background border border-glass-border rounded-lg">
+            <div className="flex items-center gap-2">
+              {isRecording && (
+                <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+              )}
+              {isSpeaking && (
+                <Volume2 className="w-5 h-5 text-quantum-green animate-pulse" />
+              )}
+              <span className="text-sm text-foreground">
+                {isRecording && !isSpeaking && "Listening..."}
+                {isSpeaking && "AI Speaking..."}
+                {!isRecording && !isSpeaking && "Voice mode active"}
+              </span>
+            </div>
+          </div>
+        )}
+        
         <Button
-          type="submit"
-          disabled={isLoading || !inputMessage.trim()}
-          className="bg-quantum-green hover:bg-quantum-green/90 text-background"
+          type="button"
+          onClick={isVoiceMode ? stopVoiceChat : startVoiceChat}
+          className={isVoiceMode 
+            ? "bg-red-500 hover:bg-red-600 text-white" 
+            : "bg-quantum-green hover:bg-quantum-green/90 text-background"
+          }
         >
-          <Send className="w-4 h-4" />
+          {isVoiceMode ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
         </Button>
-      </form>
+      </div>
 
       <div className="mt-2 text-xs text-muted-foreground">
-        Ask about transaction analysis, money laundering patterns, compliance requirements, or specific anomalies in your data.
+        {isVoiceMode 
+          ? "Voice mode: Speak naturally or try commands like 'Show me high-risk transactions' or 'Generate a report'"
+          : "Type or click the microphone for voice queries. Ask about transaction analysis, patterns, compliance, or anomalies."
+        }
       </div>
     </Card>
   );

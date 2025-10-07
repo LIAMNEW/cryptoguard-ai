@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.fetch-blockchain-data]
 verify_jwt = false
+
+[functions.voice-chat]
+verify_jwt = false
