@@ -5,6 +5,9 @@ import { uploadTransactions } from "@/lib/supabase";
 import { logAuditEvent } from "@/lib/auditLog";
 import { initializeQuantumSafeKeys } from "@/lib/quantumCrypto";
 import { toast } from "sonner";
+import { TeamPresence } from "@/components/realtime/TeamPresence";
+import { LiveTransactionFeed } from "@/components/realtime/LiveTransactionFeed";
+import { RiskAlertMonitor } from "@/components/realtime/RiskAlertMonitor";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("upload");
@@ -63,11 +66,22 @@ const Index = () => {
           activeSection={activeSection} 
           onSectionChange={setActiveSection} 
         />
-        <MainContent 
-          activeSection={activeSection}
-          hasData={hasData}
-          onFileUpload={handleFileUpload}
-        />
+        <div className="flex-1 flex flex-col">
+          {/* Real-time Collaboration Panel */}
+          <div className="p-4 border-b border-border bg-card/30 backdrop-blur">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <TeamPresence />
+              <LiveTransactionFeed />
+              <RiskAlertMonitor />
+            </div>
+          </div>
+          
+          <MainContent 
+            activeSection={activeSection}
+            hasData={hasData}
+            onFileUpload={handleFileUpload}
+          />
+        </div>
       </div>
     </div>
   );
