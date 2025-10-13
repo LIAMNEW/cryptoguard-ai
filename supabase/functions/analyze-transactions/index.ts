@@ -25,6 +25,9 @@ interface AnalysisResult {
   anomaly_detected: boolean;
   anomaly_type?: string;
   network_cluster?: string;
+  austrac_score?: number;
+  general_risk_score?: number;
+  risk_level?: string;
 }
 
 serve(async (req) => {
@@ -100,56 +103,57 @@ serve(async (req) => {
 })
 
 async function analyzeTransaction(transaction: Transaction, supabase: any): Promise<AnalysisResult> {
-  // Risk scoring algorithm
-  let riskScore = 0
+  // ============ AUSTRAC COMPLIANCE RISK SCORE (0-100%) ============
+  let austracScore = 0
   let anomalyDetected = false
   let anomalyType = ''
+  const anomalies: string[] = []
 
-  // Get dataset statistics for dynamic thresholds
-  const { data: allTransactions } = await supabase
-    .from('transactions')
-    .select('amount, timestamp')
-    .order('created_at', { ascending: false })
-    .limit(1000) // Get recent transactions for context
-
-  let avgAmount = 0
-  let maxAmount = 0
-  if (allTransactions && allTransactions.length > 0) {
-    avgAmount = allTransactions.reduce((sum: number, tx: any) => sum + Number(tx.amount), 0) / allTransactions.length
-    maxAmount = Math.max(...allTransactions.map((tx: any) => Number(tx.amount)))
+  // 1. TRANSACTION AMOUNT (Critical Indicator)
+  const amount = Number(transaction.amount)
+  if (amount > 100000) {
+    austracScore += 40 // Critical
+    anomalies.push('critical_amount')
+  } else if (amount > 50000) {
+    austracScore += 30 // Very High
+    anomalies.push('very_high_amount')
+  } else if (amount > 10000) {
+    austracScore += 20 // High - Reportable threshold
+    anomalies.push('high_amount')
   }
 
-  // Dynamic amount-based risk assessment
-  const amountRatio = transaction.amount / (avgAmount || 1000)
-  if (amountRatio > 5) { // 5x above average
-    riskScore += 40
-    anomalyDetected = true
-    anomalyType = 'high_value'
-  } else if (amountRatio > 3) { // 3x above average
-    riskScore += 25
-    anomalyDetected = true
-    anomalyType = 'unusual_amount'
-  } else if (amountRatio > 2) { // 2x above average
-    riskScore += 15
+  // 2. INTERNATIONAL TRANSFERS (if over $1,000)
+  // Note: Would need country data in real implementation
+  if (amount > 1000) {
+    // In real implementation, check if to_address country is international
+    // For now, use address pattern heuristics
+    const isInternational = transaction.to_address.startsWith('0x') && transaction.from_address.startsWith('0x')
+    if (isInternational && amount > 1000) {
+      austracScore += 15
+      anomalies.push('international_transfer')
+    }
   }
 
-  // Round amounts detection (potential structuring)
-  const isRoundAmount = transaction.amount % 1000 === 0 && transaction.amount >= 10000
+  // 3. HIGH-RISK COUNTRIES (would need geolocation data)
+  // Placeholder for future enhancement with real country detection
+  // FATF Blacklist: +40, Sanctioned: +35, Tax Havens: +20
+
+  // 4. SUSPICIOUS PATTERNS
+  // Round amounts (potential structuring)
+  const isRoundAmount = amount % 1000 === 0 && amount >= 5000
   if (isRoundAmount) {
-    riskScore += 10
-    anomalyDetected = true
-    anomalyType = anomalyType ? `${anomalyType},round_amount` : 'round_amount'
+    austracScore += 15
+    anomalies.push('round_amount_structuring')
   }
 
-  // Time-based analysis (unusual hours)
+  // Unusual transaction times (10pm-6am)
   const hour = new Date(transaction.timestamp).getUTCHours()
-  if (hour < 6 || hour > 22) {
-    riskScore += 10
-    anomalyDetected = true
-    anomalyType = anomalyType ? `${anomalyType},unusual_time` : 'unusual_time'
+  if (hour >= 22 || hour < 6) {
+    austracScore += 10
+    anomalies.push('unusual_time')
   }
 
-  // Frequency analysis - check for rapid transactions from same address
+  // High velocity (many transactions quickly)
   const { data: recentTxs } = await supabase
     .from('transactions')
     .select('*')
@@ -158,14 +162,58 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
     .order('timestamp', { ascending: false })
 
   if (recentTxs && recentTxs.length > 5) {
-    riskScore += 30
-    anomalyDetected = true
-    anomalyType = anomalyType ? `${anomalyType},rapid_transactions` : 'rapid_transactions'
-  } else if (recentTxs && recentTxs.length > 3) {
-    riskScore += 15
+    austracScore += 20
+    anomalies.push('high_velocity')
   }
 
-  // Network analysis - check for circular transactions
+  // 5. IDENTITY ISSUES (Placeholder - would need KYC data)
+  // Missing verification: +25, Failed checks: +25
+
+  // 6. SUSPICIOUS ACTIVITY
+  // Structuring detection - multiple transactions just under reporting threshold
+  const { data: structuringCheck } = await supabase
+    .from('transactions')
+    .select('amount')
+    .eq('from_address', transaction.from_address)
+    .gte('timestamp', new Date(Date.now() - 86400000).toISOString()) // Last 24 hours
+    .gte('amount', 9000)
+    .lt('amount', 10000)
+
+  if (structuringCheck && structuringCheck.length >= 3) {
+    austracScore += 25
+    anomalies.push('structuring_detected')
+  }
+
+  // ============ GENERAL BLOCKCHAIN RISK ASSESSMENT (0.0-1.0) ============
+  let generalRisk = 0.0
+
+  // Get dataset statistics for dynamic thresholds
+  const { data: allTransactions } = await supabase
+    .from('transactions')
+    .select('amount, timestamp')
+    .order('created_at', { ascending: false })
+    .limit(1000)
+
+  let avgAmount = 0
+  let stdDev = 0
+  if (allTransactions && allTransactions.length > 0) {
+    avgAmount = allTransactions.reduce((sum: number, tx: any) => sum + Number(tx.amount), 0) / allTransactions.length
+    
+    // Calculate standard deviation
+    const variance = allTransactions.reduce((sum: number, tx: any) => {
+      return sum + Math.pow(Number(tx.amount) - avgAmount, 2)
+    }, 0) / allTransactions.length
+    stdDev = Math.sqrt(variance)
+  }
+
+  // 1. UNUSUAL TRANSACTION AMOUNTS (0.2 points)
+  // 3+ standard deviations from average
+  if (stdDev > 0 && Math.abs(amount - avgAmount) > (3 * stdDev)) {
+    generalRisk += 0.2
+    anomalies.push('statistical_anomaly')
+  }
+
+  // 2. CIRCULAR TRANSACTIONS (0.15 points)
   const { data: circularCheck } = await supabase
     .from('transactions')
     .select('*')
@@ -174,48 +222,83 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
     .gte('timestamp', new Date(Date.now() - 86400000).toISOString()) // Last 24 hours
 
   if (circularCheck && circularCheck.length > 0) {
-    riskScore += 25
-    anomalyDetected = true
-    anomalyType = anomalyType ? `${anomalyType},circular` : 'circular'
+    generalRisk += 0.15
+    anomalies.push('circular_transaction')
   }
 
-  // Chain detection - check for immediate subsequent transactions
+  // 3. HIGH FREQUENCY TRANSACTIONS (0.25 points)
+  if (recentTxs && recentTxs.length > 10) {
+    generalRisk += 0.25
+    anomalies.push('high_frequency')
+  }
+
+  // 4. NEW ADDRESS WITH HIGH VALUE (0.3 points)
+  const { data: addressHistory } = await supabase
+    .from('transactions')
+    .select('*')
+    .or(`from_address.eq.${transaction.from_address},to_address.eq.${transaction.from_address}`)
+    .order('timestamp', { ascending: true })
+    .limit(5)
+
+  const isNewAddress = !addressHistory || addressHistory.length <= 2
+  const isHighValue = amount > (avgAmount * 3)
+  if (isNewAddress && isHighValue) {
+    generalRisk += 0.3
+    anomalies.push('new_address_high_value')
+  }
+
+  // 5. CHAIN TRANSACTIONS (Network anomaly)
   const { data: chainTxs } = await supabase
     .from('transactions')
     .select('*')
     .eq('from_address', transaction.to_address)
-    .gte('timestamp', new Date(new Date(transaction.timestamp).getTime() + 60000).toISOString()) // Within 1 minute after
-    .lte('timestamp', new Date(new Date(transaction.timestamp).getTime() + 600000).toISOString()) // Within 10 minutes after
+    .gte('timestamp', new Date(new Date(transaction.timestamp).getTime() + 60000).toISOString())
+    .lte('timestamp', new Date(new Date(transaction.timestamp).getTime() + 600000).toISOString())
 
   if (chainTxs && chainTxs.length > 2) {
-    riskScore += 20
-    anomalyDetected = true
-    anomalyType = anomalyType ? `${anomalyType},chain_transactions` : 'chain_transactions'
+    generalRisk += 0.2
+    anomalies.push('chain_transaction')
   }
 
-  // Velocity analysis - multiple large transactions in short time
-  const { data: velocityCheck } = await supabase
-    .from('transactions')
-    .select('amount')
-    .eq('from_address', transaction.from_address)
-    .gte('timestamp', new Date(Date.now() - 1800000).toISOString()) // Last 30 minutes
-    .gt('amount', avgAmount * 2) // Large transactions only
+  // Cap general risk at 1.0
+  generalRisk = Math.min(generalRisk, 1.0)
 
-  if (velocityCheck && velocityCheck.length > 2) {
-    riskScore += 25
-    anomalyDetected = true
-    anomalyType = anomalyType ? `${anomalyType},high_velocity` : 'high_velocity'
+  // ============ COMBINED RISK SCORE ============
+  // Primary score is AUSTRAC (0-100), General Risk provides additional context
+  austracScore = Math.min(austracScore, 100)
+  
+  // Determine final risk score (use AUSTRAC as primary)
+  const finalRiskScore = austracScore
+  
+  // Determine risk level
+  let riskLevel = ''
+  if (finalRiskScore >= 80) {
+    riskLevel = 'CRITICAL'
+  } else if (finalRiskScore >= 60) {
+    riskLevel = 'VERY_HIGH'
+  } else if (finalRiskScore >= 40) {
+    riskLevel = 'HIGH'
+  } else if (finalRiskScore >= 20) {
+    riskLevel = 'MEDIUM'
+  } else {
+    riskLevel = 'LOW'
   }
 
-  // Cap risk score at 100
-  riskScore = Math.min(riskScore, 100)
+  // Mark as anomaly if any risk detected
+  anomalyDetected = anomalies.length > 0
+  anomalyType = anomalies.join(',')
+
+  console.log(`Transaction ${transaction.transaction_id}: AUSTRAC=${austracScore}%, General=${(generalRisk * 100).toFixed(1)}%, Level=${riskLevel}`)
 
   return {
     transaction_id: transaction.id,
-    risk_score: riskScore,
+    risk_score: finalRiskScore,
     anomaly_detected: anomalyDetected,
     anomaly_type: anomalyType || undefined,
-    network_cluster: `cluster_${Math.floor(riskScore / 25) + 1}`
+    network_cluster: `cluster_${riskLevel.toLowerCase()}`,
+    austrac_score: austracScore,
+    general_risk_score: Math.round(generalRisk * 100),
+    risk_level: riskLevel
   }
 }
 
