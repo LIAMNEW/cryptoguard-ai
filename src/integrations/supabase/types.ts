@@ -18,27 +18,36 @@ export type Database = {
         Row: {
           anomaly_detected: boolean
           anomaly_type: string | null
+          austrac_score: number | null
           created_at: string
+          general_risk_score: number | null
           id: string
           network_cluster: string | null
+          risk_level: string | null
           risk_score: number
           transaction_id: string
         }
         Insert: {
           anomaly_detected?: boolean
           anomaly_type?: string | null
+          austrac_score?: number | null
           created_at?: string
+          general_risk_score?: number | null
           id?: string
           network_cluster?: string | null
+          risk_level?: string | null
           risk_score: number
           transaction_id: string
         }
         Update: {
           anomaly_detected?: boolean
           anomaly_type?: string | null
+          austrac_score?: number | null
           created_at?: string
+          general_risk_score?: number | null
           id?: string
           network_cluster?: string | null
+          risk_level?: string | null
           risk_score?: number
           transaction_id?: string
         }
