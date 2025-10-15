@@ -189,8 +189,8 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
     console.log('CSV headers:', headers);
     
-    // Detect if this is a bank transaction CSV (has merchant_name or country_of_origin)
-    const isBankTransaction = headers.includes('merchant_name') || headers.includes('country_of_origin');
+    // Detect if this is a bank transaction CSV (has merchant or country columns)
+    const isBankTransaction = headers.includes('merchant') || headers.includes('country');
     
     const transactions = lines.slice(1).map((line, index) => {
       const values = parseCSVLine(line);
@@ -203,13 +203,23 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       });
       
       if (isBankTransaction) {
-        // Bank transaction format
+        // Bank transaction format - map various column names to expected format
+        const transactionId = obj.transaction_id || obj.transactionid || `tx_${Date.now()}_${index}`;
+        
+        // Combine date and time if separate, or use timestamp
+        let timestamp;
+        if (obj.date && obj.time) {
+          timestamp = new Date(`${obj.date} ${obj.time}`).toISOString();
+        } else {
+          timestamp = obj.timestamp || new Date().toISOString();
+        }
+        
         return {
-          transaction_id: obj.transaction_id || `tx_${Date.now()}_${index}`,
-          timestamp: obj.timestamp || new Date().toISOString(),
+          transaction_id: transactionId,
+          timestamp: timestamp,
           amount: parseFloat(obj.amount || '0'),
-          merchant_name: obj.merchant_name || '',
-          country_of_origin: obj.country_of_origin || '',
+          merchant_name: obj.merchant || obj.merchant_name || '',
+          country_of_origin: obj.country || obj.country_of_origin || 'Australia',
           _isBankTransaction: true
         };
       } else {
