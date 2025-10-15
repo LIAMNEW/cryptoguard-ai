@@ -40,7 +40,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Sending alert to ${email} for transaction ${transactionId} with risk score ${riskScore}`);
 
     const emailResponse = await resend.emails.send({
-      from: "BlockFlow Security <onboarding@resend.dev>",
+      from: "QuantumGuard AI <onboarding@resend.dev>",
       to: [email],
       subject: `⚠️ High Risk Transaction Alert - Score: ${riskScore}`,
       html: `
@@ -93,7 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <p style="color: #9ca3af; font-size: 12px; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 15px;">
-            This is an automated alert from BlockFlow Security Platform. 
+            This is an automated alert from QuantumGuard AI Platform. 
             You received this email because a high-risk transaction was detected in your monitored network.
           </p>
         </div>

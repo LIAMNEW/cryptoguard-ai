@@ -93,7 +93,7 @@ const Auth = () => {
           <div className="flex justify-center mb-4">
             <Shield className="h-12 w-12 text-quantum-green" />
           </div>
-          <CardTitle className="text-2xl">BlockFlow Security</CardTitle>
+          <CardTitle className="text-2xl">QuantumGuard AI</CardTitle>
           <CardDescription>
             Advanced blockchain transaction analysis platform
           </CardDescription>
