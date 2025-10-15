@@ -189,6 +189,9 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
     console.log('CSV headers:', headers);
     
+    // Detect if this is a bank transaction CSV (has merchant_name or country_of_origin)
+    const isBankTransaction = headers.includes('merchant_name') || headers.includes('country_of_origin');
+    
     const transactions = lines.slice(1).map((line, index) => {
       const values = parseCSVLine(line);
       const obj: any = {};
@@ -199,32 +202,50 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         }
       });
       
-      // Map common field variations to expected format
-      const transaction: any = {
-        transaction_id: obj.transaction_id || obj.txid || obj.id || obj.hash || `tx_${Date.now()}_${index}`,
-        from_address: obj.from_address || obj.from || obj.sender || obj.source_address || obj.from_addr,
-        to_address: obj.to_address || obj.to || obj.recipient || obj.destination_address || obj.to_addr,
-        amount: parseFloat(obj.amount || obj.value || obj.sum || obj.total || '0'),
-        timestamp: obj.timestamp || obj.time || obj.date || obj.created_at || new Date().toISOString(),
-        transaction_hash: obj.transaction_hash || obj.hash || obj.txhash,
-        block_number: obj.block_number ? parseInt(obj.block_number) : undefined,
-        gas_fee: obj.gas_fee ? parseFloat(obj.gas_fee) : undefined,
-        transaction_type: obj.transaction_type || obj.type || 'transfer'
-      };
-      
-      // Ensure timestamp is in ISO format
-      if (transaction.timestamp && !transaction.timestamp.includes('T')) {
-        try {
-          transaction.timestamp = new Date(transaction.timestamp).toISOString();
-        } catch (e) {
-          transaction.timestamp = new Date().toISOString();
+      if (isBankTransaction) {
+        // Bank transaction format
+        return {
+          transaction_id: obj.transaction_id || `tx_${Date.now()}_${index}`,
+          timestamp: obj.timestamp || new Date().toISOString(),
+          amount: parseFloat(obj.amount || '0'),
+          merchant_name: obj.merchant_name || '',
+          country_of_origin: obj.country_of_origin || '',
+          _isBankTransaction: true
+        };
+      } else {
+        // Blockchain transaction format
+        const transaction: any = {
+          transaction_id: obj.transaction_id || obj.txid || obj.id || obj.hash || `tx_${Date.now()}_${index}`,
+          from_address: obj.from_address || obj.from || obj.sender || obj.source_address || obj.from_addr,
+          to_address: obj.to_address || obj.to || obj.recipient || obj.destination_address || obj.to_addr,
+          amount: parseFloat(obj.amount || obj.value || obj.sum || obj.total || '0'),
+          timestamp: obj.timestamp || obj.time || obj.date || obj.created_at || new Date().toISOString(),
+          transaction_hash: obj.transaction_hash || obj.hash || obj.txhash,
+          block_number: obj.block_number ? parseInt(obj.block_number) : undefined,
+          gas_fee: obj.gas_fee ? parseFloat(obj.gas_fee) : undefined,
+          transaction_type: obj.transaction_type || obj.type || 'transfer'
+        };
+        
+        // Ensure timestamp is in ISO format
+        if (transaction.timestamp && !transaction.timestamp.includes('T')) {
+          try {
+            transaction.timestamp = new Date(transaction.timestamp).toISOString();
+          } catch (e) {
+            transaction.timestamp = new Date().toISOString();
+          }
         }
+        
+        return transaction;
       }
-      
-      return transaction;
-    }).filter(tx => tx.from_address && tx.to_address && tx.amount > 0);
+    }).filter(tx => {
+      if (tx._isBankTransaction) {
+        return tx.amount > 0;
+      }
+      return tx.from_address && tx.to_address && tx.amount > 0;
+    });
     
     console.log('Parsed transactions:', transactions.length);
+    console.log('Is bank transaction:', isBankTransaction);
     console.log('Sample transaction:', transactions[0]);
     return transactions;
   };

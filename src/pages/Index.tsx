@@ -64,23 +64,63 @@ const Index = () => {
 
   const handleFileUpload = useCallback(async (transactions: any[]) => {
     try {
-      const result = await uploadTransactions(transactions);
+      // Detect if these are bank transactions
+      const isBankTransaction = transactions.length > 0 && transactions[0]._isBankTransaction;
       
-      // Log audit event
-      await logAuditEvent({
-        action: "upload_transactions",
-        resourceType: "transactions",
-        details: {
-          count: transactions.length,
-          timestamp: new Date().toISOString(),
-        },
-      });
+      if (isBankTransaction) {
+        console.log('Processing bank transactions for fraud detection...');
+        const { data, error } = await supabase.functions.invoke('analyze-bank-transactions', {
+          body: { transactions }
+        });
+
+        if (error) throw error;
+
+        // Log audit event
+        await logAuditEvent({
+          action: "analyze_bank_transactions",
+          resourceType: "bank_transactions",
+          details: {
+            total_transactions: data.total_transactions,
+            flagged_count: data.flagged_count,
+            timestamp: new Date().toISOString(),
+          },
+        });
+
+        toast.success(
+          `Analysis complete! ${data.flagged_count} of ${data.total_transactions} transactions flagged for review.`,
+          { duration: 5000 }
+        );
+        
+        if (data.flagged_count > 0) {
+          toast.info(
+            `Top concerns: ${Object.entries(data.reason_breakdown)
+              .filter(([_, count]) => (count as number) > 0)
+              .map(([reason, count]) => `${reason} (${count})`)
+              .join(', ')}`,
+            { duration: 7000 }
+          );
+        }
+      } else {
+        console.log('Processing blockchain transactions...');
+        const result = await uploadTransactions(transactions);
+        
+        // Log audit event
+        await logAuditEvent({
+          action: "upload_transactions",
+          resourceType: "transactions",
+          details: {
+            count: transactions.length,
+            timestamp: new Date().toISOString(),
+          },
+        });
+        
+        toast.success(`${transactions.length} transactions uploaded and analyzed successfully!`);
+      }
       
-      toast.success(`${transactions.length} transactions uploaded and analyzed successfully!`);
       setHasData(true);
       setActiveSection("dashboard");
     } catch (error) {
-      toast.error('Failed to upload transactions. Please try again.');
+      toast.error('Failed to process transactions. Please try again.');
       console.error('Upload error:', error);
       
       // Log error event
