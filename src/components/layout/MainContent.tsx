@@ -4,6 +4,7 @@ import { SavedAnalysesDashboard } from "@/components/dashboard/SavedAnalysesDash
 import { AuditLogsViewer } from "@/components/dashboard/AuditLogsViewer";
 import { BlockchainSourceManager } from "@/components/dashboard/BlockchainSourceManager";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
+import { UserSettings } from "@/components/settings/UserSettings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, Globe } from "lucide-react";
@@ -69,6 +70,23 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
                   </CardContent>
                 </Card>
               </div>
+            </div>
+          </div>
+        );
+
+      case "settings":
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                Account Settings
+              </h1>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Manage your profile and notification preferences
+              </p>
+            </div>
+            <div className="max-w-4xl mx-auto">
+              <UserSettings />
             </div>
           </div>
         );

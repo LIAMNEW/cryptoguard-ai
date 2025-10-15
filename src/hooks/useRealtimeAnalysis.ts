@@ -12,6 +12,18 @@ async function sendEmailAlert(analysis: AnalysisResult) {
       return;
     }
 
+    // Check user notification preferences
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('email_notifications, high_risk_alerts')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile?.email_notifications || !profile?.high_risk_alerts) {
+      console.log('Email notifications disabled for user, skipping alert');
+      return;
+    }
+
     // Fetch transaction details
     const { data: transaction } = await supabase
       .from('transactions')

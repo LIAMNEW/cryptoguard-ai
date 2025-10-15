@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MainContent } from "@/components/layout/MainContent";
 import { uploadTransactions } from "@/lib/supabase";
@@ -8,15 +10,46 @@ import { toast } from "sonner";
 import { TeamPresence } from "@/components/realtime/TeamPresence";
 import { LiveTransactionFeed } from "@/components/realtime/LiveTransactionFeed";
 import { RiskAlertMonitor } from "@/components/realtime/RiskAlertMonitor";
-import { BlockchainSourceManager } from "@/components/dashboard/BlockchainSourceManager";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Session, User } from "@supabase/supabase-js";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("upload");
   const [hasData, setHasData] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+
+  // Authentication check
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (!session) {
+          navigate("/auth");
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (!session) {
+        navigate("/auth");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   // Initialize quantum-safe encryption keys on mount
   useEffect(() => {
+    if (!user) return;
+    
     const initKeys = async () => {
       try {
         await initializeQuantumSafeKeys();
@@ -27,7 +60,7 @@ const Index = () => {
       }
     };
     initKeys();
-  }, []);
+  }, [user]);
 
   const handleFileUpload = useCallback(async (transactions: any[]) => {
     try {
@@ -61,12 +94,21 @@ const Index = () => {
     }
   }, []);
 
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin w-8 h-8 border-2 border-quantum-green border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background font-inter">
       <div className="flex">
         <Sidebar 
           activeSection={activeSection} 
-          onSectionChange={setActiveSection} 
+          onSectionChange={setActiveSection}
+          userEmail={user?.email}
         />
         <div className="flex-1 flex flex-col">
           {/* Real-time Collaboration Panel */}

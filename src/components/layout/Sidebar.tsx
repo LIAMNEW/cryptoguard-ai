@@ -10,15 +10,21 @@ import {
   ChevronLeft,
   ChevronRight,
   Activity,
-  ScrollText
+  ScrollText,
+  LogOut,
+  User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QuantumSafeStatus } from "@/components/security/QuantumSafeStatus";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
+  userEmail?: string;
 }
 
 const navigation = [
@@ -30,10 +36,30 @@ const navigation = [
   { id: "reports", label: "Reports", icon: FileText },
   { id: "saved", label: "Saved Analyses", icon: Settings },
   { id: "audit", label: "Audit Logs", icon: ScrollText },
+  { id: "settings", label: "Settings", icon: User },
 ];
 
-export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
+export function Sidebar({ activeSection, onSectionChange, userEmail }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+      navigate("/auth");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className={cn(
@@ -95,6 +121,26 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           <QuantumSafeStatus />
         </div>
       )}
+
+      {/* User Info & Logout */}
+      <div className="p-4 border-t border-glass-border space-y-3">
+        {!collapsed && userEmail && (
+          <div className="text-xs text-muted-foreground truncate px-2">
+            {userEmail}
+          </div>
+        )}
+        <Button
+          variant="ghost"
+          className={cn(
+            "w-full justify-start gap-3 text-muted-foreground hover:text-red-500",
+            collapsed && "justify-center"
+          )}
+          onClick={handleSignOut}
+        >
+          <LogOut className="w-4 h-4" />
+          {!collapsed && <span>Sign Out</span>}
+        </Button>
+      </div>
 
       {/* System Status */}
       <div className="p-4 border-t border-glass-border">

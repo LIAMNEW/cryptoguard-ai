@@ -163,6 +163,42 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          email: string
+          email_notifications: boolean
+          full_name: string | null
+          high_risk_alerts: boolean
+          id: string
+          updated_at: string
+          user_tier: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          email: string
+          email_notifications?: boolean
+          full_name?: string | null
+          high_risk_alerts?: boolean
+          id: string
+          updated_at?: string
+          user_tier?: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          email_notifications?: boolean
+          full_name?: string | null
+          high_risk_alerts?: boolean
+          id?: string
+          updated_at?: string
+          user_tier?: string
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           created_at: string
