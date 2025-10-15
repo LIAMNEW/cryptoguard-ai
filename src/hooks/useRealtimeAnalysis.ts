@@ -2,6 +2,42 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
+// Helper function to send email alerts
+async function sendEmailAlert(analysis: AnalysisResult) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user?.email) {
+      console.log('No user email found, skipping email alert');
+      return;
+    }
+
+    // Fetch transaction details
+    const { data: transaction } = await supabase
+      .from('transactions')
+      .select('*')
+      .eq('transaction_id', analysis.transaction_id)
+      .single();
+
+    await supabase.functions.invoke('send-risk-alert-email', {
+      body: {
+        email: user.email,
+        transactionId: analysis.transaction_id,
+        riskScore: analysis.risk_score,
+        anomalyType: analysis.anomaly_type,
+        amount: transaction?.amount,
+        fromAddress: transaction?.from_address,
+        toAddress: transaction?.to_address,
+      },
+    });
+
+    console.log('📧 Email alert sent successfully');
+  } catch (error) {
+    console.error('Failed to send email alert:', error);
+    throw error;
+  }
+}
+
 interface AnalysisResult {
   id: string;
   transaction_id: string;
@@ -41,6 +77,11 @@ export const useRealtimeAnalysis = () => {
               title: "⚠️ High Risk Transaction Alert",
               description: `Risk Score: ${newAnalysis.risk_score} | ${newAnalysis.anomaly_type || 'Unknown anomaly'}`,
               variant: "destructive",
+            });
+
+            // Send email alert for high-risk transactions
+            sendEmailAlert(newAnalysis).catch(error => {
+              console.error('Failed to send email alert:', error);
             });
           }
         }
