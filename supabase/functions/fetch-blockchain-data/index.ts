@@ -122,12 +122,23 @@ async function fetchBitcoinTransactions(address: string, limit: number) {
     : `https://blockchain.info/latestblock`;
 
   const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`Bitcoin API error: ${response.status} ${response.statusText}`);
+  }
+  
   const data = await response.json();
+  console.log('Bitcoin API response structure:', Object.keys(data));
 
   if (!address) {
     // Fetch latest block transactions
     const blockResponse = await fetch(`https://blockchain.info/rawblock/${data.hash}`);
     const blockData = await blockResponse.json();
+    
+    if (!blockData.tx || !Array.isArray(blockData.tx)) {
+      console.error('Invalid block data structure:', blockData);
+      return [];
+    }
     
     return blockData.tx.slice(0, limit).map((tx: any) => ({
       transaction_id: tx.hash,
@@ -139,6 +150,25 @@ async function fetchBitcoinTransactions(address: string, limit: number) {
       block_number: blockData.height,
       transaction_type: 'bitcoin'
     }));
+  }
+
+  // Check if data has txs array
+  if (!data.txs || !Array.isArray(data.txs)) {
+    console.error('No txs array found. Data structure:', Object.keys(data));
+    // Try alternative structure
+    if (data.tx && Array.isArray(data.tx)) {
+      console.log('Using data.tx instead of data.txs');
+      return data.tx.slice(0, limit).map((tx: any) => ({
+        transaction_id: tx.hash,
+        from_address: tx.inputs[0]?.prev_out?.addr || 'coinbase',
+        to_address: tx.out[0]?.addr || 'unknown',
+        amount: tx.out[0]?.value / 1e8 || 0,
+        timestamp: new Date(tx.time * 1000).toISOString(),
+        transaction_hash: tx.hash,
+        transaction_type: 'bitcoin'
+      }));
+    }
+    return [];
   }
 
   return data.txs.slice(0, limit).map((tx: any) => ({
