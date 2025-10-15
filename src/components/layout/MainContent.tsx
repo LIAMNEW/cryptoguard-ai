@@ -112,22 +112,12 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
               <div className="max-w-4xl mx-auto">
                 <FileUpload onFileUpload={onFileUpload} />
               </div>
-              
-              {/* Quantum-ready infrastructure at bottom */}
-              <div className="max-w-4xl mx-auto">
-                <QuantumSafeIndicator />
-              </div>
             </div>
           );
         }
         return (
           <div className="space-y-6">
             <AnalysisTabs />
-            
-            {/* Quantum-ready infrastructure at bottom of dashboard */}
-            <div className="max-w-4xl mx-auto">
-              <QuantumSafeIndicator />
-            </div>
           </div>
         );
 
@@ -149,59 +139,6 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
     <div className="flex-1 min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {renderContent()}
-        
-        {/* Branding Footer - Only show when analysis is complete */}
-        {hasData && (
-          <Card className="glass-card p-6 text-center space-y-4 mt-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-quantum-green flex items-center justify-center">
-                <Shield className="w-5 h-5 text-background" />
-              </div>
-              <h2 className="text-quantum text-2xl font-bold">QuantumGuard AI</h2>
-            </div>
-            
-            <p className="text-lg font-semibold text-foreground">
-              Advanced Blockchain Transaction Analytics & AUSTRAC Compliance
-            </p>
-            
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-quantum-green" />
-                <span>Powered by Post-Quantum Cryptography</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-quantum-green" />
-                <span>AI-Driven Risk Assessment</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Globe className="w-4 h-4 text-quantum-green" />
-                <span>Real-Time Compliance Monitoring</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-center gap-2">
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                Enterprise Grade Security
-              </Badge>
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                Regulatory Compliant
-              </Badge>
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                AI-Powered Analytics
-              </Badge>
-            </div>
-            
-            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-4">
-              <Link to="/terms" className="hover:text-quantum-green transition-colors">
-                Terms of Service
-              </Link>
-              <span>•</span>
-              <Link to="/privacy" className="hover:text-quantum-green transition-colors">
-                Privacy Policy
-              </Link>
-            </div>
-          </Card>
-        )}
       </div>
     </div>
   );

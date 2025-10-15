@@ -7,6 +7,7 @@ import { NetworkGraph } from "./NetworkGraph";
 import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
+import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
 import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
   Network, 
@@ -18,8 +19,11 @@ import {
   Download,
   TrendingUp,
   Activity,
-  Target
+  Target,
+  Zap,
+  Globe
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function AnalysisTabs() {
   const [activeTab, setActiveTab] = useState("network");
@@ -159,6 +163,60 @@ export function AnalysisTabs() {
             <p className="text-sm text-muted-foreground mt-2">
               Showing connections between {analysisData.totalTransactions} transactions
             </p>
+          </Card>
+          
+          {/* Quantum-Ready Infrastructure - Only in Network tab */}
+          <QuantumSafeIndicator />
+          
+          {/* QuantumGuard AI Branding - Only in Network tab */}
+          <Card className="glass-card p-6 text-center space-y-4">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-quantum-green flex items-center justify-center">
+                <Shield className="w-5 h-5 text-background" />
+              </div>
+              <h2 className="text-quantum text-2xl font-bold">QuantumGuard AI</h2>
+            </div>
+            
+            <p className="text-lg font-semibold text-foreground">
+              Advanced Blockchain Transaction Analytics & AUSTRAC Compliance
+            </p>
+            
+            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-quantum-green" />
+                <span>Powered by Post-Quantum Cryptography</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-quantum-green" />
+                <span>AI-Driven Risk Assessment</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-quantum-green" />
+                <span>Real-Time Compliance Monitoring</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-center gap-2">
+              <Badge variant="outline" className="border-quantum-green text-quantum-green">
+                Enterprise Grade Security
+              </Badge>
+              <Badge variant="outline" className="border-quantum-green text-quantum-green">
+                Regulatory Compliant
+              </Badge>
+              <Badge variant="outline" className="border-quantum-green text-quantum-green">
+                AI-Powered Analytics
+              </Badge>
+            </div>
+            
+            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-4">
+              <Link to="/terms" className="hover:text-quantum-green transition-colors">
+                Terms of Service
+              </Link>
+              <span>•</span>
+              <Link to="/privacy" className="hover:text-quantum-green transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
           </Card>
         </TabsContent>
 
