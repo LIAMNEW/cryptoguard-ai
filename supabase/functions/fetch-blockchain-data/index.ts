@@ -31,11 +31,15 @@ serve(async (req) => {
     }
 
     // Store transactions in database and get back with IDs
+    // Use upsert to handle duplicate transactions gracefully
     let storedTransactions = [];
     if (transactions.length > 0) {
       const { data: stored, error } = await supabase
         .from('transactions')
-        .insert(transactions)
+        .upsert(transactions, { 
+          onConflict: 'transaction_id',
+          ignoreDuplicates: false 
+        })
         .select();
 
       if (error) {
@@ -43,7 +47,7 @@ serve(async (req) => {
         throw error;
       }
       storedTransactions = stored || [];
-      console.log(`Stored ${storedTransactions.length} transactions in database`);
+      console.log(`Successfully stored/updated ${storedTransactions.length} transactions`);
     }
 
     return new Response(
