@@ -29,19 +29,30 @@ export function BlockchainSourceManager() {
 
       toast.success(`Fetched ${data.count} transactions from ${source}. QuantumGuard AI is analyzing...`);
       
-      // Trigger AI analysis on the fetched transactions
+      // Trigger AI analysis on the stored transactions
       if (data.transactions && data.transactions.length > 0) {
-        const { error: analysisError } = await supabase.functions.invoke('analyze-transactions', {
-          body: {
-            transactions: data.transactions
-          }
-        });
+        console.log('Analyzing transactions:', data.transactions.length);
+        
+        const analysisResults = [];
+        for (const tx of data.transactions) {
+          // Analyze each transaction
+          const { data: analysis, error: analysisError } = await supabase.functions.invoke('analyze-transactions', {
+            body: {
+              transactions: [tx]
+            }
+          });
 
-        if (analysisError) {
-          console.error('Analysis error:', analysisError);
-          toast.error('Transactions fetched but analysis failed');
+          if (analysisError) {
+            console.error('Analysis error for transaction:', tx.transaction_id, analysisError);
+          } else if (analysis) {
+            analysisResults.push(analysis);
+          }
+        }
+
+        if (analysisResults.length > 0) {
+          toast.success(`Analysis complete! Analyzed ${analysisResults.length} transactions.`);
         } else {
-          toast.success('Analysis complete! Check Dashboard for results.');
+          toast.error('Transactions fetched but analysis failed');
         }
       }
       

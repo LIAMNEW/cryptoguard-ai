@@ -30,19 +30,28 @@ serve(async (req) => {
       throw new Error('Unsupported blockchain source');
     }
 
-    // Store transactions in database
+    // Store transactions in database and get back with IDs
+    let storedTransactions = [];
     if (transactions.length > 0) {
-      const { error } = await supabase
+      const { data: stored, error } = await supabase
         .from('transactions')
-        .insert(transactions);
+        .insert(transactions)
+        .select();
 
       if (error) {
         console.error('Error storing transactions:', error);
+        throw error;
       }
+      storedTransactions = stored || [];
+      console.log(`Stored ${storedTransactions.length} transactions in database`);
     }
 
     return new Response(
-      JSON.stringify({ success: true, count: transactions.length, transactions }),
+      JSON.stringify({ 
+        success: true, 
+        count: storedTransactions.length, 
+        transactions: storedTransactions 
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
@@ -55,64 +64,94 @@ serve(async (req) => {
 });
 
 async function fetchEthereumTransactions(address: string, apiKey: string, limit: number) {
-  const infuraUrl = `https://mainnet.infura.io/v3/${apiKey}`;
+  // Use Etherscan API (free tier: 5 calls/sec, 100k calls/day)
+  const ETHERSCAN_API_KEY = apiKey || 'YourApiKeyToken'; // Free API key placeholder
   
-  // Get latest block number
-  const blockResponse = await fetch(infuraUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      method: 'eth_blockNumber',
-      params: [],
-      id: 1
-    })
-  });
-  const blockData = await blockResponse.json();
-  const latestBlock = parseInt(blockData.result, 16);
-
-  // Fetch recent transactions for the address
-  const transactions = [];
-  for (let i = 0; i < Math.min(limit, 10); i++) {
-    const blockNum = `0x${(latestBlock - i).toString(16)}`;
-    const txResponse = await fetch(infuraUrl, {
+  if (address) {
+    // Fetch transactions for specific address
+    const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=${limit}&sort=desc&apikey=${ETHERSCAN_API_KEY}`;
+    
+    console.log('Fetching from Etherscan for address:', address);
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data.status !== '1' || !data.result) {
+      console.error('Etherscan API error:', data.message);
+      return [];
+    }
+    
+    return data.result.slice(0, limit).map((tx: any) => ({
+      transaction_id: tx.hash,
+      from_address: tx.from || 'unknown',
+      to_address: tx.to || 'contract',
+      amount: parseInt(tx.value) / 1e18,
+      timestamp: new Date(parseInt(tx.timeStamp) * 1000).toISOString(),
+      transaction_hash: tx.hash,
+      block_number: parseInt(tx.blockNumber),
+      gas_fee: (parseInt(tx.gasUsed) * parseInt(tx.gasPrice)) / 1e18,
+      transaction_type: 'ethereum'
+    }));
+  } else {
+    // Get latest block transactions using Infura (backup)
+    if (!apiKey) {
+      console.error('INFURA_API_KEY required for latest transactions');
+      return [];
+    }
+    
+    const infuraUrl = `https://mainnet.infura.io/v3/${apiKey}`;
+    
+    // Get latest block number
+    const blockResponse = await fetch(infuraUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         jsonrpc: '2.0',
-        method: 'eth_getBlockByNumber',
-        params: [blockNum, true],
+        method: 'eth_blockNumber',
+        params: [],
         id: 1
       })
     });
-    
-    const txData = await txResponse.json();
-    if (txData.result?.transactions) {
-      const filtered = txData.result.transactions
-        .filter((tx: any) => 
-          !address || 
-          tx.from?.toLowerCase() === address.toLowerCase() || 
-          tx.to?.toLowerCase() === address.toLowerCase()
-        )
-        .slice(0, limit - transactions.length)
-        .map((tx: any) => ({
-          transaction_id: tx.hash,
-          from_address: tx.from || 'unknown',
-          to_address: tx.to || 'contract',
-          amount: parseInt(tx.value, 16) / 1e18,
-          timestamp: new Date(parseInt(txData.result.timestamp, 16) * 1000).toISOString(),
-          transaction_hash: tx.hash,
-          block_number: parseInt(tx.blockNumber, 16),
-          gas_fee: (parseInt(tx.gas, 16) * parseInt(tx.gasPrice || '0', 16)) / 1e18,
-          transaction_type: 'ethereum'
-        }));
-      
-      transactions.push(...filtered);
-      if (transactions.length >= limit) break;
-    }
-  }
+    const blockData = await blockResponse.json();
+    const latestBlock = parseInt(blockData.result, 16);
 
-  return transactions.slice(0, limit);
+    // Fetch recent transactions
+    const transactions = [];
+    for (let i = 0; i < Math.min(limit, 5); i++) {
+      const blockNum = `0x${(latestBlock - i).toString(16)}`;
+      const txResponse = await fetch(infuraUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'eth_getBlockByNumber',
+          params: [blockNum, true],
+          id: 1
+        })
+      });
+      
+      const txData = await txResponse.json();
+      if (txData.result?.transactions) {
+        const mapped = txData.result.transactions
+          .slice(0, Math.ceil(limit / 5))
+          .map((tx: any) => ({
+            transaction_id: tx.hash,
+            from_address: tx.from || 'unknown',
+            to_address: tx.to || 'contract',
+            amount: parseInt(tx.value, 16) / 1e18,
+            timestamp: new Date(parseInt(txData.result.timestamp, 16) * 1000).toISOString(),
+            transaction_hash: tx.hash,
+            block_number: parseInt(tx.blockNumber, 16),
+            gas_fee: (parseInt(tx.gas, 16) * parseInt(tx.gasPrice || '0', 16)) / 1e18,
+            transaction_type: 'ethereum'
+          }));
+        
+        transactions.push(...mapped);
+        if (transactions.length >= limit) break;
+      }
+    }
+
+    return transactions.slice(0, limit);
+  }
 }
 
 async function fetchBitcoinTransactions(address: string, limit: number) {
