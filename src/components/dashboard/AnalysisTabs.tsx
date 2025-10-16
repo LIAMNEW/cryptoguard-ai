@@ -42,6 +42,7 @@ export function AnalysisTabs() {
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
+  const [reanalyzing, setReanalyzing] = useState(false);
 
   useEffect(() => {
     loadAnalysisData();
@@ -66,6 +67,54 @@ export function AnalysisTabs() {
       console.error('Failed to load analysis data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReanalyze = async () => {
+    if (!confirm('This will re-analyze all existing transactions with improved detection logic. Continue?')) {
+      return;
+    }
+
+    setReanalyzing(true);
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Fetch all existing transactions
+      const { data: transactions, error: fetchError } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('timestamp', { ascending: false });
+
+      if (fetchError) throw fetchError;
+
+      if (!transactions || transactions.length === 0) {
+        alert('No transactions found to re-analyze.');
+        return;
+      }
+
+      // Delete old analysis results
+      const { error: deleteError } = await supabase
+        .from('analysis_results')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+
+      if (deleteError) throw deleteError;
+
+      // Re-analyze transactions with new logic
+      const { error: analyzeError } = await supabase.functions.invoke('analyze-transactions', {
+        body: { transactions }
+      });
+
+      if (analyzeError) throw analyzeError;
+
+      // Reload data
+      await loadAnalysisData();
+      alert(`Successfully re-analyzed ${transactions.length} transactions with improved detection!`);
+    } catch (error) {
+      console.error('Failed to re-analyze transactions:', error);
+      alert('Failed to re-analyze transactions. Please try again.');
+    } finally {
+      setReanalyzing(false);
     }
   };
 
@@ -269,7 +318,28 @@ export function AnalysisTabs() {
 
         <TabsContent value="anomalies" className="space-y-4 animate-fade-in">
           <Card className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Detected Anomalies</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Detected Anomalies</h3>
+              <Button
+                onClick={handleReanalyze}
+                disabled={reanalyzing || loading}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                {reanalyzing ? (
+                  <>
+                    <div className="animate-spin w-4 h-4 border-2 border-quantum-green border-t-transparent rounded-full"></div>
+                    Re-analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Shield className="w-4 h-4" />
+                    Re-analyze with New Logic
+                  </>
+                )}
+              </Button>
+            </div>
             <div className="space-y-4">
               {loading ? (
                 <div className="text-center py-8">
