@@ -42,11 +42,83 @@ export function AnalysisTabs() {
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
-  const [reanalyzing, setReanalyzing] = useState(false);
+  const [autoReanalyzing, setAutoReanalyzing] = useState(false);
 
   useEffect(() => {
     loadAnalysisData();
+    checkAndReanalyze();
   }, []);
+
+  const checkAndReanalyze = async () => {
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Check if there are analysis results with old unusual_time detection
+      const { data: oldAnomalies, error } = await supabase
+        .from('analysis_results')
+        .select('id')
+        .like('anomaly_type', '%unusual_time%')
+        .limit(1);
+
+      if (error) {
+        console.error('Error checking for old anomalies:', error);
+        return;
+      }
+
+      // If we found old unusual_time anomalies, trigger automatic re-analysis
+      if (oldAnomalies && oldAnomalies.length > 0) {
+        console.log('Found old unusual_time anomalies, triggering automatic re-analysis...');
+        await performReanalysis();
+      }
+    } catch (error) {
+      console.error('Error in checkAndReanalyze:', error);
+    }
+  };
+
+  const performReanalysis = async () => {
+    setAutoReanalyzing(true);
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Fetch all existing transactions
+      const { data: transactions, error: fetchError } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('timestamp', { ascending: false });
+
+      if (fetchError) throw fetchError;
+
+      if (!transactions || transactions.length === 0) {
+        console.log('No transactions found to re-analyze.');
+        return;
+      }
+
+      console.log(`Re-analyzing ${transactions.length} transactions with improved detection...`);
+
+      // Delete old analysis results
+      const { error: deleteError } = await supabase
+        .from('analysis_results')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (deleteError) throw deleteError;
+
+      // Re-analyze transactions with new logic
+      const { error: analyzeError } = await supabase.functions.invoke('analyze-transactions', {
+        body: { transactions }
+      });
+
+      if (analyzeError) throw analyzeError;
+
+      // Reload data
+      await loadAnalysisData();
+      console.log('✓ Auto re-analysis complete with improved detection');
+    } catch (error) {
+      console.error('Failed to auto re-analyze transactions:', error);
+    } finally {
+      setAutoReanalyzing(false);
+    }
+  };
 
   const loadAnalysisData = async () => {
     try {
@@ -67,54 +139,6 @@ export function AnalysisTabs() {
       console.error('Failed to load analysis data:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleReanalyze = async () => {
-    if (!confirm('This will re-analyze all existing transactions with improved detection logic. Continue?')) {
-      return;
-    }
-
-    setReanalyzing(true);
-    try {
-      const { supabase } = await import('@/integrations/supabase/client');
-      
-      // Fetch all existing transactions
-      const { data: transactions, error: fetchError } = await supabase
-        .from('transactions')
-        .select('*')
-        .order('timestamp', { ascending: false });
-
-      if (fetchError) throw fetchError;
-
-      if (!transactions || transactions.length === 0) {
-        alert('No transactions found to re-analyze.');
-        return;
-      }
-
-      // Delete old analysis results
-      const { error: deleteError } = await supabase
-        .from('analysis_results')
-        .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
-
-      if (deleteError) throw deleteError;
-
-      // Re-analyze transactions with new logic
-      const { error: analyzeError } = await supabase.functions.invoke('analyze-transactions', {
-        body: { transactions }
-      });
-
-      if (analyzeError) throw analyzeError;
-
-      // Reload data
-      await loadAnalysisData();
-      alert(`Successfully re-analyzed ${transactions.length} transactions with improved detection!`);
-    } catch (error) {
-      console.error('Failed to re-analyze transactions:', error);
-      alert('Failed to re-analyze transactions. Please try again.');
-    } finally {
-      setReanalyzing(false);
     }
   };
 
@@ -320,25 +344,12 @@ export function AnalysisTabs() {
           <Card className="glass-card p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">Detected Anomalies</h3>
-              <Button
-                onClick={handleReanalyze}
-                disabled={reanalyzing || loading}
-                variant="outline"
-                size="sm"
-                className="gap-2"
-              >
-                {reanalyzing ? (
-                  <>
-                    <div className="animate-spin w-4 h-4 border-2 border-quantum-green border-t-transparent rounded-full"></div>
-                    Re-analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Shield className="w-4 h-4" />
-                    Re-analyze with New Logic
-                  </>
-                )}
-              </Button>
+              {autoReanalyzing && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="animate-spin w-4 h-4 border-2 border-quantum-green border-t-transparent rounded-full"></div>
+                  <span>Applying improved detection...</span>
+                </div>
+              )}
             </div>
             <div className="space-y-4">
               {loading ? (
