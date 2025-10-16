@@ -8,7 +8,6 @@ import { logAuditEvent } from "@/lib/auditLog";
 import { initializeQuantumSafeKeys } from "@/lib/quantumCrypto";
 import { toast } from "sonner";
 import { TeamPresence } from "@/components/realtime/TeamPresence";
-import { LiveTransactionFeed } from "@/components/realtime/LiveTransactionFeed";
 import { RiskAlertMonitor } from "@/components/realtime/RiskAlertMonitor";
 import { Session, User } from "@supabase/supabase-js";
 
@@ -153,9 +152,8 @@ const Index = () => {
         <div className="flex-1 flex flex-col">
           {/* Real-time Collaboration Panel */}
           <div className="p-4 border-b border-border bg-card/30 backdrop-blur">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <TeamPresence />
-              <LiveTransactionFeed />
               <RiskAlertMonitor />
             </div>
           </div>

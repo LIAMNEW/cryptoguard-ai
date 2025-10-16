@@ -3,6 +3,7 @@ import { AnalysisTabs } from "@/components/dashboard/AnalysisTabs";
 import { SavedAnalysesDashboard } from "@/components/dashboard/SavedAnalysesDashboard";
 import { AuditLogsViewer } from "@/components/dashboard/AuditLogsViewer";
 import { BlockchainSourceManager } from "@/components/dashboard/BlockchainSourceManager";
+import { LiveTransactionFeed } from "@/components/realtime/LiveTransactionFeed";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
 import { UserSettings } from "@/components/settings/UserSettings";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,7 +57,8 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <BlockchainSourceManager />
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 space-y-4">
+                <LiveTransactionFeed />
                 <Card>
                   <CardHeader>
                     <CardTitle>Cross-Chain Analysis</CardTitle>
