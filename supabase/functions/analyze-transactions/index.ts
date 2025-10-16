@@ -44,13 +44,28 @@ serve(async (req) => {
     if (req.method === 'POST') {
       const { transactions } = await req.json()
       
-      // Store transactions in database
-      const { data: storedTransactions, error: insertError } = await supabaseClient
-        .from('transactions')
-        .insert(transactions)
-        .select()
+      console.log(`Analyzing ${transactions.length} transactions`)
+      
+      // Check if transactions already have IDs (already stored)
+      const hasIds = transactions.every((tx: any) => tx.id)
+      let storedTransactions = transactions
+      
+      // Only insert if they don't have IDs yet
+      if (!hasIds) {
+        console.log('Storing transactions in database...')
+        const { data, error: insertError } = await supabaseClient
+          .from('transactions')
+          .insert(transactions)
+          .select()
 
-      if (insertError) throw insertError
+        if (insertError) {
+          console.error('Error storing transactions:', insertError)
+          throw insertError
+        }
+        storedTransactions = data
+      } else {
+        console.log('Transactions already stored, proceeding with analysis...')
+      }
 
       // Analyze each transaction
       const analysisResults: AnalysisResult[] = []
