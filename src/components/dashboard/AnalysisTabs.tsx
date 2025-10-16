@@ -9,6 +9,7 @@ import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
+import { RiskAlertMonitor } from "@/components/realtime/RiskAlertMonitor";
 import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
   Network, 
@@ -282,6 +283,9 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="risk" className="space-y-4 animate-fade-in">
+          {/* Risk Alert Monitor */}
+          <RiskAlertMonitor />
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card className="glass-card p-6">
               <h3 className="text-lg font-semibold text-foreground mb-4">Overall Risk Assessment</h3>

@@ -7,8 +7,7 @@ import { uploadTransactions } from "@/lib/supabase";
 import { logAuditEvent } from "@/lib/auditLog";
 import { initializeQuantumSafeKeys } from "@/lib/quantumCrypto";
 import { toast } from "sonner";
-import { TeamPresence } from "@/components/realtime/TeamPresence";
-import { RiskAlertMonitor } from "@/components/realtime/RiskAlertMonitor";
+import { CommandSearch } from "@/components/navigation/CommandSearch";
 import { Session, User } from "@supabase/supabase-js";
 
 const Index = () => {
@@ -150,11 +149,10 @@ const Index = () => {
           userEmail={user?.email}
         />
         <div className="flex-1 flex flex-col">
-          {/* Real-time Collaboration Panel */}
+          {/* Command Search Bar */}
           <div className="p-4 border-b border-border bg-card/30 backdrop-blur">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TeamPresence />
-              <RiskAlertMonitor />
+            <div className="max-w-7xl mx-auto">
+              <CommandSearch onNavigate={setActiveSection} />
             </div>
           </div>
           
