@@ -144,7 +144,7 @@ export function AnalysisTabs() {
 
   // Memoize the overview cards to prevent unnecessary re-renders
   const OverviewCards = memo(() => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="glass-card p-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-quantum-green/20 flex items-center justify-center">
@@ -153,18 +153,6 @@ export function AnalysisTabs() {
           <div>
             <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.averageRiskScore}</p>
             <p className="text-sm text-muted-foreground">Risk Score</p>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="glass-card p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-            <AlertTriangle className="w-5 h-5 text-red-400" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.anomaliesFound}</p>
-            <p className="text-sm text-muted-foreground">Anomalies Found</p>
           </div>
         </div>
       </Card>
@@ -202,7 +190,7 @@ export function AnalysisTabs() {
 
       {/* Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-7 glass-card p-1">
+        <TabsList className="grid w-full grid-cols-6 glass-card p-1">
           <TabsTrigger value="network" className="flex items-center gap-2">
             <Network className="w-4 h-4" />
             <span className="hidden sm:inline">Network</span>
@@ -210,10 +198,6 @@ export function AnalysisTabs() {
           <TabsTrigger value="risk" className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
             <span className="hidden sm:inline">Risk</span>
-          </TabsTrigger>
-          <TabsTrigger value="anomalies" className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4" />
-            <span className="hidden sm:inline">Anomalies</span>
           </TabsTrigger>
           <TabsTrigger value="timeline" className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
@@ -338,168 +322,6 @@ export function AnalysisTabs() {
               </div>
             </Card>
           </div>
-        </TabsContent>
-
-        <TabsContent value="anomalies" className="space-y-4 animate-fade-in">
-          <Card className="glass-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-foreground">Detected Anomalies</h3>
-              {autoReanalyzing && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="animate-spin w-4 h-4 border-2 border-quantum-green border-t-transparent rounded-full"></div>
-                  <span>Applying improved detection...</span>
-                </div>
-              )}
-            </div>
-            <div className="space-y-4">
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin w-6 h-6 border-2 border-quantum-green border-t-transparent rounded-full mx-auto mb-2"></div>
-                  <p className="text-muted-foreground">Loading anomalies...</p>
-                </div>
-              ) : anomalies.length === 0 ? (
-                <div className="text-center py-8">
-                  <Shield className="w-12 h-12 text-quantum-green mx-auto mb-4" />
-                  <p className="text-foreground font-medium">No anomalies detected</p>
-                  <p className="text-muted-foreground text-sm">All transactions appear normal</p>
-                </div>
-              ) : (
-                anomalies.map((anomaly: any) => {
-                  const getAnomalyIcon = (type: string) => {
-                    switch (type) {
-                      case 'high_value': return '💰';
-                      case 'unusual_amount': return '📊';
-                      case 'rapid_transactions': return '⚡';
-                      case 'circular': return '🔄';
-                      case 'chain_transactions': return '🔗';
-                      case 'high_velocity': return '🚀';
-                      case 'round_amount': return '🎯';
-                      case 'unusual_time': return '🕐';
-                      default: return '⚠️';
-                    }
-                  };
-
-                  const getSeverityVariant = (severity: string) => {
-                    switch (severity.toLowerCase()) {
-                      case 'critical': return 'destructive';
-                      case 'high': return 'destructive';
-                      case 'medium': return 'secondary';
-                      default: return 'outline';
-                    }
-                  };
-
-                  const formatAmount = (amount: number) => {
-                    return new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0
-                    }).format(amount);
-                  };
-
-                  const isExpanded = expandedAnomalies.has(anomaly.id);
-                  
-                  return (
-                    <Collapsible 
-                      key={anomaly.id} 
-                      open={isExpanded}
-                      onOpenChange={(open) => {
-                        setExpandedAnomalies(prev => {
-                          const newSet = new Set(prev);
-                          if (open) {
-                            newSet.add(anomaly.id);
-                          } else {
-                            newSet.delete(anomaly.id);
-                          }
-                          return newSet;
-                        });
-                      }}
-                      className="p-4 rounded-lg bg-glass-background border border-glass-border hover:border-quantum-green/50 transition-colors"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-2 flex-1">
-                          <CollapsibleTrigger className="w-full text-left">
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg">{getAnomalyIcon(anomaly.type)}</span>
-                              <span className="font-medium capitalize">{anomaly.type.replace(/_/g, ' ')}</span>
-                              <Badge variant={getSeverityVariant(anomaly.severity)}>
-                                {anomaly.severity}
-                              </Badge>
-                              {isExpanded ? (
-                                <ChevronUp className="w-4 h-4 ml-auto text-muted-foreground" />
-                              ) : (
-                                <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground" />
-                              )}
-                            </div>
-                          </CollapsibleTrigger>
-                          <p className="text-sm text-muted-foreground">{anomaly.description}</p>
-                          
-                          <CollapsibleContent>
-                            {anomaly.transaction && (
-                              <div className="mt-3 p-4 rounded bg-glass-card border border-glass-border/50 space-y-3">
-                                <h4 className="text-sm font-semibold text-foreground mb-2">Transaction Details</h4>
-                                <div className="text-xs space-y-2">
-                                  <div className="flex justify-between items-start">
-                                    <span className="text-muted-foreground">Transaction ID:</span>
-                                    <span className="font-mono text-foreground text-right break-all ml-2">{anomaly.transaction.transaction_id}</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Amount:</span>
-                                    <span className="font-semibold text-foreground">{formatAmount(anomaly.transaction.amount)}</span>
-                                  </div>
-                                  <div className="flex justify-between items-start">
-                                    <span className="text-muted-foreground">From:</span>
-                                    <span className="font-mono text-xs text-foreground text-right break-all ml-2">{anomaly.transaction.from_address}</span>
-                                  </div>
-                                  <div className="flex justify-between items-start">
-                                    <span className="text-muted-foreground">To:</span>
-                                    <span className="font-mono text-xs text-foreground text-right break-all ml-2">{anomaly.transaction.to_address}</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Timestamp:</span>
-                                    <span className="text-xs text-foreground">{new Date(anomaly.transaction.timestamp).toLocaleString()}</span>
-                                  </div>
-                                  {anomaly.transaction.transaction_hash && (
-                                    <div className="flex justify-between items-start">
-                                      <span className="text-muted-foreground">Hash:</span>
-                                      <span className="font-mono text-xs text-foreground text-right break-all ml-2">{anomaly.transaction.transaction_hash}</span>
-                                    </div>
-                                  )}
-                                  {anomaly.transaction.block_number && (
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">Block Number:</span>
-                                      <span className="text-xs text-foreground">{anomaly.transaction.block_number}</span>
-                                    </div>
-                                  )}
-                                  {anomaly.transaction.gas_fee && (
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">Gas Fee:</span>
-                                      <span className="text-xs text-foreground">{formatAmount(anomaly.transaction.gas_fee)}</span>
-                                    </div>
-                                  )}
-                                  {anomaly.transaction.transaction_type && (
-                                    <div className="flex justify-between">
-                                      <span className="text-muted-foreground">Type:</span>
-                                      <span className="text-xs text-foreground capitalize">{anomaly.transaction.transaction_type}</span>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </CollapsibleContent>
-                        </div>
-                        <div className="text-right ml-4 flex-shrink-0">
-                          <p className="text-sm font-medium text-foreground">{anomaly.riskScore}</p>
-                          <p className="text-xs text-muted-foreground">Risk Score</p>
-                          <p className="text-xs text-muted-foreground mt-1">{new Date(anomaly.timestamp).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                    </Collapsible>
-                  );
-                })
-              )}
-            </div>
-          </Card>
         </TabsContent>
 
         <TabsContent value="timeline" className="space-y-4 animate-fade-in">
