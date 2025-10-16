@@ -71,9 +71,12 @@ async function getOverviewData(supabase: any) {
     .from('transactions')
     .select('count')
 
+  // Get recent analysis results (last 100) for more relevant average
   const { data: analysisResults } = await supabase
     .from('analysis_results')
     .select('risk_score, anomaly_detected')
+    .order('created_at', { ascending: false })
+    .limit(100)
 
   const totalTransactions = transactions?.[0]?.count || 0
   const avgRiskScore = analysisResults?.length > 0 
