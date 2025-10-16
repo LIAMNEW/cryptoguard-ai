@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { NetworkGraph } from "./NetworkGraph";
 import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
@@ -21,7 +22,9 @@ import {
   Activity,
   Target,
   Zap,
-  Globe
+  Globe,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -38,6 +41,7 @@ export function AnalysisTabs() {
   const [networkData, setNetworkData] = useState({ nodes: [], links: [] });
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadAnalysisData();
@@ -312,52 +316,104 @@ export function AnalysisTabs() {
                     }).format(amount);
                   };
 
+                  const isExpanded = expandedAnomalies.has(anomaly.id);
+                  
                   return (
-                    <div key={anomaly.id} className="p-4 rounded-lg bg-glass-background border border-glass-border hover:border-quantum-green/50 transition-colors">
+                    <Collapsible 
+                      key={anomaly.id} 
+                      open={isExpanded}
+                      onOpenChange={(open) => {
+                        setExpandedAnomalies(prev => {
+                          const newSet = new Set(prev);
+                          if (open) {
+                            newSet.add(anomaly.id);
+                          } else {
+                            newSet.delete(anomaly.id);
+                          }
+                          return newSet;
+                        });
+                      }}
+                      className="p-4 rounded-lg bg-glass-background border border-glass-border hover:border-quantum-green/50 transition-colors"
+                    >
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{getAnomalyIcon(anomaly.type)}</span>
-                            <span className="font-medium capitalize">{anomaly.type.replace(/_/g, ' ')}</span>
-                            <Badge variant={getSeverityVariant(anomaly.severity)}>
-                              {anomaly.severity}
-                            </Badge>
-                          </div>
+                          <CollapsibleTrigger className="w-full text-left">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{getAnomalyIcon(anomaly.type)}</span>
+                              <span className="font-medium capitalize">{anomaly.type.replace(/_/g, ' ')}</span>
+                              <Badge variant={getSeverityVariant(anomaly.severity)}>
+                                {anomaly.severity}
+                              </Badge>
+                              {isExpanded ? (
+                                <ChevronUp className="w-4 h-4 ml-auto text-muted-foreground" />
+                              ) : (
+                                <ChevronDown className="w-4 h-4 ml-auto text-muted-foreground" />
+                              )}
+                            </div>
+                          </CollapsibleTrigger>
                           <p className="text-sm text-muted-foreground">{anomaly.description}</p>
-                          {anomaly.transaction && (
-                            <div className="mt-3 p-3 rounded bg-glass-card border border-glass-border/50">
-                              <div className="text-xs space-y-1">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Transaction ID:</span>
-                                  <span className="font-mono text-foreground">{anomaly.transaction.transaction_id}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Amount:</span>
-                                  <span className="font-semibold text-foreground">{formatAmount(anomaly.transaction.amount)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">From:</span>
-                                  <span className="font-mono text-xs text-foreground">{anomaly.transaction.from_address.slice(0, 10)}...</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">To:</span>
-                                  <span className="font-mono text-xs text-foreground">{anomaly.transaction.to_address.slice(0, 10)}...</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Time:</span>
-                                  <span className="text-xs text-foreground">{new Date(anomaly.transaction.timestamp).toLocaleString()}</span>
+                          
+                          <CollapsibleContent>
+                            {anomaly.transaction && (
+                              <div className="mt-3 p-4 rounded bg-glass-card border border-glass-border/50 space-y-3">
+                                <h4 className="text-sm font-semibold text-foreground mb-2">Transaction Details</h4>
+                                <div className="text-xs space-y-2">
+                                  <div className="flex justify-between items-start">
+                                    <span className="text-muted-foreground">Transaction ID:</span>
+                                    <span className="font-mono text-foreground text-right break-all ml-2">{anomaly.transaction.transaction_id}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Amount:</span>
+                                    <span className="font-semibold text-foreground">{formatAmount(anomaly.transaction.amount)}</span>
+                                  </div>
+                                  <div className="flex justify-between items-start">
+                                    <span className="text-muted-foreground">From:</span>
+                                    <span className="font-mono text-xs text-foreground text-right break-all ml-2">{anomaly.transaction.from_address}</span>
+                                  </div>
+                                  <div className="flex justify-between items-start">
+                                    <span className="text-muted-foreground">To:</span>
+                                    <span className="font-mono text-xs text-foreground text-right break-all ml-2">{anomaly.transaction.to_address}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">Timestamp:</span>
+                                    <span className="text-xs text-foreground">{new Date(anomaly.transaction.timestamp).toLocaleString()}</span>
+                                  </div>
+                                  {anomaly.transaction.transaction_hash && (
+                                    <div className="flex justify-between items-start">
+                                      <span className="text-muted-foreground">Hash:</span>
+                                      <span className="font-mono text-xs text-foreground text-right break-all ml-2">{anomaly.transaction.transaction_hash}</span>
+                                    </div>
+                                  )}
+                                  {anomaly.transaction.block_number && (
+                                    <div className="flex justify-between">
+                                      <span className="text-muted-foreground">Block Number:</span>
+                                      <span className="text-xs text-foreground">{anomaly.transaction.block_number}</span>
+                                    </div>
+                                  )}
+                                  {anomaly.transaction.gas_fee && (
+                                    <div className="flex justify-between">
+                                      <span className="text-muted-foreground">Gas Fee:</span>
+                                      <span className="text-xs text-foreground">{formatAmount(anomaly.transaction.gas_fee)}</span>
+                                    </div>
+                                  )}
+                                  {anomaly.transaction.transaction_type && (
+                                    <div className="flex justify-between">
+                                      <span className="text-muted-foreground">Type:</span>
+                                      <span className="text-xs text-foreground capitalize">{anomaly.transaction.transaction_type}</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
-                            </div>
-                          )}
+                            )}
+                          </CollapsibleContent>
                         </div>
-                        <div className="text-right ml-4">
+                        <div className="text-right ml-4 flex-shrink-0">
                           <p className="text-sm font-medium text-foreground">{anomaly.riskScore}</p>
                           <p className="text-xs text-muted-foreground">Risk Score</p>
                           <p className="text-xs text-muted-foreground mt-1">{new Date(anomaly.timestamp).toLocaleDateString()}</p>
                         </div>
                       </div>
-                    </div>
+                    </Collapsible>
                   );
                 })
               )}

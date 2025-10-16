@@ -161,11 +161,35 @@ async function analyzeTransaction(transaction: Transaction, supabase: any): Prom
     anomalies.push('round_amount_structuring')
   }
 
-  // Unusual transaction times (10pm-6am)
+  // Statistically unusual transaction times
   const hour = new Date(transaction.timestamp).getUTCHours()
-  if (hour >= 22 || hour < 6) {
-    austracScore += 10
-    anomalies.push('unusual_time')
+  
+  // Calculate time distribution from historical data
+  const { data: hourDistribution } = await supabase
+    .from('transactions')
+    .select('timestamp')
+    .order('created_at', { ascending: false })
+    .limit(1000)
+  
+  if (hourDistribution && hourDistribution.length > 100) {
+    // Count transactions per hour
+    const hourCounts = new Array(24).fill(0)
+    hourDistribution.forEach((tx: any) => {
+      const txHour = new Date(tx.timestamp).getUTCHours()
+      hourCounts[txHour]++
+    })
+    
+    // Calculate mean and standard deviation of hour distribution
+    const meanCount = hourCounts.reduce((a, b) => a + b, 0) / 24
+    const variance = hourCounts.reduce((sum, count) => sum + Math.pow(count - meanCount, 2), 0) / 24
+    const stdDev = Math.sqrt(variance)
+    
+    // Only flag if this hour is significantly unusual (2+ std deviations below mean)
+    // This means the hour is rarely used in the dataset
+    if (stdDev > 0 && hourCounts[hour] < (meanCount - 2 * stdDev) && hourCounts[hour] < 10) {
+      austracScore += 10
+      anomalies.push('unusual_time')
+    }
   }
 
   // High velocity (many transactions quickly)
