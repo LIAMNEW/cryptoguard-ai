@@ -99,7 +99,8 @@ export function Sidebar({ activeSection, onSectionChange, userEmail }: SidebarPr
               key={item.id}
               variant={isActive ? "default" : "ghost"}
               className={cn(
-                "w-full justify-start gap-3 transition-all duration-200",
+                "w-full transition-all duration-200",
+                collapsed ? "justify-center px-0" : "justify-start gap-3",
                 isActive && "bg-quantum-green text-background glow-effect",
                 !isActive && "text-muted-foreground hover:text-quantum-green hover:bg-glass-background"
               )}
