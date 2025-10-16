@@ -71,25 +71,34 @@ async function getOverviewData(supabase: any) {
     .from('transactions')
     .select('count')
 
-  // Get recent analysis results (last 100) for more relevant average
-  const { data: analysisResults } = await supabase
+  // Get recent analysis results (last 100) for average risk score
+  const { data: recentAnalysis } = await supabase
     .from('analysis_results')
-    .select('risk_score, anomaly_detected')
+    .select('risk_score')
     .order('created_at', { ascending: false })
     .limit(100)
 
+  // Get total counts for anomalies and high risk transactions
+  const { count: totalAnomalies } = await supabase
+    .from('analysis_results')
+    .select('*', { count: 'exact', head: true })
+    .eq('anomaly_detected', true)
+
+  const { count: totalHighRisk } = await supabase
+    .from('analysis_results')
+    .select('*', { count: 'exact', head: true })
+    .gt('risk_score', 70)
+
   const totalTransactions = transactions?.[0]?.count || 0
-  const avgRiskScore = analysisResults?.length > 0 
-    ? Math.round(analysisResults.reduce((sum: number, r: any) => sum + r.risk_score, 0) / analysisResults.length)
+  const avgRiskScore = recentAnalysis?.length > 0 
+    ? Math.round(recentAnalysis.reduce((sum: number, r: any) => sum + r.risk_score, 0) / recentAnalysis.length)
     : 0
-  const anomaliesFound = analysisResults?.filter((r: any) => r.anomaly_detected).length || 0
-  const highRiskTransactions = analysisResults?.filter((r: any) => r.risk_score > 70).length || 0
 
   return {
     totalTransactions,
     averageRiskScore: avgRiskScore,
-    anomaliesFound,
-    highRiskTransactions
+    anomaliesFound: totalAnomalies || 0,
+    highRiskTransactions: totalHighRisk || 0
   }
 }
 
