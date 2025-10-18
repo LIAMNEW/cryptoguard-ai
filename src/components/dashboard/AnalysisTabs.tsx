@@ -9,7 +9,8 @@ import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
-import { CanvasCharts } from "@/components/analytics/CanvasCharts";
+import { RiskPieChart } from "@/components/analytics/RiskPieChart";
+import { InvestigativePanel } from "@/components/analytics/InvestigativePanel";
 
 import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
@@ -45,6 +46,7 @@ export function AnalysisTabs() {
   const [loading, setLoading] = useState(true);
   const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
   const [autoReanalyzing, setAutoReanalyzing] = useState(false);
+  const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>();
 
   useEffect(() => {
     loadAnalysisData();
@@ -363,14 +365,13 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4 animate-fade-in">
-          <div className="flex items-center gap-3 mb-4">
-            <BarChart3 className="w-6 h-6 text-quantum-green" />
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Canvas-Based Analytics</h3>
-              <p className="text-sm text-muted-foreground">High-performance analytics with Chart.js</p>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <RiskPieChart 
+              riskData={riskData} 
+              onSegmentClick={(level) => setSelectedRiskLevel(level)}
+            />
+            <InvestigativePanel filterRiskLevel={selectedRiskLevel} />
           </div>
-          <CanvasCharts riskData={riskData} timelineData={timelineData} />
         </TabsContent>
 
         <TabsContent value="export" className="space-y-4 animate-fade-in">
