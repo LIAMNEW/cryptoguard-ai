@@ -111,12 +111,12 @@ async function getNetworkData(supabase: any) {
   const { data: nodes } = await supabase
     .from('network_nodes')
     .select('*')
-    .limit(50)
+    .limit(200) // Increased to show more nodes
 
   const { data: edges } = await supabase
     .from('network_edges')
     .select('*')
-    .limit(100)
+    .limit(500) // Increased to show more connections
 
   const formattedNodes = nodes?.map((node: any) => ({
     id: node.address,
@@ -142,6 +142,7 @@ async function getTimelineData(supabase: any) {
     .from('transactions')
     .select('timestamp, amount')
     .order('timestamp', { ascending: true })
+    .limit(10000) // Ensure we get all transactions
 
   if (!transactions) return []
 
