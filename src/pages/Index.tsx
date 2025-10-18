@@ -60,70 +60,63 @@ const Index = () => {
     initKeys();
   }, [user]);
 
-  const handleFileUpload = useCallback(async (transactions: any[]) => {
+  const handleFileUpload = useCallback(async (data: { fileContent: string; fileName: string }) => {
     try {
-      // Detect if these are bank transactions
-      const isBankTransaction = transactions.length > 0 && transactions[0]._isBankTransaction;
+      console.log('Sending file to LLM for intelligent analysis...');
       
-      if (isBankTransaction) {
-        console.log('Processing bank transactions for fraud detection...');
-        const { data, error } = await supabase.functions.invoke('analyze-bank-transactions', {
-          body: { transactions }
-        });
+      const { data: result, error } = await supabase.functions.invoke('llm-analyze-transactions', {
+        body: data
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        // Log audit event
-        await logAuditEvent({
-          action: "analyze_bank_transactions",
-          resourceType: "bank_transactions",
-          details: {
-            total_transactions: data.total_transactions,
-            flagged_count: data.flagged_count,
-            timestamp: new Date().toISOString(),
-          },
-        });
+      // Log audit event
+      await logAuditEvent({
+        action: "llm_analyze_transactions",
+        resourceType: "transactions",
+        details: {
+          fileName: data.fileName,
+          total_transactions: result.total_transactions,
+          high_risk_count: result.high_risk_count,
+          critical_count: result.critical_count,
+          timestamp: new Date().toISOString(),
+        },
+      });
 
-        toast.success(
-          `Analysis complete! ${data.flagged_count} of ${data.total_transactions} transactions flagged for review.`,
-          { duration: 5000 }
-        );
+      const riskSummary = [];
+      if (result.critical_count > 0) {
+        riskSummary.push(`🚨 ${result.critical_count} CRITICAL`);
+      }
+      if (result.high_risk_count > 0) {
+        riskSummary.push(`⚠️ ${result.high_risk_count} HIGH RISK`);
+      }
+
+      toast.success(
+        `AI Analysis Complete! ${result.total_transactions} transactions processed${riskSummary.length > 0 ? ': ' + riskSummary.join(', ') : ''}`,
+        { duration: 6000 }
+      );
+
+      if (result.patterns) {
+        const patterns = [];
+        if (result.patterns.structuring_detected) patterns.push('Structuring');
+        if (result.patterns.velocity_abuse) patterns.push('Velocity Abuse');
+        if (result.patterns.circular_transactions) patterns.push('Circular Flow');
+        if (result.patterns.unusual_timing) patterns.push('Unusual Timing');
         
-        if (data.flagged_count > 0) {
-          toast.info(
-            `Top concerns: ${Object.entries(data.reason_breakdown)
-              .filter(([_, count]) => (count as number) > 0)
-              .map(([reason, count]) => `${reason} (${count})`)
-              .join(', ')}`,
-            { duration: 7000 }
-          );
+        if (patterns.length > 0) {
+          toast.warning(`Patterns detected: ${patterns.join(', ')}`, { duration: 8000 });
         }
-      } else {
-        console.log('Processing blockchain transactions...');
-        const result = await uploadTransactions(transactions);
-        
-        // Log audit event
-        await logAuditEvent({
-          action: "upload_transactions",
-          resourceType: "transactions",
-          details: {
-            count: transactions.length,
-            timestamp: new Date().toISOString(),
-          },
-        });
-        
-        toast.success(`${transactions.length} transactions uploaded and analyzed successfully!`);
       }
       
       setHasData(true);
       setActiveSection("dashboard");
     } catch (error) {
-      toast.error('Failed to process transactions. Please try again.');
+      toast.error('AI analysis failed. Please check your file format and try again.');
       console.error('Upload error:', error);
       
       // Log error event
       await logAuditEvent({
-        action: "upload_transactions_failed",
+        action: "llm_analyze_failed",
         resourceType: "transactions",
         details: {
           error: error instanceof Error ? error.message : "Unknown error",

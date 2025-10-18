@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 interface MainContentProps {
   activeSection: string;
   hasData: boolean;
-  onFileUpload: (transactions: any[]) => Promise<void>;
+  onFileUpload: (data: { fileContent: string; fileName: string }) => Promise<any>;
 }
 
 export function MainContent({ activeSection, hasData, onFileUpload }: MainContentProps) {

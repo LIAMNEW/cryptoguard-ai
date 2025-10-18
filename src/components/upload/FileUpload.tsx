@@ -15,7 +15,7 @@ interface UploadedFile {
 }
 
 interface FileUploadProps {
-  onFileUpload: (transactions: any[]) => Promise<void>;
+  onFileUpload: (data: { fileContent: string; fileName: string }) => Promise<any>;
 }
 
 export function FileUpload({ onFileUpload }: FileUploadProps) {
@@ -69,7 +69,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
   const processFile = async (upload: UploadedFile) => {
     try {
-      console.log('Processing file:', upload.file.name);
+      console.log('Processing file with LLM:', upload.file.name);
       
       // Update progress
       setUploadedFiles(prev => 
@@ -80,60 +80,36 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
         )
       );
 
-      // Parse file content
-      const text = await upload.file.text();
-      let transactions = [];
+      // Read raw file content
+      const fileContent = await upload.file.text();
       
-      console.log('File content preview:', text.substring(0, 500));
-      
-      if (upload.file.name.endsWith('.csv')) {
-        transactions = parseCSV(text);
-      } else if (upload.file.name.endsWith('.json')) {
-        try {
-          const parsed = JSON.parse(text);
-          if (Array.isArray(parsed)) {
-            transactions = parsed;
-          } else if (parsed && typeof parsed === 'object' && parsed.transactions) {
-            transactions = parsed.transactions;
-          } else {
-            // Wrap single object in array
-            transactions = [parsed];
-          }
-        } catch (e) {
-          console.error('Failed to parse JSON:', e);
-          throw new Error('Invalid JSON format');
-        }
-      }
-
-      console.log('Parsed transactions count:', transactions.length);
-      console.log('Sample transaction:', transactions[0]);
-
-      if (transactions.length === 0) {
-        throw new Error('No valid transactions found in file. Please check the format.');
-      }
+      console.log('File size:', fileContent.length, 'characters');
 
       // Update progress
       setUploadedFiles(prev => 
         prev.map(file => 
           file.file === upload.file 
-            ? { ...file, progress: 60 }
+            ? { ...file, progress: 40 }
             : file
         )
       );
+
+      // Send to LLM for analysis - let the AI figure out the format
+      console.log('Sending to LLM for intelligent analysis...');
+      
+      const analysisResult = await onFileUpload({
+        fileContent,
+        fileName: upload.file.name
+      });
 
       // Update progress
       setUploadedFiles(prev => 
         prev.map(file => 
           file.file === upload.file 
-            ? { ...file, progress: 80 }
+            ? { ...file, progress: 90 }
             : file
         )
       );
-
-      // Note: Transaction data is encrypted in transit via HTTPS/TLS
-      // Additional quantum-safe encryption can be added at the storage layer if needed
-      console.log('Uploading transactions to backend...');
-      await onFileUpload(transactions);
 
       // Mark as complete
       setUploadedFiles(prev => 
@@ -155,110 +131,6 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
     }
   };
 
-  const parseCSV = (text: string) => {
-    console.log('Parsing CSV text length:', text.length);
-    const lines = text.split('\n').filter(line => line.trim());
-    console.log('CSV lines count:', lines.length);
-    
-    if (lines.length < 2) {
-      console.log('Not enough lines in CSV');
-      return [];
-    }
-    
-    // Better CSV parsing that handles quoted fields
-    const parseCSVLine = (line: string) => {
-      const result = [];
-      let current = '';
-      let inQuotes = false;
-      
-      for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        if (char === '"') {
-          inQuotes = !inQuotes;
-        } else if (char === ',' && !inQuotes) {
-          result.push(current.trim());
-          current = '';
-        } else {
-          current += char;
-        }
-      }
-      result.push(current.trim());
-      return result.map(field => field.replace(/^"|"$/g, ''));
-    };
-    
-    const headers = parseCSVLine(lines[0]).map(h => h.toLowerCase().trim());
-    console.log('CSV headers:', headers);
-    
-    // Detect if this is a bank transaction CSV (has merchant or country columns)
-    const isBankTransaction = headers.includes('merchant') || headers.includes('country');
-    
-    const transactions = lines.slice(1).map((line, index) => {
-      const values = parseCSVLine(line);
-      const obj: any = {};
-      
-      headers.forEach((header, i) => {
-        if (values[i]) {
-          obj[header] = values[i];
-        }
-      });
-      
-      if (isBankTransaction) {
-        // Bank transaction format - map various column names to expected format
-        const transactionId = obj.transaction_id || obj.transactionid || `tx_${Date.now()}_${index}`;
-        
-        // Combine date and time if separate, or use timestamp
-        let timestamp;
-        if (obj.date && obj.time) {
-          timestamp = new Date(`${obj.date} ${obj.time}`).toISOString();
-        } else {
-          timestamp = obj.timestamp || new Date().toISOString();
-        }
-        
-        return {
-          transaction_id: transactionId,
-          timestamp: timestamp,
-          amount: parseFloat(obj.amount || '0'),
-          merchant_name: obj.merchant || obj.merchant_name || '',
-          country_of_origin: obj.country || obj.country_of_origin || 'Australia',
-          _isBankTransaction: true
-        };
-      } else {
-        // Blockchain transaction format
-        const transaction: any = {
-          transaction_id: obj.transaction_id || obj.txid || obj.id || obj.hash || `tx_${Date.now()}_${index}`,
-          from_address: obj.from_address || obj.from || obj.sender || obj.source_address || obj.from_addr,
-          to_address: obj.to_address || obj.to || obj.recipient || obj.destination_address || obj.to_addr,
-          amount: parseFloat(obj.amount || obj.value || obj.sum || obj.total || '0'),
-          timestamp: obj.timestamp || obj.time || obj.date || obj.created_at || new Date().toISOString(),
-          transaction_hash: obj.transaction_hash || obj.hash || obj.txhash,
-          block_number: obj.block_number ? parseInt(obj.block_number) : undefined,
-          gas_fee: obj.gas_fee ? parseFloat(obj.gas_fee) : undefined,
-          transaction_type: obj.transaction_type || obj.type || 'transfer'
-        };
-        
-        // Ensure timestamp is in ISO format
-        if (transaction.timestamp && !transaction.timestamp.includes('T')) {
-          try {
-            transaction.timestamp = new Date(transaction.timestamp).toISOString();
-          } catch (e) {
-            transaction.timestamp = new Date().toISOString();
-          }
-        }
-        
-        return transaction;
-      }
-    }).filter(tx => {
-      if (tx._isBankTransaction) {
-        return tx.amount > 0;
-      }
-      return tx.from_address && tx.to_address && tx.amount > 0;
-    });
-    
-    console.log('Parsed transactions:', transactions.length);
-    console.log('Is bank transaction:', isBankTransaction);
-    console.log('Sample transaction:', transactions[0]);
-    return transactions;
-  };
 
   const removeFile = (fileToRemove: File) => {
     setUploadedFiles(prev => prev.filter(upload => upload.file !== fileToRemove));

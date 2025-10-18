@@ -12,6 +12,9 @@ verify_jwt = false
 [functions.voice-chat]
 verify_jwt = false
 
+[functions.llm-analyze-transactions]
+verify_jwt = false
+
 [functions.generate-ai-graph]
 verify_jwt = false
 
