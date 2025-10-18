@@ -67,16 +67,17 @@ serve(async (req) => {
 })
 
 async function getOverviewData(supabase: any) {
-  const { data: transactions } = await supabase
+  // Get total transaction count
+  const { count: totalTransactions } = await supabase
     .from('transactions')
-    .select('count')
+    .select('*', { count: 'exact', head: true })
 
-  // Get recent analysis results (last 100) for average risk score
-  const { data: recentAnalysis } = await supabase
+  // Get ALL analysis results for accurate average risk score
+  const { data: allAnalysis } = await supabase
     .from('analysis_results')
     .select('risk_score')
-    .order('created_at', { ascending: false })
-    .limit(100)
+
+  console.log(`📊 Total transactions: ${totalTransactions}, Analysis results: ${allAnalysis?.length || 0}`)
 
   // Get total counts for anomalies and high risk transactions
   const { count: totalAnomalies } = await supabase
@@ -89,13 +90,14 @@ async function getOverviewData(supabase: any) {
     .select('*', { count: 'exact', head: true })
     .gt('risk_score', 70)
 
-  const totalTransactions = transactions?.[0]?.count || 0
-  const avgRiskScore = recentAnalysis?.length > 0 
-    ? Math.round(recentAnalysis.reduce((sum: number, r: any) => sum + r.risk_score, 0) / recentAnalysis.length)
+  const avgRiskScore = allAnalysis?.length > 0 
+    ? Math.round(allAnalysis.reduce((sum: number, r: any) => sum + r.risk_score, 0) / allAnalysis.length)
     : 0
 
+  console.log(`📈 Avg Risk Score: ${avgRiskScore}, Anomalies: ${totalAnomalies}, High Risk: ${totalHighRisk}`)
+
   return {
-    totalTransactions,
+    totalTransactions: totalTransactions || 0,
     averageRiskScore: avgRiskScore,
     anomaliesFound: totalAnomalies || 0,
     highRiskTransactions: totalHighRisk || 0
@@ -103,15 +105,17 @@ async function getOverviewData(supabase: any) {
 }
 
 async function getNetworkData(supabase: any) {
+  // Fetch ALL network nodes (removed limit)
   const { data: nodes } = await supabase
     .from('network_nodes')
     .select('*')
-    .limit(50)
+    .order('total_volume', { ascending: false })
 
+  // Fetch ALL network edges (removed limit)
   const { data: edges } = await supabase
     .from('network_edges')
     .select('*')
-    .limit(100)
+    .order('total_amount', { ascending: false })
 
   const formattedNodes = nodes?.map((node: any) => ({
     id: node.address,
@@ -133,10 +137,13 @@ async function getNetworkData(supabase: any) {
 }
 
 async function getTimelineData(supabase: any) {
+  // Fetch ALL transactions for timeline (removed any implicit limits)
   const { data: transactions } = await supabase
     .from('transactions')
     .select('timestamp, amount')
     .order('timestamp', { ascending: true })
+
+  console.log(`📅 Timeline data: ${transactions?.length || 0} transactions`)
 
   if (!transactions) return []
 
@@ -160,6 +167,7 @@ async function getTimelineData(supabase: any) {
 }
 
 async function getAnomaliesData(supabase: any) {
+  // Fetch ALL anomalies (removed 20 limit for full dataset)
   const { data: anomalies } = await supabase
     .from('analysis_results')
     .select(`
@@ -168,7 +176,8 @@ async function getAnomaliesData(supabase: any) {
     `)
     .eq('anomaly_detected', true)
     .order('created_at', { ascending: false })
-    .limit(20)
+
+  console.log(`🚨 Anomalies found: ${anomalies?.length || 0}`)
 
   return anomalies?.map((anomaly: any) => ({
     id: anomaly.id,
@@ -182,9 +191,12 @@ async function getAnomaliesData(supabase: any) {
 }
 
 async function getRiskData(supabase: any) {
+  // Fetch ALL analysis results for risk distribution
   const { data: analysisResults } = await supabase
     .from('analysis_results')
     .select('risk_score')
+
+  console.log(`⚠️ Risk data from ${analysisResults?.length || 0} analysis results`)
 
   if (!analysisResults) return { low: 0, medium: 0, high: 0, critical: 0 }
 
