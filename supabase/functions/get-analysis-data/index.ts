@@ -72,39 +72,38 @@ async function getOverviewData(supabase: any) {
     .from('transactions')
     .select('*', { count: 'exact', head: true })
 
-  // Get ALL analysis results for accurate average risk score
-  const { data: allAnalysis } = await supabase
-    .from('analysis_results')
-    .select('risk_score')
+  // Get ALL scorecards for accurate metrics
+  const { data: allScorecards } = await supabase
+    .from('transaction_scorecards')
+    .select('final_score, risk_level')
 
-  // Get total counts for anomalies and high risk transactions
+  // Calculate average risk score from scorecards if available
+  const avgRiskScore = allScorecards && allScorecards.length > 0 
+    ? Math.round(allScorecards.reduce((sum: number, s: any) => sum + s.final_score, 0) / allScorecards.length)
+    : 0
+
+  // Count high-risk transactions (SMR level)
+  const highRiskCount = allScorecards?.filter((s: any) => s.risk_level === 'SMR').length || 0
+
+  // Count anomalies from analysis_results for backward compatibility
   const { count: totalAnomalies } = await supabase
     .from('analysis_results')
     .select('*', { count: 'exact', head: true })
     .eq('anomaly_detected', true)
 
-  const { count: totalHighRisk } = await supabase
-    .from('analysis_results')
-    .select('*', { count: 'exact', head: true })
-    .gt('risk_score', 70)
-
-  const avgRiskScore = allAnalysis && allAnalysis.length > 0 
-    ? Math.round(allAnalysis.reduce((sum: number, r: any) => sum + r.risk_score, 0) / allAnalysis.length)
-    : 0
-
   console.log('Overview Data:', {
     totalTransactions,
     avgRiskScore,
+    highRiskCount,
     totalAnomalies,
-    totalHighRisk,
-    analysisCount: allAnalysis?.length
+    scorecardCount: allScorecards?.length
   })
 
   return {
     totalTransactions: totalTransactions || 0,
     averageRiskScore: avgRiskScore,
     anomaliesFound: totalAnomalies || 0,
-    highRiskTransactions: totalHighRisk || 0
+    highRiskTransactions: highRiskCount
   }
 }
 

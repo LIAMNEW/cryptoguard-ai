@@ -97,6 +97,87 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_profiles: {
+        Row: {
+          addresses: Json | null
+          created_at: string
+          customer_identifier: string
+          emails: Json | null
+          id: string
+          income_bracket: string | null
+          kyc_data: Json | null
+          last_kyc_update: string | null
+          occupation: string | null
+          phones: Json | null
+          prior_alerts_count: number | null
+          risk_profile: Json | null
+          risk_rating: string | null
+          updated_at: string
+        }
+        Insert: {
+          addresses?: Json | null
+          created_at?: string
+          customer_identifier: string
+          emails?: Json | null
+          id?: string
+          income_bracket?: string | null
+          kyc_data?: Json | null
+          last_kyc_update?: string | null
+          occupation?: string | null
+          phones?: Json | null
+          prior_alerts_count?: number | null
+          risk_profile?: Json | null
+          risk_rating?: string | null
+          updated_at?: string
+        }
+        Update: {
+          addresses?: Json | null
+          created_at?: string
+          customer_identifier?: string
+          emails?: Json | null
+          id?: string
+          income_bracket?: string | null
+          kyc_data?: Json | null
+          last_kyc_update?: string | null
+          occupation?: string | null
+          phones?: Json | null
+          prior_alerts_count?: number | null
+          risk_profile?: Json | null
+          risk_rating?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      high_risk_jurisdictions: {
+        Row: {
+          active: boolean
+          country_code: string
+          country_name: string
+          created_at: string
+          id: string
+          notes: string | null
+          risk_category: string
+        }
+        Insert: {
+          active?: boolean
+          country_code: string
+          country_name: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          risk_category: string
+        }
+        Update: {
+          active?: boolean
+          country_code?: string
+          country_name?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          risk_category?: string
+        }
+        Relationships: []
+      }
       network_edges: {
         Row: {
           created_at: string
@@ -226,6 +307,48 @@ export type Database = {
         }
         Relationships: []
       }
+      rule_catalog: {
+        Row: {
+          austrac_indicator: string | null
+          created_at: string
+          description: string
+          enabled: boolean
+          id: string
+          must_report: boolean
+          name: string
+          rule_id: string
+          severity: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          austrac_indicator?: string | null
+          created_at?: string
+          description: string
+          enabled?: boolean
+          id?: string
+          must_report?: boolean
+          name: string
+          rule_id: string
+          severity: string
+          updated_at?: string
+          weight: number
+        }
+        Update: {
+          austrac_indicator?: string | null
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          id?: string
+          must_report?: boolean
+          name?: string
+          rule_id?: string
+          severity?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       saved_analyses: {
         Row: {
           analysis_date: string
@@ -267,6 +390,128 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      smr_drafts: {
+        Row: {
+          analysis_conclusion: string | null
+          created_at: string
+          crime_type: string | null
+          customer_profile: string | null
+          due_by_ts: string | null
+          id: string
+          payload: Json
+          scorecard_id: string | null
+          status: string
+          submitted_at: string | null
+          suspicion_description: string | null
+          transaction_id: string
+          unusual_activity: string | null
+          updated_at: string
+        }
+        Insert: {
+          analysis_conclusion?: string | null
+          created_at?: string
+          crime_type?: string | null
+          customer_profile?: string | null
+          due_by_ts?: string | null
+          id?: string
+          payload: Json
+          scorecard_id?: string | null
+          status?: string
+          submitted_at?: string | null
+          suspicion_description?: string | null
+          transaction_id: string
+          unusual_activity?: string | null
+          updated_at?: string
+        }
+        Update: {
+          analysis_conclusion?: string | null
+          created_at?: string
+          crime_type?: string | null
+          customer_profile?: string | null
+          due_by_ts?: string | null
+          id?: string
+          payload?: Json
+          scorecard_id?: string | null
+          status?: string
+          submitted_at?: string | null
+          suspicion_description?: string | null
+          transaction_id?: string
+          unusual_activity?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "smr_drafts_scorecard_id_fkey"
+            columns: ["scorecard_id"]
+            isOneToOne: false
+            referencedRelation: "transaction_scorecards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "smr_drafts_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_scorecards: {
+        Row: {
+          austrac_compliance: Json | null
+          created_at: string
+          due_by_ts: string | null
+          final_score: number
+          id: string
+          indicators: Json | null
+          mandatory_flags: Json | null
+          ml_score: number | null
+          policy_score: number
+          rationale: string | null
+          risk_level: string
+          rules_triggered: Json | null
+          transaction_id: string
+        }
+        Insert: {
+          austrac_compliance?: Json | null
+          created_at?: string
+          due_by_ts?: string | null
+          final_score: number
+          id?: string
+          indicators?: Json | null
+          mandatory_flags?: Json | null
+          ml_score?: number | null
+          policy_score?: number
+          rationale?: string | null
+          risk_level: string
+          rules_triggered?: Json | null
+          transaction_id: string
+        }
+        Update: {
+          austrac_compliance?: Json | null
+          created_at?: string
+          due_by_ts?: string | null
+          final_score?: number
+          id?: string
+          indicators?: Json | null
+          mandatory_flags?: Json | null
+          ml_score?: number | null
+          policy_score?: number
+          rationale?: string | null
+          risk_level?: string
+          rules_triggered?: Json | null
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_scorecards_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transactions: {
         Row: {
