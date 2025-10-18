@@ -47,10 +47,79 @@ export function AnalysisTabs() {
 
   useEffect(() => {
     loadAnalysisData();
-    // Removed auto-reanalysis to prevent CPU timeout issues
+    checkAndReanalyze();
   }, []);
 
-  // Removed checkAndReanalyze and performReanalysis to prevent CPU timeout issues
+  const checkAndReanalyze = async () => {
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Check if there are analysis results with old unusual_time detection
+      const { data: oldAnomalies, error } = await supabase
+        .from('analysis_results')
+        .select('id')
+        .like('anomaly_type', '%unusual_time%')
+        .limit(1);
+
+      if (error) {
+        console.error('Error checking for old anomalies:', error);
+        return;
+      }
+
+      // If we found old unusual_time anomalies, trigger automatic re-analysis
+      if (oldAnomalies && oldAnomalies.length > 0) {
+        console.log('Found old unusual_time anomalies, triggering automatic re-analysis...');
+        await performReanalysis();
+      }
+    } catch (error) {
+      console.error('Error in checkAndReanalyze:', error);
+    }
+  };
+
+  const performReanalysis = async () => {
+    setAutoReanalyzing(true);
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Fetch all existing transactions
+      const { data: transactions, error: fetchError } = await supabase
+        .from('transactions')
+        .select('*')
+        .order('timestamp', { ascending: false });
+
+      if (fetchError) throw fetchError;
+
+      if (!transactions || transactions.length === 0) {
+        console.log('No transactions found to re-analyze.');
+        return;
+      }
+
+      console.log(`Re-analyzing ${transactions.length} transactions with improved detection...`);
+
+      // Delete old analysis results
+      const { error: deleteError } = await supabase
+        .from('analysis_results')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (deleteError) throw deleteError;
+
+      // Re-analyze transactions with new logic
+      const { error: analyzeError } = await supabase.functions.invoke('analyze-transactions', {
+        body: { transactions }
+      });
+
+      if (analyzeError) throw analyzeError;
+
+      // Reload data
+      await loadAnalysisData();
+      console.log('✓ Auto re-analysis complete with improved detection');
+    } catch (error) {
+      console.error('Failed to auto re-analyze transactions:', error);
+    } finally {
+      setAutoReanalyzing(false);
+    }
+  };
 
   const loadAnalysisData = async () => {
     try {

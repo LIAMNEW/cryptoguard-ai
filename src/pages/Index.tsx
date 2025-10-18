@@ -107,14 +107,12 @@ const Index = () => {
           action: "upload_transactions",
           resourceType: "transactions",
           details: {
-            count: result.count,
+            count: transactions.length,
             timestamp: new Date().toISOString(),
           },
         });
         
-        toast.success(`${result.count} transactions uploaded successfully!`, {
-          description: 'AUSTRAC compliance scoring is processing in the background.'
-        });
+        toast.success(`${transactions.length} transactions uploaded and analyzed successfully!`);
       }
       
       setHasData(true);
