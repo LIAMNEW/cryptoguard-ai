@@ -1,12 +1,25 @@
-import { Shield, Lock, Key, AlertTriangle, CheckCircle } from "lucide-react";
+import { Shield, Lock, Key, AlertTriangle, CheckCircle, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { QuantumCryptoTest } from "@/components/security/QuantumCryptoTest";
+import { useNavigate } from "react-router-dom";
 
 export default function SecurityInfo() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto space-y-8">
+        <Button
+          variant="outline"
+          onClick={() => navigate("/")}
+          className="mb-4"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to App
+        </Button>
+
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-quantum-green/10 border-2 border-quantum-green">
