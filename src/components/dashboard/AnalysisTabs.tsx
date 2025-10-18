@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TransactionScatterPlot } from "./TransactionScatterPlot";
 import { TransactionTimeline } from "./TransactionTimeline";
+import { NetworkGraph } from "./NetworkGraph";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
@@ -215,6 +216,7 @@ export function AnalysisTabs() {
         </TabsList>
 
         <TabsContent value="network" className="space-y-4 animate-fade-in">
+          <NetworkGraph nodes={networkData.nodes} links={networkData.links} />
           <TransactionScatterPlot />
           
           {/* Quantum-Ready Infrastructure - Only in Network tab */}

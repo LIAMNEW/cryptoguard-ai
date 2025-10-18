@@ -17,32 +17,24 @@ interface Link {
 }
 
 interface NetworkGraphProps {
-  nodes?: Node[];
-  links?: Link[];
+  nodes: Node[];
+  links: Link[];
 }
 
-export function NetworkGraph({ nodes = [], links = [] }: NetworkGraphProps) {
+export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Mock data if no data provided
-  const mockNodes: Node[] = [
-    { id: '1', address: '1A1zP1eP...', amount: 50000, riskLevel: 'low' },
-    { id: '2', address: '1BvBMS...', amount: 15000, riskLevel: 'medium' },
-    { id: '3', address: '1C4eDQ...', amount: 85000, riskLevel: 'high' },
-    { id: '4', address: '1D7fPM...', amount: 25000, riskLevel: 'low' },
-    { id: '5', address: '1E9kRN...', amount: 45000, riskLevel: 'medium' },
-  ];
-
-  const mockLinks: Link[] = [
-    { source: '1', target: '2', amount: 12000 },
-    { source: '2', target: '3', amount: 8500 },
-    { source: '1', target: '4', amount: 22000 },
-    { source: '4', target: '5', amount: 15000 },
-    { source: '3', target: '5', amount: 35000 },
-  ];
-
-  const displayNodes = nodes.length > 0 ? nodes : mockNodes;
-  const displayLinks = links.length > 0 ? links : mockLinks;
+  if (!nodes || nodes.length === 0) {
+    return (
+      <div className="relative w-full h-96 flex items-center justify-center border border-glass-border rounded-lg bg-glass-background">
+        <div className="text-center space-y-2">
+          <Network className="w-12 h-12 text-muted-foreground mx-auto" />
+          <p className="text-muted-foreground">No transaction data available</p>
+          <p className="text-sm text-muted-foreground">Upload transactions to see network graph</p>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -64,8 +56,8 @@ export function NetworkGraph({ nodes = [], links = [] }: NetworkGraphProps) {
     const centerY = height / 2;
     const radius = Math.min(width, height) / 3;
 
-    displayNodes.forEach((node, index) => {
-      const angle = (index / displayNodes.length) * 2 * Math.PI;
+    nodes.forEach((node, index) => {
+      const angle = (index / nodes.length) * 2 * Math.PI;
       node.x = centerX + Math.cos(angle) * radius;
       node.y = centerY + Math.sin(angle) * radius;
     });
@@ -79,9 +71,9 @@ export function NetworkGraph({ nodes = [], links = [] }: NetworkGraphProps) {
       ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
       ctx.lineWidth = 1;
       
-      displayLinks.forEach(link => {
-        const sourceNode = displayNodes.find(n => n.id === link.source);
-        const targetNode = displayNodes.find(n => n.id === link.target);
+      links.forEach(link => {
+        const sourceNode = nodes.find(n => n.id === link.source);
+        const targetNode = nodes.find(n => n.id === link.target);
         
         if (sourceNode && targetNode && sourceNode.x && sourceNode.y && targetNode.x && targetNode.y) {
           ctx.beginPath();
@@ -92,7 +84,7 @@ export function NetworkGraph({ nodes = [], links = [] }: NetworkGraphProps) {
       });
 
       // Draw nodes
-      displayNodes.forEach(node => {
+      nodes.forEach(node => {
         if (!node.x || !node.y) return;
         
         const nodeRadius = Math.sqrt(node.amount / 1000) + 5;
@@ -136,7 +128,7 @@ export function NetworkGraph({ nodes = [], links = [] }: NetworkGraphProps) {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [displayNodes, displayLinks]);
+  }, [nodes, links]);
 
   return (
     <div className="relative w-full h-96">
