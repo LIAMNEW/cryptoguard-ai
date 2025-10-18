@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/card";
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Transaction {
   date: string;
@@ -10,7 +12,7 @@ interface Transaction {
 }
 
 interface TransactionScatterPlotProps {
-  transactions?: Transaction[];
+  // No props needed - will fetch its own data
 }
 
 // Risk level color mapping using semantic tokens
@@ -93,8 +95,74 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-export function TransactionScatterPlot({ transactions }: TransactionScatterPlotProps) {
-  const displayData = transactions && transactions.length > 0 ? transactions : generateMockData();
+export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
+  const [displayData, setDisplayData] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTransactionData = async () => {
+      try {
+        // Fetch transactions with their analysis results
+        const { data: txData, error: txError } = await supabase
+          .from('transactions')
+          .select('*')
+          .order('timestamp', { ascending: false })
+          .limit(500);
+
+        if (txError) throw txError;
+
+        // Fetch analysis results to get risk scores
+        const { data: analysisData, error: analysisError } = await supabase
+          .from('analysis_results')
+          .select('transaction_id, risk_score, risk_level');
+
+        if (analysisError) throw analysisError;
+
+        // Create a map of transaction_id to risk data
+        const riskMap = new Map(
+          analysisData?.map(a => [a.transaction_id, { 
+            riskScore: a.risk_score, 
+            riskLevel: a.risk_level 
+          }]) || []
+        );
+
+        // Transform the data for the scatter plot
+        const transformedData: Transaction[] = (txData || []).map(tx => {
+          const riskInfo = riskMap.get(tx.id);
+          const riskScore = riskInfo?.riskScore || 0;
+          
+          // Determine risk level based on score or use existing level
+          let riskLevel: 'low' | 'medium' | 'high' = 'low';
+          if (riskInfo?.riskLevel) {
+            const level = riskInfo.riskLevel.toLowerCase();
+            if (level === 'critical' || level === 'high') riskLevel = 'high';
+            else if (level === 'medium') riskLevel = 'medium';
+          } else if (riskScore >= 60) {
+            riskLevel = 'high';
+          } else if (riskScore >= 30) {
+            riskLevel = 'medium';
+          }
+
+          return {
+            date: tx.timestamp,
+            amount: Number(tx.amount),
+            riskLevel,
+            transactionId: tx.transaction_id
+          };
+        });
+
+        setDisplayData(transformedData);
+      } catch (error) {
+        console.error('Error fetching transaction data:', error);
+        // Fallback to mock data on error
+        setDisplayData(generateMockData());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactionData();
+  }, []);
 
   // Group data by risk level for rendering
   const lowRiskData = displayData.filter(t => t.riskLevel === 'low');
@@ -106,7 +174,7 @@ export function TransactionScatterPlot({ transactions }: TransactionScatterPlotP
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-foreground mb-1">Transaction Scatter</h3>
         <p className="text-sm text-muted-foreground">
-          Visualizing {displayData.length} transactions by amount and risk level
+          {loading ? 'Loading...' : `Visualizing ${displayData.length} transactions by amount and risk level`}
         </p>
       </div>
       
