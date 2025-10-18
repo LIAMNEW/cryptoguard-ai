@@ -131,14 +131,6 @@ export function AnalysisTabs() {
         getTimelineData()
       ]);
       
-      console.log('📊 Full Dataset Loaded:', {
-        transactions: overview.totalTransactions,
-        anomalies: anomaliesData.length,
-        networkNodes: network.nodes.length,
-        networkEdges: network.links.length,
-        timelineEntries: timeline.length
-      });
-      
       setAnalysisData(overview);
       setAnomalies(anomaliesData);
       setRiskData(risk);
@@ -291,6 +283,9 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="risk" className="space-y-4 animate-fade-in">
+          {/* Risk Alert Monitor */}
+          <RiskAlertMonitor />
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card className="glass-card p-6">
               <h3 className="text-lg font-semibold text-foreground mb-4">Overall Risk Assessment</h3>
