@@ -106,8 +106,7 @@ export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
         const { data: txData, error: txError } = await supabase
           .from('transactions')
           .select('*')
-          .order('timestamp', { ascending: false })
-          .limit(500);
+          .order('timestamp', { ascending: false });
 
         if (txError) throw txError;
 
