@@ -366,12 +366,12 @@ export function AnalysisTabs() {
             <div className="flex items-center gap-3 mb-4">
               <BarChart3 className="w-6 h-6 text-quantum-green" />
               <div>
-                <h3 className="text-lg font-semibold text-foreground">AI-Powered Analytics</h3>
-                <p className="text-sm text-muted-foreground">Generate custom graphs instantly with AI</p>
+                <h3 className="text-lg font-semibold text-foreground">Canvas-Based Analytics</h3>
+                <p className="text-sm text-muted-foreground">High-performance analytics with Chart.js</p>
               </div>
             </div>
             <p className="text-muted-foreground text-center py-8">
-              Switch to the <span className="text-quantum-green font-semibold">Export</span> tab to access the AI Analytics Graph Generator
+              Canvas-based charts will be implemented here
             </p>
           </Card>
         </TabsContent>
