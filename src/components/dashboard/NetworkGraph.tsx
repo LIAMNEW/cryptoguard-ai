@@ -24,8 +24,19 @@ interface NetworkGraphProps {
 export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  if (!nodes || nodes.length === 0) {
+    return (
+      <div className="relative w-full h-96 flex items-center justify-center border border-glass-border rounded-lg bg-glass-background">
+        <div className="text-center space-y-2">
+          <Network className="w-12 h-12 text-muted-foreground mx-auto" />
+          <p className="text-muted-foreground">No transaction data available</p>
+          <p className="text-sm text-muted-foreground">Upload transactions to see network graph</p>
+        </div>
+      </div>
+    );
+  }
+
   useEffect(() => {
-    if (!nodes || nodes.length === 0) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -118,18 +129,6 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
       }
     };
   }, [nodes, links]);
-
-  if (!nodes || nodes.length === 0) {
-    return (
-      <div className="relative w-full h-96 flex items-center justify-center border border-glass-border rounded-lg bg-glass-background">
-        <div className="text-center space-y-2">
-          <Network className="w-12 h-12 text-muted-foreground mx-auto" />
-          <p className="text-muted-foreground">No transaction data available</p>
-          <p className="text-sm text-muted-foreground">Upload transactions to see network graph</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="relative w-full h-96">
