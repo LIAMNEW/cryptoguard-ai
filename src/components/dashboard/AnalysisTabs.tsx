@@ -217,7 +217,6 @@ export function AnalysisTabs() {
 
         <TabsContent value="network" className="space-y-4 animate-fade-in">
           <NetworkGraph nodes={networkData.nodes} links={networkData.links} />
-          <TransactionScatterPlot />
           
           {/* Quantum-Ready Infrastructure - Only in Network tab */}
           <QuantumSafeIndicator />
