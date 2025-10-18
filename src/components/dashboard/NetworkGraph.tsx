@@ -137,26 +137,6 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
         className="w-full h-full rounded-lg border border-glass-border"
         style={{ background: 'var(--glass-background)' }}
       />
-      <div className="absolute top-4 left-4 bg-glass-background/80 backdrop-blur-sm border border-glass-border rounded-lg p-3">
-        <div className="flex items-center gap-2 text-sm">
-          <Network className="w-4 h-4 text-quantum-green" />
-          <span className="text-foreground font-medium">Network Analysis</span>
-        </div>
-        <div className="mt-2 space-y-1 text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-quantum-green"></div>
-            <span className="text-muted-foreground">Low Risk</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <span className="text-muted-foreground">Medium Risk</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-400"></div>
-            <span className="text-muted-foreground">High Risk</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
