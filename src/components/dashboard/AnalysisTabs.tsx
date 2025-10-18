@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { NetworkGraph } from "./NetworkGraph";
+import { TransactionScatterPlot } from "./TransactionScatterPlot";
 import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
@@ -219,13 +219,7 @@ export function AnalysisTabs() {
         </TabsList>
 
         <TabsContent value="network" className="space-y-4 animate-fade-in">
-          <Card className="glass-card p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Transaction Network Visualization</h3>
-            <NetworkGraph nodes={networkData.nodes} links={networkData.links} />
-            <p className="text-sm text-muted-foreground mt-2">
-              Showing connections between {analysisData.totalTransactions} transactions
-            </p>
-          </Card>
+          <TransactionScatterPlot />
           
           {/* Quantum-Ready Infrastructure - Only in Network tab */}
           <QuantumSafeIndicator />
