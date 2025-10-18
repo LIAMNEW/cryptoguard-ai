@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { format, parseISO, min, max } from "date-fns";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Slider } from "@/components/ui/slider";
 
 interface Transaction {
   date: string;
@@ -96,8 +97,9 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
-  const [displayData, setDisplayData] = useState<Transaction[]>([]);
+  const [allData, setAllData] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState<[number, number]>([0, 100]);
 
   useEffect(() => {
     const fetchTransactionData = async () => {
@@ -106,7 +108,7 @@ export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
         const { data: txData, error: txError } = await supabase
           .from('transactions')
           .select('*')
-          .order('timestamp', { ascending: false });
+          .order('timestamp', { ascending: true });
 
         if (txError) throw txError;
 
@@ -150,11 +152,11 @@ export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
           };
         });
 
-        setDisplayData(transformedData);
+        setAllData(transformedData);
       } catch (error) {
         console.error('Error fetching transaction data:', error);
         // Fallback to mock data on error
-        setDisplayData(generateMockData());
+        setAllData(generateMockData());
       } finally {
         setLoading(false);
       }
@@ -162,6 +164,33 @@ export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
 
     fetchTransactionData();
   }, []);
+
+  // Calculate date boundaries
+  const dateBoundaries = useMemo(() => {
+    if (allData.length === 0) return { minDate: new Date(), maxDate: new Date() };
+    
+    const dates = allData.map(t => parseISO(t.date));
+    return {
+      minDate: min(dates),
+      maxDate: max(dates)
+    };
+  }, [allData]);
+
+  // Filter data based on date range slider
+  const displayData = useMemo(() => {
+    if (allData.length === 0) return [];
+    
+    const { minDate, maxDate } = dateBoundaries;
+    const totalRange = maxDate.getTime() - minDate.getTime();
+    
+    const startTime = minDate.getTime() + (totalRange * dateRange[0] / 100);
+    const endTime = minDate.getTime() + (totalRange * dateRange[1] / 100);
+    
+    return allData.filter(t => {
+      const time = parseISO(t.date).getTime();
+      return time >= startTime && time <= endTime;
+    });
+  }, [allData, dateRange, dateBoundaries]);
 
   // Group data by risk level for rendering
   const lowRiskData = displayData.filter(t => t.riskLevel === 'low');
@@ -173,9 +202,37 @@ export function TransactionScatterPlot({}: TransactionScatterPlotProps) {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-foreground mb-1">Transaction Scatter</h3>
         <p className="text-sm text-muted-foreground">
-          {loading ? 'Loading...' : `Visualizing ${displayData.length} transactions by amount and risk level`}
+          {loading ? 'Loading...' : `Showing ${displayData.length} of ${allData.length} transactions`}
         </p>
       </div>
+
+      {/* Date Range Slider */}
+      {!loading && allData.length > 0 && (
+        <div className="mb-6 px-2">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-muted-foreground">
+              {format(new Date(dateBoundaries.minDate.getTime() + 
+                (dateBoundaries.maxDate.getTime() - dateBoundaries.minDate.getTime()) * dateRange[0] / 100), 'MMM dd, yyyy')}
+            </span>
+            <span className="text-xs text-quantum-green font-medium">
+              Date Range Filter
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {format(new Date(dateBoundaries.minDate.getTime() + 
+                (dateBoundaries.maxDate.getTime() - dateBoundaries.minDate.getTime()) * dateRange[1] / 100), 'MMM dd, yyyy')}
+            </span>
+          </div>
+          <Slider
+            value={dateRange}
+            onValueChange={(value) => setDateRange(value as [number, number])}
+            min={0}
+            max={100}
+            step={1}
+            minStepsBetweenThumbs={1}
+            className="w-full"
+          />
+        </div>
+      )}
       
       <ResponsiveContainer width="100%" height={400}>
         <ScatterChart margin={{ top: 20, right: 20, bottom: 60, left: 80 }}>
