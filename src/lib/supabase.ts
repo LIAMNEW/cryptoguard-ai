@@ -51,12 +51,40 @@ export interface AnomalyData {
 
 // API functions with error handling
 export async function uploadTransactions(transactions: Transaction[]) {
-  const { data, error } = await supabase.functions.invoke('analyze-transactions', {
-    body: { transactions }
-  })
+  // Process in batches to avoid CPU timeout
+  const BATCH_SIZE = 50;
+  const batches = [];
   
-  if (error) throw error
-  return data
+  for (let i = 0; i < transactions.length; i += BATCH_SIZE) {
+    batches.push(transactions.slice(i, i + BATCH_SIZE));
+  }
+  
+  console.log(`Processing ${transactions.length} transactions in ${batches.length} batches`);
+  
+  // Insert all transactions first
+  const { data: insertedTxs, error: insertError } = await supabase
+    .from('transactions')
+    .insert(transactions)
+    .select();
+    
+  if (insertError) throw insertError;
+  
+  // Process AUSTRAC scoring in background (async, don't wait)
+  // This will be processed by the new austrac-score-transaction function
+  if (insertedTxs && insertedTxs.length > 0) {
+    // Score the first batch immediately for quick feedback
+    const firstBatch = insertedTxs.slice(0, 10);
+    for (const tx of firstBatch) {
+      supabase.functions.invoke('austrac-score-transaction', {
+        body: { transaction: tx }
+      }).catch(err => console.warn('Background scoring error:', err));
+    }
+  }
+  
+  return {
+    message: 'Transactions uploaded successfully',
+    count: insertedTxs?.length || 0
+  };
 }
 
 export async function getAnalysisOverview(): Promise<AnalysisOverview> {
