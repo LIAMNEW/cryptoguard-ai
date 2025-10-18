@@ -200,13 +200,18 @@ Return JSON:
 
     // Store analysis results
     if (analysisResults.flagged_transactions && Array.isArray(analysisResults.flagged_transactions)) {
-      const analysisRecords = analysisResults.flagged_transactions.map((result: any) => ({
-        transaction_id: storedTxs?.find(tx => tx.transaction_id === result.transaction_id)?.id,
-        risk_score: result.risk_score || 0,
-        anomaly_detected: true,
-        anomaly_type: result.anomalies?.join(',') || '',
-        risk_level: result.risk_level || 'MEDIUM',
-      })).filter((r: any) => r.transaction_id)
+      const analysisRecords = analysisResults.flagged_transactions.map((result: any) => {
+        const matchingTx = storedTxs?.find(tx => tx.transaction_id === result.transaction_id)
+        if (!matchingTx) return null
+        
+        return {
+          transaction_id: matchingTx.id,
+          risk_score: Math.min(100, Math.max(0, result.risk_score || 75)),
+          anomaly_detected: true,
+          anomaly_type: result.anomalies?.join(', ') || result.reason || 'High Risk',
+          risk_level: result.risk_level || 'HIGH',
+        }
+      }).filter((r: any) => r !== null)
 
       if (analysisRecords.length > 0) {
         console.log(`Storing ${analysisRecords.length} analysis results...`)
