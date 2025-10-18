@@ -9,8 +9,6 @@ import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
-import { RiskPieChart } from "@/components/analytics/RiskPieChart";
-import { InvestigativePanel } from "@/components/analytics/InvestigativePanel";
 
 import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
@@ -46,7 +44,6 @@ export function AnalysisTabs() {
   const [loading, setLoading] = useState(true);
   const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
   const [autoReanalyzing, setAutoReanalyzing] = useState(false);
-  const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>();
 
   useEffect(() => {
     loadAnalysisData();
@@ -194,7 +191,7 @@ export function AnalysisTabs() {
 
       {/* Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6 glass-card p-1">
+        <TabsList className="grid w-full grid-cols-5 glass-card p-1">
           <TabsTrigger value="network" className="flex items-center gap-2">
             <Network className="w-4 h-4" />
             <span className="hidden sm:inline">Network</span>
@@ -210,10 +207,6 @@ export function AnalysisTabs() {
           <TabsTrigger value="insights" className="flex items-center gap-2">
             <Brain className="w-4 h-4" />
             <span className="hidden sm:inline">AI Insights</span>
-          </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
-            <span className="hidden sm:inline">Analytics</span>
           </TabsTrigger>
           <TabsTrigger value="export" className="flex items-center gap-2">
             <Download className="w-4 h-4" />
@@ -362,16 +355,6 @@ export function AnalysisTabs() {
           
           {/* AI Assistant Chat */}
           <AIChat />
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-4 animate-fade-in">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <RiskPieChart 
-              riskData={riskData} 
-              onSegmentClick={(level) => setSelectedRiskLevel(level)}
-            />
-            <InvestigativePanel filterRiskLevel={selectedRiskLevel} />
-          </div>
         </TabsContent>
 
         <TabsContent value="export" className="space-y-4 animate-fade-in">
