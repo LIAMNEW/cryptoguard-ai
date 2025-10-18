@@ -17,24 +17,32 @@ interface Link {
 }
 
 interface NetworkGraphProps {
-  nodes: Node[];
-  links: Link[];
+  nodes?: Node[];
+  links?: Link[];
 }
 
-export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
+export function NetworkGraph({ nodes = [], links = [] }: NetworkGraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  if (!nodes || nodes.length === 0) {
-    return (
-      <div className="relative w-full h-96 flex items-center justify-center border border-glass-border rounded-lg bg-glass-background">
-        <div className="text-center space-y-2">
-          <Network className="w-12 h-12 text-muted-foreground mx-auto" />
-          <p className="text-muted-foreground">No transaction data available</p>
-          <p className="text-sm text-muted-foreground">Upload transactions to see network graph</p>
-        </div>
-      </div>
-    );
-  }
+  // Mock data if no data provided
+  const mockNodes: Node[] = [
+    { id: '1', address: '1A1zP1eP...', amount: 50000, riskLevel: 'low' },
+    { id: '2', address: '1BvBMS...', amount: 15000, riskLevel: 'medium' },
+    { id: '3', address: '1C4eDQ...', amount: 85000, riskLevel: 'high' },
+    { id: '4', address: '1D7fPM...', amount: 25000, riskLevel: 'low' },
+    { id: '5', address: '1E9kRN...', amount: 45000, riskLevel: 'medium' },
+  ];
+
+  const mockLinks: Link[] = [
+    { source: '1', target: '2', amount: 12000 },
+    { source: '2', target: '3', amount: 8500 },
+    { source: '1', target: '4', amount: 22000 },
+    { source: '4', target: '5', amount: 15000 },
+    { source: '3', target: '5', amount: 35000 },
+  ];
+
+  const displayNodes = nodes.length > 0 ? nodes : mockNodes;
+  const displayLinks = links.length > 0 ? links : mockLinks;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -56,8 +64,8 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
     const centerY = height / 2;
     const radius = Math.min(width, height) / 3;
 
-    nodes.forEach((node, index) => {
-      const angle = (index / nodes.length) * 2 * Math.PI;
+    displayNodes.forEach((node, index) => {
+      const angle = (index / displayNodes.length) * 2 * Math.PI;
       node.x = centerX + Math.cos(angle) * radius;
       node.y = centerY + Math.sin(angle) * radius;
     });
@@ -71,9 +79,9 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
       ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
       ctx.lineWidth = 1;
       
-      links.forEach(link => {
-        const sourceNode = nodes.find(n => n.id === link.source);
-        const targetNode = nodes.find(n => n.id === link.target);
+      displayLinks.forEach(link => {
+        const sourceNode = displayNodes.find(n => n.id === link.source);
+        const targetNode = displayNodes.find(n => n.id === link.target);
         
         if (sourceNode && targetNode && sourceNode.x && sourceNode.y && targetNode.x && targetNode.y) {
           ctx.beginPath();
@@ -84,7 +92,7 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
       });
 
       // Draw nodes
-      nodes.forEach(node => {
+      displayNodes.forEach(node => {
         if (!node.x || !node.y) return;
         
         const nodeRadius = Math.sqrt(node.amount / 1000) + 5;
@@ -128,7 +136,7 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
         cancelAnimationFrame(animationId);
       }
     };
-  }, [nodes, links]);
+  }, [displayNodes, displayLinks]);
 
   return (
     <div className="relative w-full h-96">
@@ -137,6 +145,26 @@ export function NetworkGraph({ nodes, links }: NetworkGraphProps) {
         className="w-full h-full rounded-lg border border-glass-border"
         style={{ background: 'var(--glass-background)' }}
       />
+      <div className="absolute top-4 left-4 bg-glass-background/80 backdrop-blur-sm border border-glass-border rounded-lg p-3">
+        <div className="flex items-center gap-2 text-sm">
+          <Network className="w-4 h-4 text-quantum-green" />
+          <span className="text-foreground font-medium">Network Analysis</span>
+        </div>
+        <div className="mt-2 space-y-1 text-xs">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-quantum-green"></div>
+            <span className="text-muted-foreground">Low Risk</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+            <span className="text-muted-foreground">Medium Risk</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-400"></div>
+            <span className="text-muted-foreground">High Risk</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
