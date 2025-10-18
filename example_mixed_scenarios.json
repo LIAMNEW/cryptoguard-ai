@@ -1,0 +1,200 @@
+{
+  "transactions": [
+    {
+      "transaction_id": "STRUCT-001",
+      "from_address": "Jane Doe - ACC55667",
+      "to_address": "Savings Account",
+      "amount": 9100,
+      "timestamp": "2025-03-10T10:00:00Z",
+      "transaction_type": "cash_deposit",
+      "notes": "Structuring pattern - deposit just under $10k threshold"
+    },
+    {
+      "transaction_id": "STRUCT-002",
+      "from_address": "Jane Doe - ACC55667",
+      "to_address": "Savings Account",
+      "amount": 8950,
+      "timestamp": "2025-03-12T14:30:00Z",
+      "transaction_type": "cash_deposit",
+      "notes": "Second deposit in pattern"
+    },
+    {
+      "transaction_id": "STRUCT-003",
+      "from_address": "Jane Doe - ACC55667",
+      "to_address": "Savings Account",
+      "amount": 9300,
+      "timestamp": "2025-03-14T11:15:00Z",
+      "transaction_type": "cash_deposit",
+      "notes": "Third deposit in pattern"
+    },
+    {
+      "transaction_id": "STRUCT-004",
+      "from_address": "Jane Doe - ACC55667",
+      "to_address": "Overseas - Vietnam",
+      "amount": 26500,
+      "timestamp": "2025-03-15T09:00:00Z",
+      "transaction_type": "international_transfer",
+      "notes": "Rapid movement offshore after cash deposits"
+    },
+    {
+      "transaction_id": "LAYER-001",
+      "from_address": "0xSuspectWallet1a2b3c4d5e6f",
+      "to_address": "0xIntermediateWallet1",
+      "amount": 150000,
+      "timestamp": "2025-03-08T08:00:00Z",
+      "transaction_hash": "0xlayer001",
+      "transaction_type": "transfer",
+      "notes": "Large initial transfer - start of layering"
+    },
+    {
+      "transaction_id": "LAYER-002",
+      "from_address": "0xIntermediateWallet1",
+      "to_address": "0xIntermediateWallet2",
+      "amount": 75000,
+      "timestamp": "2025-03-08T10:30:00Z",
+      "transaction_hash": "0xlayer002",
+      "transaction_type": "transfer",
+      "notes": "Split transaction - layering technique"
+    },
+    {
+      "transaction_id": "LAYER-003",
+      "from_address": "0xIntermediateWallet1",
+      "to_address": "0xIntermediateWallet3",
+      "amount": 75000,
+      "timestamp": "2025-03-08T11:00:00Z",
+      "transaction_hash": "0xlayer003",
+      "transaction_type": "transfer",
+      "notes": "Second split - creating complex trail"
+    },
+    {
+      "transaction_id": "LAYER-004",
+      "from_address": "0xIntermediateWallet2",
+      "to_address": "0xOffshoreExchange",
+      "amount": 74500,
+      "timestamp": "2025-03-08T14:00:00Z",
+      "transaction_hash": "0xlayer004",
+      "transaction_type": "transfer",
+      "notes": "Moving to offshore exchange"
+    },
+    {
+      "transaction_id": "HIGHRISK-001",
+      "from_address": "Thomas Anderson - ACC88990",
+      "to_address": "Bank Account - North Korea",
+      "amount": 45000,
+      "timestamp": "2025-03-05T13:00:00Z",
+      "transaction_type": "international_transfer",
+      "notes": "Transfer to high-risk jurisdiction"
+    },
+    {
+      "transaction_id": "VELOCITY-001",
+      "from_address": "Patricia Wong - ACC77889",
+      "to_address": "Shopping Transaction",
+      "amount": 150,
+      "timestamp": "2025-03-01T09:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Normal historical activity - low amounts"
+    },
+    {
+      "transaction_id": "VELOCITY-002",
+      "from_address": "Patricia Wong - ACC77889",
+      "to_address": "Shopping Transaction",
+      "amount": 200,
+      "timestamp": "2025-03-03T10:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Normal activity continues"
+    },
+    {
+      "transaction_id": "VELOCITY-003",
+      "from_address": "Patricia Wong - ACC77889",
+      "to_address": "Large Purchase",
+      "amount": 15000,
+      "timestamp": "2025-03-15T11:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Sudden spike - 100x normal activity"
+    },
+    {
+      "transaction_id": "VELOCITY-004",
+      "from_address": "Patricia Wong - ACC77889",
+      "to_address": "Large Purchase 2",
+      "amount": 18000,
+      "timestamp": "2025-03-15T14:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Second large transaction same day"
+    },
+    {
+      "transaction_id": "VELOCITY-005",
+      "from_address": "Patricia Wong - ACC77889",
+      "to_address": "Large Purchase 3",
+      "amount": 22000,
+      "timestamp": "2025-03-15T16:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Third large transaction - velocity spike"
+    },
+    {
+      "transaction_id": "NORMAL-001",
+      "from_address": "Regular Customer - ACC11111",
+      "to_address": "Salary Deposit",
+      "amount": 4500,
+      "timestamp": "2025-03-01T08:00:00Z",
+      "transaction_type": "direct_deposit",
+      "notes": "Normal salary deposit"
+    },
+    {
+      "transaction_id": "NORMAL-002",
+      "from_address": "Regular Customer - ACC11111",
+      "to_address": "Rent Payment",
+      "amount": 1800,
+      "timestamp": "2025-03-05T09:00:00Z",
+      "transaction_type": "bill_payment",
+      "notes": "Regular rent payment"
+    },
+    {
+      "transaction_id": "NORMAL-003",
+      "from_address": "Regular Customer - ACC11111",
+      "to_address": "Groceries",
+      "amount": 450,
+      "timestamp": "2025-03-10T12:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Normal grocery shopping"
+    },
+    {
+      "transaction_id": "PROFILE-001",
+      "from_address": "Student - ACC22222",
+      "to_address": "Luxury Car Purchase",
+      "amount": 85000,
+      "timestamp": "2025-03-12T10:00:00Z",
+      "transaction_type": "purchase",
+      "notes": "Inconsistent with student occupation/income"
+    },
+    {
+      "transaction_id": "ROUNDTRIP-001",
+      "from_address": "0xCircularWallet1",
+      "to_address": "0xCircularWallet2",
+      "amount": 50000,
+      "timestamp": "2025-03-06T10:00:00Z",
+      "transaction_hash": "0xround001",
+      "transaction_type": "transfer",
+      "notes": "Start of circular transaction"
+    },
+    {
+      "transaction_id": "ROUNDTRIP-002",
+      "from_address": "0xCircularWallet2",
+      "to_address": "0xCircularWallet3",
+      "amount": 49500,
+      "timestamp": "2025-03-06T12:00:00Z",
+      "transaction_hash": "0xround002",
+      "transaction_type": "transfer",
+      "notes": "Continues circular pattern"
+    },
+    {
+      "transaction_id": "ROUNDTRIP-003",
+      "from_address": "0xCircularWallet3",
+      "to_address": "0xCircularWallet1",
+      "amount": 49000,
+      "timestamp": "2025-03-06T14:00:00Z",
+      "transaction_hash": "0xround003",
+      "transaction_type": "transfer",
+      "notes": "Completes circle - potential obfuscation"
+    }
+  ]
+}
