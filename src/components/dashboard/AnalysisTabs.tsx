@@ -148,13 +148,13 @@ export function AnalysisTabs() {
   const OverviewCards = memo(() => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="glass-card p-4">
-        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-quantum-green/20 flex items-center justify-center">
             <Shield className="w-5 h-5 text-quantum-green" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.averageRiskScore}</p>
-            <p className="text-sm text-muted-foreground">Risk Score</p>
+            <p className="text-2xl font-bold text-foreground">{loading ? "..." : `${analysisData.averageRiskScore}/100`}</p>
+            <p className="text-sm text-muted-foreground">Avg Risk Score</p>
           </div>
         </div>
       </Card>
@@ -281,12 +281,14 @@ export function AnalysisTabs() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Risk Level</span>
-                  <Badge variant="destructive">High Risk</Badge>
+                  <Badge variant={analysisData.averageRiskScore > 75 ? "destructive" : analysisData.averageRiskScore > 50 ? "outline" : "secondary"}>
+                    {analysisData.averageRiskScore > 75 ? "High Risk" : analysisData.averageRiskScore > 50 ? "Medium Risk" : "Low Risk"}
+                  </Badge>
                 </div>
                 <div className="w-full bg-glass-border rounded-full h-3">
                   <div 
-                    className="bg-gradient-to-r from-quantum-green via-yellow-500 to-red-500 h-3 rounded-full"
-                    style={{ width: `${analysisData.averageRiskScore}%` }}
+                    className="bg-gradient-to-r from-quantum-green via-yellow-500 to-red-500 h-3 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(analysisData.averageRiskScore, 100)}%` }}
                   />
                 </div>
                 <p className="text-2xl font-bold text-foreground">{analysisData.averageRiskScore}/100</p>
@@ -294,23 +296,31 @@ export function AnalysisTabs() {
             </Card>
 
             <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Risk Factors</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Risk Distribution</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Unusual Transaction Amounts</span>
-                  <Badge variant="outline">Medium</Badge>
+                  <span className="text-sm">Low Risk ({riskData.low})</span>
+                  <div className="flex-1 mx-4 bg-glass-border rounded-full h-2">
+                    <div className="bg-quantum-green h-2 rounded-full transition-all duration-500" style={{ width: `${(riskData.low / analysisData.totalTransactions) * 100}%` }} />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Frequency Patterns</span>
-                  <Badge variant="destructive">High</Badge>
+                  <span className="text-sm">Medium Risk ({riskData.medium})</span>
+                  <div className="flex-1 mx-4 bg-glass-border rounded-full h-2">
+                    <div className="bg-yellow-500 h-2 rounded-full transition-all duration-500" style={{ width: `${(riskData.medium / analysisData.totalTransactions) * 100}%` }} />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Geographic Distribution</span>
-                  <Badge variant="secondary">Low</Badge>
+                  <span className="text-sm">High Risk ({riskData.high})</span>
+                  <div className="flex-1 mx-4 bg-glass-border rounded-full h-2">
+                    <div className="bg-orange-500 h-2 rounded-full transition-all duration-500" style={{ width: `${(riskData.high / analysisData.totalTransactions) * 100}%` }} />
+                  </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Time-based Clustering</span>
-                  <Badge variant="destructive">High</Badge>
+                  <span className="text-sm">Critical Risk ({riskData.critical})</span>
+                  <div className="flex-1 mx-4 bg-glass-border rounded-full h-2">
+                    <div className="bg-red-500 h-2 rounded-full transition-all duration-500" style={{ width: `${(riskData.critical / analysisData.totalTransactions) * 100}%` }} />
+                  </div>
                 </div>
               </div>
             </Card>
