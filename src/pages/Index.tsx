@@ -64,12 +64,21 @@ const Index = () => {
     try {
       console.log('Processing file with unified analysis pipeline...');
       
+      // Show initial loading state
+      toast.info('Starting analysis...', { duration: 2000 });
+      
       // First, extract transactions using LLM
       const { data: extractResult, error: extractError } = await supabase.functions.invoke('llm-analyze-transactions', {
         body: data
       });
 
       if (extractError) throw extractError;
+
+      // Show progress during analysis
+      const progressToast = toast.loading(
+        `Analyzing ${extractResult.total_transactions} transactions...`,
+        { duration: 10000 }
+      );
 
       // Log audit event
       await logAuditEvent({
@@ -82,6 +91,9 @@ const Index = () => {
           timestamp: new Date().toISOString(),
         },
       });
+
+      // Dismiss progress toast
+      toast.dismiss(progressToast);
 
       const riskSummary = [];
       if (extractResult.high_risk_count > 0) {
@@ -108,7 +120,17 @@ const Index = () => {
       setHasData(true);
       setActiveSection("dashboard");
     } catch (error) {
-      toast.error('AI analysis failed. Please check your file format and try again.');
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      
+      // Provide helpful error messages based on error type
+      if (errorMsg.includes('timeout') || errorMsg.includes('Failed to fetch')) {
+        toast.error('Analysis timed out. Your file may be too large. Try a smaller dataset or contact support.', { duration: 8000 });
+      } else if (errorMsg.includes('429')) {
+        toast.error('Rate limit exceeded. Please wait a moment and try again.', { duration: 6000 });
+      } else {
+        toast.error('Analysis failed. Please check your file format and try again.', { duration: 6000 });
+      }
+      
       console.error('Upload error:', error);
       
       // Log error event
@@ -116,7 +138,7 @@ const Index = () => {
         action: "llm_analyze_failed",
         resourceType: "transactions",
         details: {
-          error: error instanceof Error ? error.message : "Unknown error",
+          error: errorMsg,
         },
       });
     }

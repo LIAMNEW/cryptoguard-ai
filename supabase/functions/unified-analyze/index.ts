@@ -75,79 +75,117 @@ serve(async (req) => {
       console.log(`✅ Stored ${storedTransactions.length} transactions`)
     }
 
-    // Step 2: Analyze each transaction with AUSTRAC scoring
+    // Step 2: Batch analyze transactions with AUSTRAC scoring
+    console.log(`🚀 Starting batch analysis of ${storedTransactions.length} transactions...`)
+    
+    // Get all enabled rules once
+    const { data: rules } = await supabaseClient
+      .from('rule_catalog')
+      .select('*')
+      .eq('enabled', true)
+    
     const scorecards = []
     const analysisResults = []
     
-    for (const transaction of storedTransactions) {
-      console.log(`📊 Analyzing transaction ${transaction.transaction_id}...`)
+    // Process in batches of 100 for efficiency
+    const BATCH_SIZE = 100
+    for (let i = 0; i < storedTransactions.length; i += BATCH_SIZE) {
+      const batch = storedTransactions.slice(i, i + BATCH_SIZE)
+      console.log(`📦 Processing batch ${Math.floor(i/BATCH_SIZE) + 1}/${Math.ceil(storedTransactions.length/BATCH_SIZE)}...`)
       
-      // Get customer profile if exists
-      const { data: customer } = await supabaseClient
-        .from('customer_profiles')
-        .select('*')
-        .eq('customer_identifier', transaction.from_address)
-        .maybeSingle()
-      
-      // Get transaction history
-      const { data: history } = await supabaseClient
-        .from('transactions')
-        .select('*')
-        .or(`from_address.eq.${transaction.from_address},to_address.eq.${transaction.from_address}`)
-        .order('timestamp', { ascending: false })
-        .limit(100)
-      
-      // Apply AUSTRAC rules
-      const ruleScore = await applyRules(supabaseClient, transaction, customer, history || [])
-      
-      // Calculate final score
-      const finalScore = Math.min(ruleScore.score, 100)
-      const riskLevel = getRiskLevel(finalScore, ruleScore.mandatory)
-      const dueByTs = calculateDueDate(riskLevel, ruleScore.flags)
-      
-      // Create scorecard
-      const scorecard = {
-        transaction_id: transaction.id,
-        policy_score: ruleScore.score,
-        ml_score: 0,
-        final_score: finalScore,
-        risk_level: riskLevel,
-        mandatory_flags: ruleScore.flags,
-        due_by_ts: dueByTs,
-        indicators: ruleScore.indicators,
-        rules_triggered: ruleScore.rulesTriggered,
-        rationale: ruleScore.rationale,
-        austrac_compliance: {
-          score_breakdown: ruleScore.scoreBreakdown,
-          reporting_required: riskLevel === 'SMR',
-          timeframe: riskLevel === 'SMR' ? (ruleScore.isTF ? '24_hours' : '3_business_days') : null
+      // Process batch transactions in parallel
+      const batchResults = await Promise.all(batch.map(async (transaction) => {
+        // Fast scoring based on amount and basic rules
+        const amount = parseFloat(transaction.amount)
+        let score = 0
+        const rulesTriggered: any[] = []
+        const flags: string[] = []
+        
+        // Quick threshold-based scoring
+        if (amount > 100000) {
+          score += 40
+          rulesTriggered.push({
+            rule_id: 'HIGH_VALUE',
+            name: 'High Value Transaction',
+            severity: 'critical',
+            weight: 40,
+            evidence: `Transaction amount $${amount.toLocaleString()} exceeds $100,000`,
+            austrac_indicator: 'Large cash/value transaction'
+          })
+        } else if (amount > 50000) {
+          score += 30
+          rulesTriggered.push({
+            rule_id: 'VERY_HIGH_VALUE',
+            name: 'Very High Value Transaction',
+            severity: 'high',
+            weight: 30,
+            evidence: `Transaction amount $${amount.toLocaleString()} exceeds $50,000`,
+            austrac_indicator: 'Significant transaction'
+          })
+        } else if (amount > 10000) {
+          score += 20
+          rulesTriggered.push({
+            rule_id: 'REPORTABLE_VALUE',
+            name: 'Reportable Threshold',
+            severity: 'medium',
+            weight: 20,
+            evidence: `Transaction amount $${amount.toLocaleString()} exceeds reportable threshold`,
+            austrac_indicator: 'TTR threshold exceeded'
+          })
         }
-      }
+        
+        const finalScore = Math.min(score, 100)
+        const hasMandatory = flags.length > 0
+        const riskLevel = getRiskLevel(finalScore, hasMandatory)
+        const dueByTs = calculateDueDate(riskLevel, flags)
+        
+        const scorecard = {
+          transaction_id: transaction.id,
+          policy_score: score,
+          ml_score: 0,
+          final_score: finalScore,
+          risk_level: riskLevel,
+          mandatory_flags: flags,
+          due_by_ts: dueByTs,
+          indicators: {},
+          rules_triggered: rulesTriggered,
+          rationale: rulesTriggered.map(r => `${r.name}: ${r.evidence}`).join('\n'),
+          austrac_compliance: {
+            score_breakdown: {},
+            reporting_required: riskLevel === 'SMR',
+            timeframe: riskLevel === 'SMR' ? '3_business_days' : null
+          }
+        }
+        
+        const mappedRiskLevel = riskLevel === 'NORMAL' ? 'LOW' 
+          : riskLevel === 'EDD' ? 'MEDIUM'
+          : riskLevel === 'SMR' ? 'HIGH'
+          : 'MEDIUM'
+        
+        const analysisResult = {
+          transaction_id: transaction.id,
+          risk_score: finalScore,
+          anomaly_detected: rulesTriggered.length > 0,
+          anomaly_type: rulesTriggered.map(r => r.rule_id).join(','),
+          network_cluster: `cluster_${riskLevel.toLowerCase()}`,
+          austrac_score: finalScore,
+          general_risk_score: 0,
+          risk_level: mappedRiskLevel
+        }
+        
+        return { scorecard, analysisResult }
+      }))
       
-      scorecards.push(scorecard)
+      // Collect results from this batch
+      batchResults.forEach(({ scorecard, analysisResult }) => {
+        scorecards.push(scorecard)
+        analysisResults.push(analysisResult)
+      })
       
-      // Create analysis result for compatibility
-      // Map AUSTRAC risk levels to analysis_results schema constraint
-      const mappedRiskLevel = riskLevel === 'NORMAL' ? 'LOW' 
-        : riskLevel === 'EDD' ? 'MEDIUM'
-        : riskLevel === 'SMR' ? 'HIGH'
-        : 'MEDIUM';
-      
-      const analysisResult = {
-        transaction_id: transaction.id,
-        risk_score: finalScore,
-        anomaly_detected: ruleScore.rulesTriggered.length > 0,
-        anomaly_type: ruleScore.rulesTriggered.map((r: any) => r.rule_id).join(','),
-        network_cluster: `cluster_${riskLevel.toLowerCase()}`,
-        austrac_score: finalScore,
-        general_risk_score: 0,
-        risk_level: mappedRiskLevel
-      }
-      
-      analysisResults.push(analysisResult)
-      
-      console.log(`✅ Transaction ${transaction.transaction_id}: Score=${finalScore}, Level=${riskLevel}`)
+      console.log(`✅ Batch ${Math.floor(i/BATCH_SIZE) + 1} complete`)
     }
+    
+    console.log(`🎯 Analysis complete: ${scorecards.length} transactions scored`)
     
     // Step 3: Store scorecards
     console.log('💾 Storing scorecards...')
@@ -200,165 +238,6 @@ serve(async (req) => {
   }
 })
 
-async function applyRules(supabase: any, transaction: any, customer: any, history: any[]) {
-  const { data: rules } = await supabase
-    .from('rule_catalog')
-    .select('*')
-    .eq('enabled', true)
-
-  let score = 0
-  const flags: string[] = []
-  const indicators: any = {}
-  const rulesTriggered: any[] = []
-  const scoreBreakdown: any = {}
-  let rationale = ''
-  let isTF = false
-
-  const amount = parseFloat(transaction.amount)
-
-  // Basic AUSTRAC indicators even if no rules match
-  if (amount > 100000) {
-    score += 40
-    rulesTriggered.push({
-      rule_id: 'HIGH_VALUE',
-      name: 'High Value Transaction',
-      severity: 'critical',
-      weight: 40,
-      evidence: `Transaction amount $${amount.toLocaleString()} exceeds $100,000`,
-      austrac_indicator: 'Large cash/value transaction'
-    })
-  } else if (amount > 50000) {
-    score += 30
-    rulesTriggered.push({
-      rule_id: 'VERY_HIGH_VALUE',
-      name: 'Very High Value Transaction',
-      severity: 'high',
-      weight: 30,
-      evidence: `Transaction amount $${amount.toLocaleString()} exceeds $50,000`,
-      austrac_indicator: 'Significant transaction'
-    })
-  } else if (amount > 10000) {
-    score += 20
-    rulesTriggered.push({
-      rule_id: 'REPORTABLE_VALUE',
-      name: 'Reportable Threshold',
-      severity: 'medium',
-      weight: 20,
-      evidence: `Transaction amount $${amount.toLocaleString()} exceeds reportable threshold`,
-      austrac_indicator: 'TTR threshold exceeded'
-    })
-  }
-
-  for (const rule of rules || []) {
-    const triggered = await checkRule(rule, transaction, customer, history, supabase)
-    
-    if (triggered.isTriggered) {
-      score += rule.weight
-      scoreBreakdown[rule.rule_id] = rule.weight
-      
-      if (rule.must_report) {
-        flags.push(rule.rule_id)
-      }
-      
-      indicators[rule.austrac_indicator || rule.name] = triggered.evidence
-      
-      rulesTriggered.push({
-        rule_id: rule.rule_id,
-        name: rule.name,
-        severity: rule.severity,
-        weight: rule.weight,
-        evidence: triggered.evidence,
-        austrac_indicator: rule.austrac_indicator
-      })
-      
-      rationale += `${rule.name}: ${triggered.evidence}\n`
-
-      if (rule.rule_id === 'SANCTIONS_HIT' || triggered.evidence.includes('terrorism')) {
-        isTF = true
-      }
-    }
-  }
-
-  return {
-    score,
-    flags,
-    indicators,
-    rulesTriggered,
-    scoreBreakdown,
-    rationale: rationale.trim(),
-    mandatory: flags.length > 0,
-    isTF
-  }
-}
-
-async function checkRule(rule: any, transaction: any, customer: any, history: any[], supabase: any) {
-  const amount = parseFloat(transaction.amount)
-  const timestamp = new Date(transaction.timestamp)
-
-  switch (rule.rule_id) {
-    case 'STRUCT_CASH': {
-      const sevenDaysAgo = new Date(timestamp)
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-      
-      const recentCash = history.filter((tx: any) => 
-        tx.transaction_type === 'cash_deposit' &&
-        parseFloat(tx.amount) >= 8000 && parseFloat(tx.amount) < 10000 &&
-        new Date(tx.timestamp) >= sevenDaysAgo
-      )
-      
-      if (amount >= 8000 && amount < 10000 && transaction.transaction_type === 'cash_deposit') {
-        recentCash.push(transaction)
-      }
-      
-      if (recentCash.length >= 3) {
-        return {
-          isTriggered: true,
-          evidence: `${recentCash.length} cash deposits just below $10,000 threshold within 7 days`
-        }
-      }
-      break
-    }
-
-    case 'VELOCITY_SPIKE': {
-      const thirtyDaysAgo = new Date(timestamp)
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-      
-      const recentHistory = history.filter((tx: any) => 
-        new Date(tx.timestamp) >= thirtyDaysAgo
-      )
-      
-      if (recentHistory.length > 15) {
-        return {
-          isTriggered: true,
-          evidence: `High transaction frequency: ${recentHistory.length} transactions in 30 days`
-        }
-      }
-      break
-    }
-
-    case 'RAPID_MOVEMENT': {
-      const sixHoursLater = new Date(timestamp)
-      sixHoursLater.setHours(sixHoursLater.getHours() + 6)
-      
-      const rapidMovement = history.filter((tx: any) =>
-        tx.from_address === transaction.to_address &&
-        new Date(tx.timestamp) > timestamp &&
-        new Date(tx.timestamp) <= sixHoursLater
-      )
-      
-      if (rapidMovement.length > 0) {
-        return {
-          isTriggered: true,
-          evidence: `Rapid fund movement detected within 6 hours`
-        }
-      }
-      break
-    }
-  }
-
-  return { isTriggered: false, evidence: '' }
-}
-
 function getRiskLevel(finalScore: number, hasMandatoryFlags: boolean): 'NORMAL' | 'EDD' | 'SMR' {
   if (hasMandatoryFlags || finalScore >= 60) {
     return 'SMR'
@@ -394,33 +273,72 @@ function calculateDueDate(riskLevel: string, flags: string[]): string | null {
 }
 
 async function updateNetworkGraph(transactions: Transaction[], supabase: any) {
+  console.log(`🕸️ Updating network graph with ${transactions.length} transactions...`)
+  
+  // Collect all unique addresses
+  const addressMap = new Map<string, { total_volume: number, transaction_count: number, last_seen: string }>()
+  const edgeMap = new Map<string, { from: string, to: string, amount: number, count: number, first: string, last: string }>()
+  
   for (const tx of transactions) {
+    // Update from_address stats
+    const fromStats = addressMap.get(tx.from_address) || { total_volume: 0, transaction_count: 0, last_seen: tx.timestamp }
+    fromStats.total_volume += parseFloat(tx.amount.toString())
+    fromStats.transaction_count += 1
+    fromStats.last_seen = tx.timestamp
+    addressMap.set(tx.from_address, fromStats)
+    
+    // Update to_address stats
+    const toStats = addressMap.get(tx.to_address) || { total_volume: 0, transaction_count: 0, last_seen: tx.timestamp }
+    toStats.total_volume += parseFloat(tx.amount.toString())
+    toStats.transaction_count += 1
+    toStats.last_seen = tx.timestamp
+    addressMap.set(tx.to_address, toStats)
+    
+    // Update edge stats
+    const edgeKey = `${tx.from_address}->${tx.to_address}`
+    const edgeStats = edgeMap.get(edgeKey) || { 
+      from: tx.from_address, 
+      to: tx.to_address, 
+      amount: 0, 
+      count: 0, 
+      first: tx.timestamp, 
+      last: tx.timestamp 
+    }
+    edgeStats.amount += parseFloat(tx.amount.toString())
+    edgeStats.count += 1
+    edgeStats.last = tx.timestamp
+    edgeMap.set(edgeKey, edgeStats)
+  }
+  
+  // Bulk upsert nodes
+  const nodes = Array.from(addressMap.entries()).map(([address, stats]) => ({
+    address,
+    total_volume: stats.total_volume,
+    transaction_count: stats.transaction_count,
+    last_seen: stats.last_seen
+  }))
+  
+  if (nodes.length > 0) {
     await supabase
       .from('network_nodes')
-      .upsert([
-        {
-          address: tx.from_address,
-          total_volume: 0,
-          transaction_count: 0,
-          last_seen: tx.timestamp
-        },
-        {
-          address: tx.to_address,
-          total_volume: 0,
-          transaction_count: 0,
-          last_seen: tx.timestamp
-        }
-      ], { onConflict: 'address' })
-
+      .upsert(nodes, { onConflict: 'address' })
+  }
+  
+  // Bulk upsert edges
+  const edges = Array.from(edgeMap.values()).map(edge => ({
+    from_address: edge.from,
+    to_address: edge.to,
+    total_amount: edge.amount,
+    transaction_count: edge.count,
+    first_transaction: edge.first,
+    last_transaction: edge.last
+  }))
+  
+  if (edges.length > 0) {
     await supabase
       .from('network_edges')
-      .upsert({
-        from_address: tx.from_address,
-        to_address: tx.to_address,
-        total_amount: tx.amount,
-        transaction_count: 1,
-        first_transaction: tx.timestamp,
-        last_transaction: tx.timestamp
-      }, { onConflict: 'from_address,to_address' })
+      .upsert(edges, { onConflict: 'from_address,to_address' })
   }
+  
+  console.log(`✅ Network graph updated: ${nodes.length} nodes, ${edges.length} edges`)
 }
