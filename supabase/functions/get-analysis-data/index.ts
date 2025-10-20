@@ -67,15 +67,13 @@ serve(async (req) => {
 })
 
 async function getOverviewData(supabase: any) {
-  // Get total transaction count
-  const { count: totalTransactions } = await supabase
-    .from('transactions')
-    .select('*', { count: 'exact', head: true })
-
-  // Get ALL scorecards for accurate metrics
+  // Get ALL scorecards for accurate metrics - this is our source of truth
   const { data: allScorecards } = await supabase
     .from('transaction_scorecards')
     .select('final_score, risk_level')
+
+  // Total transactions = those that have been analyzed (have scorecards)
+  const totalAnalyzed = allScorecards?.length || 0
 
   // Calculate average risk score from scorecards if available
   const avgRiskScore = allScorecards && allScorecards.length > 0 
@@ -85,24 +83,25 @@ async function getOverviewData(supabase: any) {
   // Count high-risk transactions (SMR level)
   const highRiskCount = allScorecards?.filter((s: any) => s.risk_level === 'SMR').length || 0
 
-  // Count anomalies from analysis_results for backward compatibility
-  const { count: totalAnomalies } = await supabase
-    .from('analysis_results')
-    .select('*', { count: 'exact', head: true })
-    .eq('anomaly_detected', true)
+  // Count medium risk (EDD level)
+  const mediumRiskCount = allScorecards?.filter((s: any) => s.risk_level === 'EDD').length || 0
+
+  // Count anomalies (SMR + EDD)
+  const totalAnomalies = highRiskCount + mediumRiskCount
 
   console.log('Overview Data:', {
-    totalTransactions,
+    totalAnalyzed,
     avgRiskScore,
     highRiskCount,
+    mediumRiskCount,
     totalAnomalies,
     scorecardCount: allScorecards?.length
   })
 
   return {
-    totalTransactions: totalTransactions || 0,
+    totalTransactions: totalAnalyzed,
     averageRiskScore: avgRiskScore,
-    anomaliesFound: totalAnomalies || 0,
+    anomaliesFound: totalAnomalies,
     highRiskTransactions: highRiskCount
   }
 }

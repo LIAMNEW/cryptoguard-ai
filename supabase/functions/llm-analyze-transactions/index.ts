@@ -31,7 +31,7 @@ serve(async (req) => {
 
 File: ${fileName}
 Content:
-${fileContent.substring(0, 15000)}
+${fileContent.substring(0, 100000)}
 
 MISSION: Intelligently analyze this data and extract ALL financial transactions, regardless of format (CSV, JSON, XML, plain text, tables, etc.).
 
