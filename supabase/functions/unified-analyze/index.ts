@@ -34,22 +34,44 @@ serve(async (req) => {
     
     console.log(`🔍 Unified analysis started for ${transactions.length} transactions`)
     
-    // Step 1: Store transactions if not already stored
-    const hasIds = transactions.every((tx: any) => tx.id)
-    let storedTransactions = transactions
+    // Validate and clean transaction data
+    const cleanedTransactions = transactions.map((tx: any) => ({
+      ...tx,
+      transaction_id: tx.transaction_id || `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: tx.timestamp || new Date().toISOString(),
+      amount: parseFloat(tx.amount) || 0,
+      transaction_type: tx.transaction_type || 'transfer'
+    }))
+    
+    // Step 1: Store transactions using upsert to handle duplicates
+    const hasIds = cleanedTransactions.every((tx: any) => tx.id)
+    let storedTransactions = cleanedTransactions
     
     if (!hasIds) {
       console.log('📦 Storing transactions in database...')
       const { data, error: insertError } = await supabaseClient
         .from('transactions')
-        .insert(transactions)
+        .upsert(cleanedTransactions, { 
+          onConflict: 'transaction_id',
+          ignoreDuplicates: false 
+        })
         .select()
 
       if (insertError) {
         console.error('Error storing transactions:', insertError)
-        throw insertError
+        return new Response(
+          JSON.stringify({ 
+            error: 'Failed to store transactions', 
+            details: insertError.message,
+            hint: 'Please check your data format and try again'
+          }),
+          {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400,
+          },
+        )
       }
-      storedTransactions = data
+      storedTransactions = data || cleanedTransactions
       console.log(`✅ Stored ${storedTransactions.length} transactions`)
     }
 
