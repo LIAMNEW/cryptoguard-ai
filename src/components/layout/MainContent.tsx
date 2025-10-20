@@ -6,6 +6,7 @@ import { BlockchainSourceManager } from "@/components/dashboard/BlockchainSource
 import { LiveTransactionFeed } from "@/components/realtime/LiveTransactionFeed";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
 import { UserSettings } from "@/components/settings/UserSettings";
+import { Analytics } from "@/components/analytics/Analytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, Globe } from "lucide-react";
@@ -20,21 +21,8 @@ interface MainContentProps {
 export function MainContent({ activeSection, hasData, onFileUpload }: MainContentProps) {
   const renderContent = () => {
     switch (activeSection) {
-      case "upload":
-        return (
-          <div className="space-y-6">
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl font-bold text-foreground">
-                Upload Transaction Data
-              </h1>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Upload your blockchain transaction data to begin comprehensive analysis. 
-                Our AI-powered system will analyze patterns, detect anomalies, and assess compliance risks.
-              </p>
-            </div>
-            <FileUpload onFileUpload={onFileUpload} />
-          </div>
-        );
+      case "analytics":
+        return <Analytics onFileUpload={onFileUpload} hasData={hasData} />;
 
       case "saved":
         return <SavedAnalysesDashboard />;
