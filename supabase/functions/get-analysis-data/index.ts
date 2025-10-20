@@ -138,53 +138,88 @@ async function getNetworkData(supabase: any) {
 }
 
 async function getTimelineData(supabase: any) {
-  const { data: transactions } = await supabase
+  // Join transactions with scorecards to get actual risk scores
+  const { data: transactionsWithScores } = await supabase
     .from('transactions')
-    .select('timestamp, amount')
+    .select(`
+      timestamp,
+      amount,
+      transaction_scorecards (
+        final_score,
+        risk_level
+      )
+    `)
     .order('timestamp', { ascending: true })
-    .limit(10000) // Ensure we get all transactions
+    .limit(10000)
 
-  if (!transactions) return []
+  if (!transactionsWithScores) return []
 
-  // Group by date
-  const grouped = transactions.reduce((acc: any, tx: any) => {
+  // Group by date with actual risk scores
+  const grouped = transactionsWithScores.reduce((acc: any, tx: any) => {
     const date = new Date(tx.timestamp).toISOString().split('T')[0]
     if (!acc[date]) {
-      acc[date] = { timestamp: date, volume: 0, count: 0 }
+      acc[date] = { 
+        timestamp: date, 
+        volume: 0, 
+        count: 0,
+        totalRiskScore: 0,
+        riskCount: 0,
+        anomalies: 0
+      }
     }
     acc[date].volume += parseFloat(tx.amount)
     acc[date].count += 1
+    
+    // Add actual risk scores if available
+    if (tx.transaction_scorecards && tx.transaction_scorecards.length > 0) {
+      const scorecard = tx.transaction_scorecards[0]
+      acc[date].totalRiskScore += scorecard.final_score
+      acc[date].riskCount += 1
+      if (scorecard.risk_level === 'SMR' || scorecard.risk_level === 'EDD') {
+        acc[date].anomalies += 1
+      }
+    }
     return acc
   }, {})
 
   return Object.values(grouped).map((day: any) => ({
     timestamp: day.timestamp,
     volume: day.volume,
-    riskScore: Math.random() * 100, // Placeholder
-    anomalies: Math.floor(Math.random() * 5)
+    riskScore: day.riskCount > 0 ? Math.round(day.totalRiskScore / day.riskCount) : 0,
+    anomalies: day.anomalies
   }))
 }
 
 async function getAnomaliesData(supabase: any) {
-  const { data: anomalies } = await supabase
-    .from('analysis_results')
+  // Join scorecards with transactions to get comprehensive anomaly data
+  const { data: scorecards } = await supabase
+    .from('transaction_scorecards')
     .select(`
       *,
-      transactions (*)
+      transactions!inner (*)
     `)
-    .eq('anomaly_detected', true)
+    .or('risk_level.eq.SMR,risk_level.eq.EDD')
     .order('created_at', { ascending: false })
     .limit(20)
 
-  return anomalies?.map((anomaly: any) => ({
-    id: anomaly.id,
-    type: anomaly.anomaly_type || 'Unknown',
-    severity: anomaly.risk_score > 80 ? 'Critical' : anomaly.risk_score > 60 ? 'High' : 'Medium',
-    description: getAnomalyDescription(anomaly.anomaly_type),
-    transaction: anomaly.transactions,
-    riskScore: anomaly.risk_score,
-    timestamp: anomaly.created_at
-  })) || []
+  return scorecards?.map((scorecard: any) => {
+    const topRule = scorecard.rules_triggered?.[0]
+    const anomalyType = topRule?.rule_id || scorecard.risk_level
+    
+    return {
+      id: scorecard.id,
+      type: anomalyType,
+      severity: scorecard.risk_level === 'SMR' ? 'Critical' : 'High',
+      description: topRule?.name || `${scorecard.risk_level} risk transaction`,
+      evidence: topRule?.evidence || scorecard.rationale,
+      transaction: scorecard.transactions,
+      riskScore: scorecard.final_score,
+      austracScore: scorecard.policy_score,
+      timestamp: scorecard.created_at,
+      indicators: scorecard.indicators,
+      rules: scorecard.rules_triggered
+    }
+  }) || []
 }
 
 async function getRiskData(supabase: any) {
@@ -207,6 +242,12 @@ async function getRiskData(supabase: any) {
 
 function getAnomalyDescription(type: string): string {
   const descriptions: Record<string, string> = {
+    'STRUCT_CASH': 'Potential structuring - multiple transactions below reporting threshold',
+    'VELOCITY_SPIKE': 'Unusually high transaction frequency detected',
+    'RAPID_MOVEMENT': 'Rapid fund movement indicating possible layering',
+    'HIGH_VALUE': 'Transaction exceeds high-value threshold',
+    'LAYERING': 'Complex layering pattern detected',
+    'HIGH_RISK_GEO': 'Transaction involves high-risk jurisdiction',
     'high_value': 'Transaction amount significantly above average',
     'rapid_transactions': 'Unusually high frequency of transactions',
     'circular': 'Circular transaction pattern detected',
