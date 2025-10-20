@@ -105,6 +105,12 @@ serve(async (req) => {
       scorecards.push(scorecard)
       
       // Create analysis result for compatibility
+      // Map AUSTRAC risk levels to analysis_results schema constraint
+      const mappedRiskLevel = riskLevel === 'NORMAL' ? 'LOW' 
+        : riskLevel === 'EDD' ? 'MEDIUM'
+        : riskLevel === 'SMR' ? 'HIGH'
+        : 'MEDIUM';
+      
       const analysisResult = {
         transaction_id: transaction.id,
         risk_score: finalScore,
@@ -113,7 +119,7 @@ serve(async (req) => {
         network_cluster: `cluster_${riskLevel.toLowerCase()}`,
         austrac_score: finalScore,
         general_risk_score: 0,
-        risk_level: riskLevel
+        risk_level: mappedRiskLevel
       }
       
       analysisResults.push(analysisResult)
