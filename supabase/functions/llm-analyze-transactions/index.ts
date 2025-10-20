@@ -26,8 +26,9 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured')
     }
 
-    // Split large files into chunks of ~50,000 characters to avoid AI token limits
-    const CHUNK_SIZE = 50000
+    // Split large files into chunks of ~100,000 characters to avoid AI token limits
+    // Larger chunks = fewer API calls = faster processing within edge function timeout
+    const CHUNK_SIZE = 100000
     const chunks: string[] = []
     
     if (fileContent.length > CHUNK_SIZE) {
@@ -94,9 +95,9 @@ OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra 
         try {
           console.log(`🌐 Calling AI API (attempt ${retries + 1}/${maxRetries + 1})...`)
           
-          // Create AbortController for 60 second timeout
+          // Create AbortController for 45 second timeout per chunk
           const controller = new AbortController()
-          const timeoutId = setTimeout(() => controller.abort(), 60000)
+          const timeoutId = setTimeout(() => controller.abort(), 45000)
           
           const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
             method: 'POST',
