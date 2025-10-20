@@ -156,11 +156,13 @@ const Index = () => {
       
       // Provide helpful error messages based on error type
       if (errorMsg.includes('timeout') || errorMsg.includes('Failed to fetch') || errorMsg.includes('timed out')) {
-        toast.error('⏱️ Analysis timeout - file too large. Try splitting into smaller files or contact support.', { duration: 8000 });
+        toast.error('⏱️ Analysis timeout - The AI service is taking too long. Please try again or use a smaller file.', { duration: 8000 });
       } else if (errorMsg.includes('429') || errorMsg.includes('rate limit')) {
         toast.error('🚦 Rate limit reached - please wait a moment and try again.', { duration: 6000 });
       } else if (errorMsg.includes('No transactions found')) {
         toast.error('❌ No valid transactions found in file. Check file format.', { duration: 6000 });
+      } else if (errorMsg.includes('Failed to send a request')) {
+        toast.error('🔌 Connection error - Please check your internet connection and try again.', { duration: 6000 });
       } else {
         toast.error(`❌ Analysis failed: ${errorMsg}`, { duration: 6000 });
       }

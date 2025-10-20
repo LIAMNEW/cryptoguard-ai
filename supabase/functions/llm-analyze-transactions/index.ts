@@ -85,25 +85,79 @@ INTELLIGENCE GUIDELINES:
 OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra text:
 [{"transaction_id":"...","amount":123.45,"timestamp":"2023-01-01T12:00:00Z","from_address":"...","to_address":"...","transaction_type":"..."}]`
 
-      const extractionResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
-          messages: [
-            { role: 'system', content: 'You are QuantumGuard AI, an intelligent financial data extraction system. You can understand and parse ANY data format. Return ONLY valid JSON arrays with no markdown formatting.' },
-            { role: 'user', content: extractionPrompt }
-          ]
-        }),
-      })
-
-      if (!extractionResponse.ok) {
-        const errorText = await extractionResponse.text()
-        console.error('❌ LLM extraction error:', extractionResponse.status, errorText)
-        throw new Error(`LLM extraction failed: ${extractionResponse.status}`)
+      // Retry logic with timeout
+      let extractionResponse: Response | null = null
+      let retries = 0
+      const maxRetries = 2
+      
+      while (retries <= maxRetries && !extractionResponse) {
+        try {
+          console.log(`🌐 Calling AI API (attempt ${retries + 1}/${maxRetries + 1})...`)
+          
+          // Create AbortController for 60 second timeout
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => controller.abort(), 60000)
+          
+          const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: 'google/gemini-2.5-flash',
+              messages: [
+                { role: 'system', content: 'You are QuantumGuard AI, an intelligent financial data extraction system. You can understand and parse ANY data format. Return ONLY valid JSON arrays with no markdown formatting.' },
+                { role: 'user', content: extractionPrompt }
+              ]
+            }),
+            signal: controller.signal,
+          })
+          
+          clearTimeout(timeoutId)
+          
+          if (!response.ok) {
+            const errorText = await response.text()
+            console.error('❌ LLM extraction error:', response.status, errorText)
+            
+            if (response.status === 429 || response.status >= 500) {
+              // Retry on rate limit or server errors
+              retries++
+              if (retries <= maxRetries) {
+                console.log(`⏳ Waiting 2s before retry...`)
+                await new Promise(resolve => setTimeout(resolve, 2000))
+                continue
+              }
+            }
+            
+            throw new Error(`LLM extraction failed: ${response.status} - ${errorText}`)
+          }
+          
+          extractionResponse = response
+          console.log(`✅ AI API call successful`)
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            console.error(`⏱️ Request timeout on attempt ${retries + 1}`)
+            retries++
+            if (retries <= maxRetries) {
+              console.log(`⏳ Retrying after timeout...`)
+              continue
+            }
+            throw new Error('AI API request timed out after multiple attempts')
+          }
+          
+          console.error(`❌ Fetch error on attempt ${retries + 1}:`, error)
+          retries++
+          if (retries <= maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, 2000))
+            continue
+          }
+          throw error
+        }
+      }
+      
+      if (!extractionResponse) {
+        throw new Error('Failed to get response from AI after all retries')
       }
 
       const extractionData = await extractionResponse.json()
@@ -120,6 +174,7 @@ OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra 
         }
       } catch (e) {
         console.error(`❌ Failed to parse LLM JSON response for chunk ${i + 1}:`, e)
+        console.error('Raw response:', extractedText.substring(0, 500))
         throw new Error(`LLM did not return valid JSON for chunk ${i + 1}`)
       }
 
