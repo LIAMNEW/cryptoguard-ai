@@ -9,6 +9,7 @@ import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
+import { RiskPieChart } from "./RiskPieChart";
 
 import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
@@ -127,18 +128,14 @@ export function AnalysisTabs() {
 
       {/* Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 glass-card p-1">
-          <TabsTrigger value="network" className="flex items-center gap-2">
-            <Network className="w-4 h-4" />
-            <span className="hidden sm:inline">Network</span>
+        <TabsList className="grid w-full grid-cols-4 glass-card p-1">
+          <TabsTrigger value="transactions" className="flex items-center gap-2">
+            <BarChart3 className="w-4 h-4" />
+            <span className="hidden sm:inline">Transactions</span>
           </TabsTrigger>
           <TabsTrigger value="risk" className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
             <span className="hidden sm:inline">Risk</span>
-          </TabsTrigger>
-          <TabsTrigger value="timeline" className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span className="hidden sm:inline">Timeline</span>
           </TabsTrigger>
           <TabsTrigger value="insights" className="flex items-center gap-2">
             <Brain className="w-4 h-4" />
@@ -150,122 +147,56 @@ export function AnalysisTabs() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="network" className="space-y-4 animate-fade-in">
+        <TabsContent value="transactions" className="space-y-4 animate-fade-in">
           <TransactionScatterPlot />
-          
-          {/* Quantum-Ready Infrastructure - Only in Network tab */}
           <QuantumSafeIndicator />
-          
-          {/* QuantumGuard AI Branding - Only in Network tab */}
-          <Card className="glass-card p-6 text-center space-y-4">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-quantum-green flex items-center justify-center">
-                <Shield className="w-5 h-5 text-background" />
-              </div>
-              <h2 className="text-quantum text-2xl font-bold">QuantumGuard AI</h2>
-            </div>
-            
-            <p className="text-lg font-semibold text-foreground">
-              Advanced Blockchain Transaction Analytics & AUSTRAC Compliance
-            </p>
-            
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-quantum-green" />
-                <span>Powered by Post-Quantum Cryptography</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-quantum-green" />
-                <span>AI-Driven Risk Assessment</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Globe className="w-4 h-4 text-quantum-green" />
-                <span>Real-Time Compliance Monitoring</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-center gap-2">
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                Enterprise Grade Security
-              </Badge>
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                Regulatory Compliant
-              </Badge>
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                AI-Powered Analytics
-              </Badge>
-            </div>
-            
-            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-4">
-              <Link to="/terms" className="hover:text-quantum-green transition-colors">
-                Terms of Service
-              </Link>
-              <span>•</span>
-              <Link to="/privacy" className="hover:text-quantum-green transition-colors">
-                Privacy Policy
-              </Link>
-            </div>
-          </Card>
         </TabsContent>
 
         <TabsContent value="risk" className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <RiskPieChart riskData={riskData} />
+            
             <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">AUSTRAC Risk Distribution</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Risk Analysis Summary</h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">SMR (Suspicious Matter)</span>
-                  <Badge variant="destructive">{riskData.high}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">EDD (Enhanced Due Diligence)</span>
-                  <Badge variant="outline" className="border-yellow-500 text-yellow-500">{riskData.medium}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Normal Risk</span>
-                  <Badge variant="secondary">{riskData.low}</Badge>
-                </div>
-                <div className="mt-4 pt-4 border-t border-glass-border">
-                  <div className="flex items-center justify-between">
+                <div className="p-4 rounded-lg bg-glass-background border border-glass-border">
+                  <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium">Average Risk Score</span>
                     <p className="text-2xl font-bold text-foreground">{analysisData.averageRiskScore}/100</p>
                   </div>
-                  <div className="w-full bg-glass-border rounded-full h-3 mt-2">
+                  <div className="w-full bg-glass-border rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-quantum-green via-yellow-500 to-red-500 h-3 rounded-full transition-all"
                       style={{ width: `${analysisData.averageRiskScore}%` }}
                     />
                   </div>
                 </div>
-              </div>
-            </Card>
-
-            <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Compliance Summary</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Total Transactions Analyzed</span>
-                  <Badge variant="outline">{analysisData.totalTransactions}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">High Risk (SMR/EDD)</span>
-                  <Badge variant="destructive">{analysisData.highRiskTransactions}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Anomalies Detected</span>
-                  <Badge variant="outline">{analysisData.anomaliesFound}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Reporting Required</span>
-                  <Badge variant="destructive">{riskData.high > 0 ? 'Yes' : 'No'}</Badge>
+                
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Total Transactions</span>
+                    <Badge variant="outline">{analysisData.totalTransactions}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">High Risk Transactions</span>
+                    <Badge variant="destructive">{riskData.high}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Medium Risk Transactions</span>
+                    <Badge variant="outline" className="border-yellow-500 text-yellow-500">{riskData.medium}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Low Risk Transactions</span>
+                    <Badge variant="secondary">{riskData.low}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-glass-border">
+                    <span className="text-sm text-muted-foreground">Anomalies Detected</span>
+                    <Badge variant="outline">{analysisData.anomaliesFound}</Badge>
+                  </div>
                 </div>
               </div>
             </Card>
           </div>
-        </TabsContent>
-
-        <TabsContent value="timeline" className="space-y-4 animate-fade-in">
-          <TransactionTimeline data={timelineData} />
         </TabsContent>
 
         <TabsContent value="insights" className="space-y-4 animate-fade-in">
