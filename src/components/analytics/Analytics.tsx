@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { FileUpload } from "@/components/upload/FileUpload";
 import { RiskPieChart } from "@/components/dashboard/RiskPieChart";
 import { TransactionScatterPlot } from "@/components/dashboard/TransactionScatterPlot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, TrendingUp } from "lucide-react";
+import { BarChart3, TrendingUp, AlertCircle } from "lucide-react";
 import { getRiskData } from "@/lib/supabase";
 
 interface AnalyticsProps {
@@ -46,17 +45,26 @@ export function Analytics({ onFileUpload, hasData }: AnalyticsProps) {
           Analytics Dashboard
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Upload transaction data to analyze risk scores and investigate patterns through interactive visualizations.
+          Analyze risk scores and investigate patterns through interactive visualizations.
         </p>
       </div>
 
-      {/* File Upload Section */}
-      <div className="max-w-4xl mx-auto">
-        <FileUpload onFileUpload={onFileUpload} />
-      </div>
-
-      {/* Visualizations - Only show when data exists */}
-      {hasData && (
+      {/* Show message if no data */}
+      {!hasData ? (
+        <Card className="glass-card">
+          <CardContent className="py-12 text-center">
+            <AlertCircle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
+              No Data Available
+            </h3>
+            <p className="text-muted-foreground">
+              Please upload transaction data first to view analytics.
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        /* Visualizations - Only show when data exists */
+        <>
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Risk Score Pie Chart */}
@@ -98,6 +106,7 @@ export function Analytics({ onFileUpload, hasData }: AnalyticsProps) {
             </CardContent>
           </Card>
         </div>
+        </>
       )}
     </div>
   );
