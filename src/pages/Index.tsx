@@ -61,59 +61,79 @@ const Index = () => {
   }, [user]);
 
   const handleFileUpload = useCallback(async (data: { fileContent: string; fileName: string }) => {
+    const startTime = Date.now();
+    
     try {
       console.log('Processing file with unified analysis pipeline...');
       
-      // Show initial loading state
-      toast.info('Starting analysis...', { duration: 2000 });
+      // Show initial toast
+      toast.info(`📄 Processing ${data.fileName}...`, { duration: 2000 });
       
-      // First, extract transactions using LLM
+      // Calculate estimated chunks
+      const estimatedChunks = Math.ceil(data.fileContent.length / 50000);
+      if (estimatedChunks > 1) {
+        toast.info(`📦 Large file detected - processing in ${estimatedChunks} chunks`, { duration: 3000 });
+      }
+      
+      // Show AI analysis progress
+      const analysisToast = toast.loading('🤖 QuantumGuard AI extracting transactions...', { duration: 30000 });
+      
+      // Extract transactions using LLM with chunking
       const { data: extractResult, error: extractError } = await supabase.functions.invoke('llm-analyze-transactions', {
         body: data
       });
 
+      toast.dismiss(analysisToast);
+
       if (extractError) throw extractError;
 
-      // Show progress during analysis
-      const progressToast = toast.loading(
-        `Analyzing ${extractResult.total_transactions} transactions...`,
-        { duration: 10000 }
-      );
+      const processingTime = ((Date.now() - startTime) / 1000).toFixed(1);
 
       // Log audit event
       await logAuditEvent({
-        action: "unified_analyze_transactions",
+        action: "file_analyzed",
         resourceType: "transactions",
         details: {
           fileName: data.fileName,
           total_transactions: extractResult.total_transactions,
+          new_transactions: extractResult.new_transactions,
+          duplicates: extractResult.duplicates,
           high_risk_count: extractResult.high_risk_count,
+          processingTimeSeconds: processingTime,
           timestamp: new Date().toISOString(),
         },
       });
 
-      // Dismiss progress toast
-      toast.dismiss(progressToast);
-
-      const riskSummary = [];
-      if (extractResult.high_risk_count > 0) {
-        riskSummary.push(`⚠️ ${extractResult.high_risk_count} HIGH RISK`);
+      // Success message with details
+      if (extractResult.duplicates > 0) {
+        toast.success(
+          `✅ Analyzed ${extractResult.total_transactions} transactions (${extractResult.new_transactions} new, ${extractResult.duplicates} duplicates skipped) in ${processingTime}s`,
+          { duration: 6000 }
+        );
+      } else {
+        toast.success(
+          `✅ Successfully analyzed ${extractResult.total_transactions} transactions in ${processingTime}s`,
+          { duration: 6000 }
+        );
       }
 
-      toast.success(
-        `Analysis Complete! ${extractResult.total_transactions} transactions processed${riskSummary.length > 0 ? ': ' + riskSummary.join(', ') : ''}`,
-        { duration: 6000 }
-      );
+      // High risk alert
+      if (extractResult.high_risk_count > 0) {
+        toast.error(
+          `⚠️ ${extractResult.high_risk_count} high-risk transactions require immediate attention`,
+          { duration: 8000 }
+        );
+      }
 
+      // Pattern detection alerts
       if (extractResult.patterns) {
         const patterns = [];
         if (extractResult.patterns.structuring_detected) patterns.push('Structuring');
         if (extractResult.patterns.velocity_abuse) patterns.push('Velocity Abuse');
-        if (extractResult.patterns.circular_transactions) patterns.push('Circular Flow');
-        if (extractResult.patterns.unusual_timing) patterns.push('Unusual Timing');
+        if (extractResult.patterns.high_value_detected) patterns.push('High Value');
         
         if (patterns.length > 0) {
-          toast.warning(`Patterns detected: ${patterns.join(', ')}`, { duration: 8000 });
+          toast.warning(`🔍 Patterns detected: ${patterns.join(', ')}`, { duration: 8000 });
         }
       }
       
@@ -122,25 +142,28 @@ const Index = () => {
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       
-      // Provide helpful error messages based on error type
-      if (errorMsg.includes('timeout') || errorMsg.includes('Failed to fetch')) {
-        toast.error('Analysis timed out. Your file may be too large. Try a smaller dataset or contact support.', { duration: 8000 });
-      } else if (errorMsg.includes('429')) {
-        toast.error('Rate limit exceeded. Please wait a moment and try again.', { duration: 6000 });
-      } else {
-        toast.error('Analysis failed. Please check your file format and try again.', { duration: 6000 });
-      }
-      
       console.error('Upload error:', error);
       
       // Log error event
       await logAuditEvent({
-        action: "llm_analyze_failed",
+        action: "file_analysis_failed",
         resourceType: "transactions",
         details: {
+          fileName: data.fileName,
           error: errorMsg,
         },
       });
+      
+      // Provide helpful error messages based on error type
+      if (errorMsg.includes('timeout') || errorMsg.includes('Failed to fetch') || errorMsg.includes('timed out')) {
+        toast.error('⏱️ Analysis timeout - file too large. Try splitting into smaller files or contact support.', { duration: 8000 });
+      } else if (errorMsg.includes('429') || errorMsg.includes('rate limit')) {
+        toast.error('🚦 Rate limit reached - please wait a moment and try again.', { duration: 6000 });
+      } else if (errorMsg.includes('No transactions found')) {
+        toast.error('❌ No valid transactions found in file. Check file format.', { duration: 6000 });
+      } else {
+        toast.error(`❌ Analysis failed: ${errorMsg}`, { duration: 6000 });
+      }
     }
   }, []);
 

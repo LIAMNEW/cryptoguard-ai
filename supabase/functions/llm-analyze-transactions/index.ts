@@ -26,12 +26,41 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured')
     }
 
-    // Use LLM to intelligently extract and parse ANY transaction data format
-    const extractionPrompt = `You are QuantumGuard AI, an intelligent financial transaction analyzer capable of understanding ANY data format.
+    // Split large files into chunks of ~50,000 characters to avoid AI token limits
+    const CHUNK_SIZE = 50000
+    const chunks: string[] = []
+    
+    if (fileContent.length > CHUNK_SIZE) {
+      // Split by lines to avoid breaking mid-transaction
+      const lines = fileContent.split('\n')
+      let currentChunk = ''
+      
+      for (const line of lines) {
+        if (currentChunk.length + line.length > CHUNK_SIZE && currentChunk.length > 0) {
+          chunks.push(currentChunk)
+          currentChunk = line + '\n'
+        } else {
+          currentChunk += line + '\n'
+        }
+      }
+      if (currentChunk) chunks.push(currentChunk)
+      
+      console.log(`📦 Split file into ${chunks.length} chunks for processing`)
+    } else {
+      chunks.push(fileContent)
+    }
 
-File: ${fileName}
+    // Process all chunks and collect transactions
+    let allExtractedTransactions: any[] = []
+    
+    for (let i = 0; i < chunks.length; i++) {
+      console.log(`🔄 Processing chunk ${i + 1}/${chunks.length}...`)
+      
+      const extractionPrompt = `You are QuantumGuard AI, an intelligent financial transaction analyzer capable of understanding ANY data format.
+
+File: ${fileName} (Chunk ${i + 1}/${chunks.length})
 Content:
-${fileContent.substring(0, 100000)}
+${chunks[i]}
 
 MISSION: Intelligently analyze this data and extract ALL financial transactions, regardless of format (CSV, JSON, XML, plain text, tables, etc.).
 
@@ -56,54 +85,56 @@ INTELLIGENCE GUIDELINES:
 OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra text:
 [{"transaction_id":"...","amount":123.45,"timestamp":"2023-01-01T12:00:00Z","from_address":"...","to_address":"...","transaction_type":"..."}]`
 
-    console.log('🤖 Calling QuantumGuard AI for intelligent data extraction...')
-    
-    const extractionResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      const extractionResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: 'You are QuantumGuard AI, an intelligent financial data extraction system. You can understand and parse ANY data format. Return ONLY valid JSON arrays with no markdown formatting.' },
-          { role: 'user', content: extractionPrompt }
-        ]
-      }),
-    })
+        headers: {
+          'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.5-flash',
+          messages: [
+            { role: 'system', content: 'You are QuantumGuard AI, an intelligent financial data extraction system. You can understand and parse ANY data format. Return ONLY valid JSON arrays with no markdown formatting.' },
+            { role: 'user', content: extractionPrompt }
+          ]
+        }),
+      })
 
-    if (!extractionResponse.ok) {
-      const errorText = await extractionResponse.text()
-      console.error('❌ LLM extraction error:', extractionResponse.status, errorText)
-      throw new Error(`LLM extraction failed: ${extractionResponse.status}`)
-    }
-
-    const extractionData = await extractionResponse.json()
-    const extractedText = extractionData.choices[0]?.message?.content || ''
-
-    // Parse extracted transactions
-    let extractedTransactions = []
-    try {
-      const jsonMatch = extractedText.match(/\[[\s\S]*\]/)
-      if (jsonMatch) {
-        extractedTransactions = JSON.parse(jsonMatch[0])
-      } else {
-        extractedTransactions = JSON.parse(extractedText)
+      if (!extractionResponse.ok) {
+        const errorText = await extractionResponse.text()
+        console.error('❌ LLM extraction error:', extractionResponse.status, errorText)
+        throw new Error(`LLM extraction failed: ${extractionResponse.status}`)
       }
-    } catch (e) {
-      console.error('❌ Failed to parse LLM JSON response:', e)
-      throw new Error('LLM did not return valid JSON')
+
+      const extractionData = await extractionResponse.json()
+      const extractedText = extractionData.choices[0]?.message?.content || ''
+
+      // Parse extracted transactions from this chunk
+      let chunkTransactions = []
+      try {
+        const jsonMatch = extractedText.match(/\[[\s\S]*\]/)
+        if (jsonMatch) {
+          chunkTransactions = JSON.parse(jsonMatch[0])
+        } else {
+          chunkTransactions = JSON.parse(extractedText)
+        }
+      } catch (e) {
+        console.error(`❌ Failed to parse LLM JSON response for chunk ${i + 1}:`, e)
+        throw new Error(`LLM did not return valid JSON for chunk ${i + 1}`)
+      }
+
+      console.log(`✅ Extracted ${chunkTransactions.length} transactions from chunk ${i + 1}`)
+      allExtractedTransactions = allExtractedTransactions.concat(chunkTransactions)
     }
 
-    console.log(`✅ Extracted ${extractedTransactions.length} transactions`)
+    console.log(`✅ Total extracted: ${allExtractedTransactions.length} transactions from all chunks`)
 
-    if (!Array.isArray(extractedTransactions) || extractedTransactions.length === 0) {
+    if (!Array.isArray(allExtractedTransactions) || allExtractedTransactions.length === 0) {
       throw new Error('No transactions found in file')
     }
 
     // Normalize transactions to database format
-    const normalizedTransactions = extractedTransactions.map((tx: any) => ({
+    const normalizedTransactions = allExtractedTransactions.map((tx: any) => ({
       transaction_id: tx.transaction_id || `tx_${Date.now()}_${Math.random()}`,
       from_address: tx.from_address || tx.merchant_name || 'unknown',
       to_address: tx.to_address || tx.country_of_origin || 'unknown',
@@ -112,12 +143,42 @@ OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra 
       transaction_type: tx.transaction_type || tx.type || 'transfer',
     }))
 
-    console.log(`🔄 Sending ${normalizedTransactions.length} transactions to unified analysis...`)
+    // Check for existing transactions to avoid duplicates
+    const transactionIds = normalizedTransactions.map(t => t.transaction_id)
+    const { data: existingTxs } = await supabaseClient
+      .from('transactions')
+      .select('transaction_id')
+      .in('transaction_id', transactionIds)
+
+    const existingIds = new Set(existingTxs?.map(t => t.transaction_id) || [])
+    const newTransactions = normalizedTransactions.filter(t => !existingIds.has(t.transaction_id))
+    
+    console.log(`📊 Found ${normalizedTransactions.length} total, ${existingIds.size} duplicates, ${newTransactions.length} new transactions`)
+
+    if (newTransactions.length === 0) {
+      console.log('✅ All transactions already exist in database')
+      return new Response(
+        JSON.stringify({
+          success: true,
+          total_transactions: normalizedTransactions.length,
+          new_transactions: 0,
+          duplicates: existingIds.size,
+          high_risk_count: 0,
+          message: 'All transactions already analyzed'
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        },
+      )
+    }
+
+    console.log(`🔄 Sending ${newTransactions.length} new transactions to unified analysis...`)
 
     // Call unified-analyze to handle storage and AUSTRAC scoring
     const { data: analysisResult, error: analysisError } = await supabaseClient.functions
       .invoke('unified-analyze', {
-        body: { transactions: normalizedTransactions }
+        body: { transactions: newTransactions }
       })
 
     if (analysisError) {
@@ -130,7 +191,9 @@ OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra 
     return new Response(
       JSON.stringify({
         success: true,
-        total_transactions: analysisResult.analyzed_count,
+        total_transactions: normalizedTransactions.length,
+        new_transactions: analysisResult.analyzed_count,
+        duplicates: existingIds.size,
         high_risk_count: analysisResult.high_risk_count,
         scorecards: analysisResult.scorecards,
         patterns: {
