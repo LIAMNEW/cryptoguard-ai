@@ -17,6 +17,8 @@ export function BlockchainSourceManager() {
   const handleFetchData = async () => {
     setLoading(true);
     try {
+      console.log('Fetching and analyzing blockchain transactions...');
+      
       const { data, error } = await supabase.functions.invoke('fetch-blockchain-data', {
         body: {
           source,
@@ -27,33 +29,21 @@ export function BlockchainSourceManager() {
 
       if (error) throw error;
 
-      toast.success(`Fetched ${data.count} transactions from ${source}. QuantumGuard AI is analyzing...`);
-      
-      // Trigger AI analysis on the stored transactions
-      if (data.transactions && data.transactions.length > 0) {
-        console.log('Analyzing transactions:', data.transactions.length);
+      // The unified-analyze function is now called automatically by fetch-blockchain-data
+      if (data.success) {
+        const riskSummary = data.high_risk_count > 0 
+          ? ` - ${data.high_risk_count} high-risk detected!` 
+          : '';
         
-        const analysisResults = [];
-        for (const tx of data.transactions) {
-          // Analyze each transaction
-          const { data: analysis, error: analysisError } = await supabase.functions.invoke('analyze-transactions', {
-            body: {
-              transactions: [tx]
-            }
-          });
-
-          if (analysisError) {
-            console.error('Analysis error for transaction:', tx.transaction_id, analysisError);
-          } else if (analysis) {
-            analysisResults.push(analysis);
-          }
-        }
-
-        if (analysisResults.length > 0) {
-          toast.success(`Analysis complete! Analyzed ${analysisResults.length} transactions.`);
-        } else {
-          toast.error('Transactions fetched but analysis failed');
-        }
+        toast.success(
+          `${data.message}${riskSummary}`,
+          { duration: 5000 }
+        );
+        
+        console.log('Blockchain fetch complete:', {
+          total: data.count,
+          high_risk: data.high_risk_count
+        });
       }
       
       setAddress("");
@@ -127,9 +117,10 @@ export function BlockchainSourceManager() {
         </Button>
 
         <div className="text-sm text-muted-foreground space-y-1">
-          <p>• Ethereum: Connected via Infura</p>
+          <p>• Ethereum: Connected via Etherscan API</p>
           <p>• Bitcoin: Using public blockchain.info API</p>
-          <p>• Transactions are analyzed automatically</p>
+          <p>• Automatic AUSTRAC compliance analysis</p>
+          <p>• Risk scores and network graph auto-updated</p>
         </div>
       </CardContent>
     </Card>
