@@ -93,44 +93,163 @@ serve(async (req) => {
       const batch = storedTransactions.slice(i, i + BATCH_SIZE)
       console.log(`📦 Processing batch ${Math.floor(i/BATCH_SIZE) + 1}/${Math.ceil(storedTransactions.length/BATCH_SIZE)}...`)
       
-      // Process batch transactions in parallel
+      // Process batch transactions in parallel with AUSTRAC 8-rule engine
       const batchResults = await Promise.all(batch.map(async (transaction) => {
-        // Fast scoring based on amount and basic rules
         const amount = parseFloat(transaction.amount)
         let score = 0
         const rulesTriggered: any[] = []
         const flags: string[] = []
+        const explanations: string[] = []
         
-        // Quick threshold-based scoring
-        if (amount > 100000) {
-          score += 40
+        // RULE 1: Large Transactions (≥ $10,000 AUD)
+        if (amount >= 10000) {
+          const points = Math.min(30, Math.floor((amount - 10000) / 1000))
+          score += points
+          explanations.push(`Large transaction: $${amount.toLocaleString()} AUD`)
           rulesTriggered.push({
-            rule_id: 'HIGH_VALUE',
-            name: 'High Value Transaction',
+            rule_id: 'LARGE_TRANSACTION',
+            name: 'Large Transaction Detection',
+            severity: amount >= 100000 ? 'critical' : 'high',
+            weight: points,
+            evidence: `Transaction amount $${amount.toLocaleString()} exceeds $10,000 threshold`,
+            austrac_indicator: 'Threshold Transaction Report (TTR) required'
+          })
+        }
+        
+        // RULE 2: Structuring (just below $10k threshold)
+        if (amount >= 9000 && amount < 10000) {
+          score += 25
+          explanations.push(`Possible structuring: $${amount.toLocaleString()} (just below $10k threshold)`)
+          flags.push('STRUCTURING_SUSPECTED')
+          rulesTriggered.push({
+            rule_id: 'STRUCT_CASH',
+            name: 'Structuring Detection',
             severity: 'critical',
-            weight: 40,
-            evidence: `Transaction amount $${amount.toLocaleString()} exceeds $100,000`,
-            austrac_indicator: 'Large cash/value transaction'
+            weight: 25,
+            evidence: `Amount $${amount.toLocaleString()} just below $10,000 reporting threshold`,
+            austrac_indicator: 'Potential structuring to avoid reporting'
           })
-        } else if (amount > 50000) {
-          score += 30
+        }
+        
+        // RULE 3: Round Amounts
+        if (amount % 1000 === 0 || amount % 500 === 0) {
+          score += 10
+          explanations.push('Round amount detected')
           rulesTriggered.push({
-            rule_id: 'VERY_HIGH_VALUE',
-            name: 'Very High Value Transaction',
-            severity: 'high',
-            weight: 30,
-            evidence: `Transaction amount $${amount.toLocaleString()} exceeds $50,000`,
-            austrac_indicator: 'Significant transaction'
-          })
-        } else if (amount > 10000) {
-          score += 20
-          rulesTriggered.push({
-            rule_id: 'REPORTABLE_VALUE',
-            name: 'Reportable Threshold',
+            rule_id: 'ROUND_AMOUNT',
+            name: 'Round Amount Pattern',
             severity: 'medium',
+            weight: 10,
+            evidence: `Exact round amount: $${amount.toLocaleString()}`,
+            austrac_indicator: 'Unusual transaction pattern'
+          })
+        }
+        
+        // RULE 4: High-Risk Geographic Destinations
+        const highRiskCountries = ['KY', 'PA', 'VG', 'BM', 'LI', 'MC', 'BS', 'TC', 'KP', 'IR', 'SY']
+        const toAddress = transaction.to_address?.toUpperCase() || ''
+        const isHighRiskDest = highRiskCountries.some(country => 
+          toAddress.includes(country) || toAddress.includes(country.toLowerCase())
+        )
+        
+        if (isHighRiskDest) {
+          score += 20
+          explanations.push('High-risk geographic destination')
+          flags.push('HIGH_RISK_JURISDICTION')
+          rulesTriggered.push({
+            rule_id: 'HIGH_RISK_JURISDICTION',
+            name: 'High-Risk Jurisdiction',
+            severity: 'high',
             weight: 20,
-            evidence: `Transaction amount $${amount.toLocaleString()} exceeds reportable threshold`,
-            austrac_indicator: 'TTR threshold exceeded'
+            evidence: `Transaction to high-risk jurisdiction`,
+            austrac_indicator: 'High-risk geographic location'
+          })
+        }
+        
+        // RULE 5: Cash Transactions (detect from transaction type or metadata)
+        const isCashTx = transaction.transaction_type?.toLowerCase().includes('cash')
+        if (isCashTx) {
+          score += 15
+          explanations.push('Cash transaction')
+          rulesTriggered.push({
+            rule_id: 'CASH_TRANSACTION',
+            name: 'Cash Transaction',
+            severity: 'medium',
+            weight: 15,
+            evidence: 'Cash-based transaction detected',
+            austrac_indicator: 'Physical currency transaction'
+          })
+        }
+        
+        // RULE 6: Sanctions/PEP Indicators (basic keyword detection)
+        const sanctionsKeywords = ['sanction', 'ofac', 'pep', 'politically exposed']
+        const hasSanctionsHit = sanctionsKeywords.some(keyword => 
+          transaction.from_address?.toLowerCase().includes(keyword) ||
+          transaction.to_address?.toLowerCase().includes(keyword)
+        )
+        
+        if (hasSanctionsHit) {
+          score += 35
+          explanations.push('Sanctions or PEP indicator detected')
+          flags.push('SANCTIONS_HIT')
+          rulesTriggered.push({
+            rule_id: 'SANCTIONS_PEP',
+            name: 'Sanctions/PEP Match',
+            severity: 'critical',
+            weight: 35,
+            evidence: 'Potential sanctions list or PEP match',
+            austrac_indicator: 'Sanctions screening hit or PEP identified'
+          })
+        }
+        
+        // RULE 7: Velocity Anomalies (check for multiple transactions from same address)
+        // Note: This is a simplified check - in production, query historical data
+        if (transaction.from_address) {
+          const { count: txCount } = await supabaseClient
+            .from('transactions')
+            .select('*', { count: 'exact', head: true })
+            .eq('from_address', transaction.from_address)
+            .gte('timestamp', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+          
+          if (txCount && txCount > 5) {
+            const velocityScore = Math.min(20, txCount * 3)
+            score += velocityScore
+            explanations.push(`High velocity: ${txCount} transactions in 24h`)
+            rulesTriggered.push({
+              rule_id: 'VELOCITY_SPIKE',
+              name: 'High Transaction Velocity',
+              severity: 'high',
+              weight: velocityScore,
+              evidence: `${txCount} transactions from same address in 24 hours`,
+              austrac_indicator: 'Unusual transaction frequency'
+            })
+          }
+        }
+        
+        // RULE 8: KYC Inconsistencies (pattern detection in transaction data)
+        let kycIssues: string[] = []
+        
+        // Check for unusual patterns that might indicate KYC issues
+        if (amount > 50000 && transaction.transaction_type === 'transfer') {
+          kycIssues.push('large transfer')
+          score += 10
+        }
+        
+        // Unusual address patterns
+        if (transaction.from_address?.length < 5 || transaction.to_address?.length < 5) {
+          kycIssues.push('incomplete address data')
+          score += 15
+        }
+        
+        if (kycIssues.length > 0) {
+          explanations.push(`KYC concerns: ${kycIssues.join(', ')}`)
+          rulesTriggered.push({
+            rule_id: 'KYC_INCONSISTENCY',
+            name: 'KYC Data Inconsistency',
+            severity: 'medium',
+            weight: 15,
+            evidence: `Potential KYC issues: ${kycIssues.join(', ')}`,
+            austrac_indicator: 'Customer due diligence concerns'
           })
         }
         

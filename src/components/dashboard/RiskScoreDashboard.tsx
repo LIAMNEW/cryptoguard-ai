@@ -25,6 +25,7 @@ interface RiskScoreData {
   timestamp: string;
   fromAddress: string;
   toAddress: string;
+  explanation?: string;
 }
 
 export function RiskScoreDashboard() {
@@ -62,17 +63,27 @@ export function RiskScoreDashboard() {
 
       if (txError) throw txError;
 
-      // Fetch corresponding scorecards
+      // Fetch corresponding scorecards with detailed rationale
       const { data: scorecards, error: scoreError } = await supabase
         .from('transaction_scorecards')
-        .select('*')
+        .select('transaction_id, final_score, risk_level, rationale, rules_triggered')
         .in('transaction_id', transactions?.map(t => t.id) || []);
 
       if (scoreError) throw scoreError;
 
-      // Merge data
+      // Merge data with explanations
       const riskData: RiskScoreData[] = transactions?.map(tx => {
         const scorecard = scorecards?.find(s => s.transaction_id === tx.id);
+        
+        // Extract explanation from rationale or rules_triggered
+        let explanation = scorecard?.rationale || '';
+        if (!explanation && scorecard?.rules_triggered) {
+          const rules = Array.isArray(scorecard.rules_triggered) 
+            ? scorecard.rules_triggered 
+            : [];
+          explanation = rules.map((r: any) => r.name).join(', ');
+        }
+        
         return {
           transactionId: tx.transaction_id,
           amount: parseFloat(tx.amount.toString()),
@@ -80,7 +91,8 @@ export function RiskScoreDashboard() {
           riskLevel: scorecard?.risk_level || 'NORMAL',
           timestamp: tx.timestamp,
           fromAddress: tx.from_address,
-          toAddress: tx.to_address
+          toAddress: tx.to_address,
+          explanation
         };
       }) || [];
 
@@ -125,7 +137,7 @@ export function RiskScoreDashboard() {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="glass-card p-4 space-y-2 border border-glass-border">
+        <div className="glass-card p-4 space-y-2 border border-glass-border max-w-md">
           <p className="font-semibold text-sm text-foreground">Transaction: {data.transactionId}</p>
           <p className="text-xs text-muted-foreground">Amount: ${data.amount.toLocaleString()}</p>
           <p className="text-xs text-muted-foreground">Risk Score: {data.riskScore}/100</p>
@@ -136,8 +148,13 @@ export function RiskScoreDashboard() {
           }>
             {data.riskLevel}
           </Badge>
-          <p className="text-xs text-muted-foreground">From: {data.fromAddress.substring(0, 12)}...</p>
-          <p className="text-xs text-muted-foreground">To: {data.toAddress.substring(0, 12)}...</p>
+          <p className="text-xs text-muted-foreground">From: {data.fromAddress.substring(0, 20)}...</p>
+          <p className="text-xs text-muted-foreground">To: {data.toAddress.substring(0, 20)}...</p>
+          {data.explanation && (
+            <p className="text-xs text-muted-foreground mt-2 border-t border-glass-border pt-2">
+              {data.explanation}
+            </p>
+          )}
         </div>
       );
     }
@@ -300,32 +317,53 @@ export function RiskScoreDashboard() {
         </CardContent>
       </Card>
 
-      {/* AUSTRAC Compliance Info */}
+      {/* AUSTRAC 8-Rule Compliance Info */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-quantum-green" />
-            AUSTRAC Risk Scoring Methodology
+            AUSTRAC 8-Rule Risk Scoring Engine
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-sm">Detection Rules Applied:</h4>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li>✓ Rule 1: Large Transactions (≥$10,000)</li>
+                <li>✓ Rule 2: Structuring Detection ($9k-$10k)</li>
+                <li>✓ Rule 3: Round Amount Patterns</li>
+                <li>✓ Rule 4: High-Risk Jurisdictions</li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-sm invisible">.</h4>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li>✓ Rule 5: Cash Transaction Detection</li>
+                <li>✓ Rule 6: Sanctions/PEP Screening</li>
+                <li>✓ Rule 7: Velocity Anomaly Detection</li>
+                <li>✓ Rule 8: KYC Inconsistency Checks</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-glass-border">
             <div className="space-y-2">
               <Badge className="bg-red-500">High Risk (SMR)</Badge>
               <p className="text-sm text-muted-foreground">
-                Score ≥60 or mandatory flags. Requires Suspicious Matter Report within 3 business days.
+                Score ≥70 or mandatory flags. Suspicious Matter Report required within 3 business days per AUSTRAC regulations.
               </p>
             </div>
             <div className="space-y-2">
               <Badge className="bg-orange-500">Medium Risk (EDD)</Badge>
               <p className="text-sm text-muted-foreground">
-                Score 30-59. Enhanced Due Diligence required. Monitor closely for escalation.
+                Score 40-69. Enhanced Due Diligence procedures must be applied. Continuous monitoring and documentation required.
               </p>
             </div>
             <div className="space-y-2">
               <Badge className="bg-green-500">Low Risk (Normal)</Badge>
               <p className="text-sm text-muted-foreground">
-                Score &lt;30. Standard monitoring applies. No immediate action required.
+                Score &lt;40. Standard Customer Due Diligence applies. Regular monitoring sufficient.
               </p>
             </div>
           </div>
