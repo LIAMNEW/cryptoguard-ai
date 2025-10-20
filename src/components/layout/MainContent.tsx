@@ -1,4 +1,3 @@
-import { TransactionUpload } from "@/components/upload/TransactionUpload";
 import { AnalysisTabs } from "@/components/dashboard/AnalysisTabs";
 import { SavedAnalysesDashboard } from "@/components/dashboard/SavedAnalysesDashboard";
 import { AuditLogsViewer } from "@/components/dashboard/AuditLogsViewer";
@@ -21,22 +20,6 @@ interface MainContentProps {
 export function MainContent({ activeSection, hasData, onFileUpload }: MainContentProps) {
   const renderContent = () => {
     switch (activeSection) {
-      case "upload":
-        return (
-          <div className="space-y-6">
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl font-bold text-foreground">
-                Upload Transaction Data
-              </h1>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Upload your transaction data files (CSV, JSON, TXT) for AI-powered analysis.
-                Our system will extract, analyze, and score all transactions automatically.
-              </p>
-            </div>
-            <TransactionUpload onFileUpload={onFileUpload} />
-          </div>
-        );
-
       case "analytics":
         return <Analytics onFileUpload={onFileUpload} hasData={hasData} />;
 
@@ -113,11 +96,7 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
                   </p>
                 </div>
               </div>
-              
-              {/* Upload section in middle */}
-              <div className="max-w-4xl mx-auto">
-                <TransactionUpload onFileUpload={onFileUpload} />
-              </div>
+              {/* No longer showing upload section here */}
             </div>
           );
         }

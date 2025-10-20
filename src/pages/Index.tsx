@@ -12,7 +12,7 @@ import { Session, User } from "@supabase/supabase-js";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState("upload");
+  const [activeSection, setActiveSection] = useState("analytics");
   const [hasData, setHasData] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -138,7 +138,7 @@ const Index = () => {
       }
       
       setHasData(true);
-      setActiveSection("upload");
+      setActiveSection("analytics");
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       
