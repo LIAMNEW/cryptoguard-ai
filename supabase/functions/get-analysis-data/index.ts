@@ -188,18 +188,17 @@ async function getAnomaliesData(supabase: any) {
 }
 
 async function getRiskData(supabase: any) {
-  const { data: analysisResults } = await supabase
-    .from('analysis_results')
-    .select('risk_score')
+  const { data: scorecards } = await supabase
+    .from('transaction_scorecards')
+    .select('risk_level, final_score')
 
-  if (!analysisResults) return { low: 0, medium: 0, high: 0, critical: 0 }
+  if (!scorecards) return { low: 0, medium: 0, high: 0, critical: 0 }
 
-  const distribution = analysisResults.reduce((acc: any, result: any) => {
-    const score = result.risk_score
-    if (score < 25) acc.low++
-    else if (score < 50) acc.medium++
-    else if (score < 75) acc.high++
-    else acc.critical++
+  const distribution = scorecards.reduce((acc: any, scorecard: any) => {
+    const level = scorecard.risk_level
+    if (level === 'NORMAL') acc.low++
+    else if (level === 'EDD') acc.medium++
+    else if (level === 'SMR') acc.high++
     return acc
   }, { low: 0, medium: 0, high: 0, critical: 0 })
 

@@ -30,31 +30,30 @@ serve(async (req) => {
       throw new Error('Unsupported blockchain source');
     }
 
-    // Store transactions in database and get back with IDs
-    // Use upsert to handle duplicate transactions gracefully
-    let storedTransactions = [];
+    // Store and analyze transactions using unified analysis
+    let analysisResults = null;
     if (transactions.length > 0) {
-      const { data: stored, error } = await supabase
-        .from('transactions')
-        .upsert(transactions, { 
-          onConflict: 'transaction_id',
-          ignoreDuplicates: false 
-        })
-        .select();
+      console.log('Invoking unified analysis for blockchain transactions...');
+      const { data: analysisData, error: analysisError } = await supabase.functions
+        .invoke('unified-analyze', {
+          body: { transactions }
+        });
 
-      if (error) {
-        console.error('Error storing transactions:', error);
-        throw error;
+      if (analysisError) {
+        console.error('Error analyzing transactions:', analysisError);
+        throw analysisError;
       }
-      storedTransactions = stored || [];
-      console.log(`Successfully stored/updated ${storedTransactions.length} transactions`);
+      
+      analysisResults = analysisData;
+      console.log(`Successfully analyzed ${analysisResults?.analyzed_count || 0} transactions`);
     }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        count: storedTransactions.length, 
-        transactions: storedTransactions 
+        count: analysisResults?.analyzed_count || 0,
+        high_risk_count: analysisResults?.high_risk_count || 0,
+        message: `Fetched and analyzed ${analysisResults?.analyzed_count || 0} transactions from ${source}`
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

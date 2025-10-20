@@ -62,46 +62,43 @@ const Index = () => {
 
   const handleFileUpload = useCallback(async (data: { fileContent: string; fileName: string }) => {
     try {
-      console.log('Sending file to LLM for intelligent analysis...');
+      console.log('Processing file with unified analysis pipeline...');
       
-      const { data: result, error } = await supabase.functions.invoke('llm-analyze-transactions', {
+      // First, extract transactions using LLM
+      const { data: extractResult, error: extractError } = await supabase.functions.invoke('llm-analyze-transactions', {
         body: data
       });
 
-      if (error) throw error;
+      if (extractError) throw extractError;
 
       // Log audit event
       await logAuditEvent({
-        action: "llm_analyze_transactions",
+        action: "unified_analyze_transactions",
         resourceType: "transactions",
         details: {
           fileName: data.fileName,
-          total_transactions: result.total_transactions,
-          high_risk_count: result.high_risk_count,
-          critical_count: result.critical_count,
+          total_transactions: extractResult.total_transactions,
+          high_risk_count: extractResult.high_risk_count,
           timestamp: new Date().toISOString(),
         },
       });
 
       const riskSummary = [];
-      if (result.critical_count > 0) {
-        riskSummary.push(`🚨 ${result.critical_count} CRITICAL`);
-      }
-      if (result.high_risk_count > 0) {
-        riskSummary.push(`⚠️ ${result.high_risk_count} HIGH RISK`);
+      if (extractResult.high_risk_count > 0) {
+        riskSummary.push(`⚠️ ${extractResult.high_risk_count} HIGH RISK`);
       }
 
       toast.success(
-        `AI Analysis Complete! ${result.total_transactions} transactions processed${riskSummary.length > 0 ? ': ' + riskSummary.join(', ') : ''}`,
+        `Analysis Complete! ${extractResult.total_transactions} transactions processed${riskSummary.length > 0 ? ': ' + riskSummary.join(', ') : ''}`,
         { duration: 6000 }
       );
 
-      if (result.patterns) {
+      if (extractResult.patterns) {
         const patterns = [];
-        if (result.patterns.structuring_detected) patterns.push('Structuring');
-        if (result.patterns.velocity_abuse) patterns.push('Velocity Abuse');
-        if (result.patterns.circular_transactions) patterns.push('Circular Flow');
-        if (result.patterns.unusual_timing) patterns.push('Unusual Timing');
+        if (extractResult.patterns.structuring_detected) patterns.push('Structuring');
+        if (extractResult.patterns.velocity_abuse) patterns.push('Velocity Abuse');
+        if (extractResult.patterns.circular_transactions) patterns.push('Circular Flow');
+        if (extractResult.patterns.unusual_timing) patterns.push('Unusual Timing');
         
         if (patterns.length > 0) {
           toast.warning(`Patterns detected: ${patterns.join(', ')}`, { duration: 8000 });
