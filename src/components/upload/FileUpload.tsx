@@ -1,10 +1,11 @@
 import { useState, useCallback } from "react";
-import { Upload, File, CheckCircle, AlertCircle, X, Shield, Loader2 } from "lucide-react";
+import { Upload, File, CheckCircle, AlertCircle, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import { encryptWithQuantumSafe, getPublicKey } from "@/lib/quantumCrypto";
+import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
 
 interface UploadedFile {
   file: File;
@@ -42,22 +43,15 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
   const handleFiles = async (files: File[]) => {
     const validFiles = files.filter(file => {
-      const validTypes = ['text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/json'];
+      const validTypes = ['.csv', '.xlsx', '.json'];
       const extension = '.' + file.name.split('.').pop()?.toLowerCase();
-      const isValidType = validTypes.includes(file.type) || ['.csv', '.xlsx', '.json'].includes(extension);
-      const isValidSize = file.size <= 50 * 1024 * 1024;
-      
-      if (!isValidType) {
-        toast.error(`${file.name}: Invalid file type`);
-      }
-      if (!isValidSize) {
-        toast.error(`${file.name}: File too large (max 50MB)`);
-      }
-      
-      return isValidType && isValidSize;
+      return validTypes.includes(extension) && file.size <= 50 * 1024 * 1024; // 50MB limit
     });
 
-    if (validFiles.length === 0) return;
+    if (validFiles.length === 0) {
+      alert("Please upload valid CSV, XLSX, or JSON files under 50MB");
+      return;
+    }
 
     const newUploads: UploadedFile[] = validFiles.map(file => ({
       file,
@@ -67,84 +61,79 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
     setUploadedFiles(prev => [...prev, ...newUploads]);
 
-    // Process each file sequentially
-    for (let i = 0; i < newUploads.length; i++) {
-      await processFile(newUploads[i]);
+    // Process each file
+    for (const upload of newUploads) {
+      await processFile(upload);
     }
   };
 
   const processFile = async (upload: UploadedFile) => {
     try {
-      console.log('🔄 Processing file:', upload.file.name);
+      console.log('Processing file with LLM:', upload.file.name);
       
-      // Update progress - reading
+      // Update progress
       setUploadedFiles(prev => 
-        prev.map(f => 
-          f.file.name === upload.file.name 
-            ? { ...f, progress: 20 }
-            : f
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, progress: 20 }
+            : file
         )
       );
 
-      // Read file content
+      // Read raw file content
       const fileContent = await upload.file.text();
-      console.log('✅ File read:', upload.file.name, 'Size:', fileContent.length);
+      
+      console.log('File size:', fileContent.length, 'characters');
 
-      // Update progress - uploading
+      // Update progress
       setUploadedFiles(prev => 
-        prev.map(f => 
-          f.file.name === upload.file.name 
-            ? { ...f, progress: 50 }
-            : f
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, progress: 40 }
+            : file
         )
       );
 
-      // Call the upload handler
-      const result = await onFileUpload({
+      // Send to LLM for analysis - let the AI figure out the format
+      console.log('Sending to LLM for intelligent analysis...');
+      
+      const analysisResult = await onFileUpload({
         fileContent,
         fileName: upload.file.name
       });
 
-      console.log('📊 Upload result:', result);
-
-      // Update progress - analyzing
+      // Update progress
       setUploadedFiles(prev => 
-        prev.map(f => 
-          f.file.name === upload.file.name 
-            ? { ...f, progress: 90 }
-            : f
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, progress: 90 }
+            : file
         )
       );
 
       // Mark as complete
       setUploadedFiles(prev => 
-        prev.map(f => 
-          f.file.name === upload.file.name 
-            ? { ...f, status: "success", progress: 100 }
-            : f
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, status: "success", progress: 100 }
+            : file
         )
       );
-
-      toast.success(`✅ ${upload.file.name} uploaded and analyzed successfully`);
     } catch (error) {
-      console.error('❌ File processing error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+      console.error('File processing error:', error);
       setUploadedFiles(prev => 
-        prev.map(f => 
-          f.file.name === upload.file.name 
-            ? { ...f, status: "error", error: errorMessage }
-            : f
+        prev.map(file => 
+          file.file === upload.file 
+            ? { ...file, status: "error", error: error instanceof Error ? error.message : 'Failed to process file' }
+            : file
         )
       );
-
-      toast.error(`Failed to process ${upload.file.name}: ${errorMessage}`);
     }
   };
 
 
-  const removeFile = (fileName: string) => {
-    setUploadedFiles(prev => prev.filter(f => f.file.name !== fileName));
+  const removeFile = (fileToRemove: File) => {
+    setUploadedFiles(prev => prev.filter(upload => upload.file !== fileToRemove));
   };
 
   const formatFileSize = (bytes: number) => {
@@ -158,19 +147,7 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
   return (
     <div className="space-y-6">
       {/* Quantum-Safe Security Indicator */}
-      <Card className="glass-card p-6 border-quantum-green/30">
-        <div className="flex items-start gap-4">
-          <Shield className="w-6 h-6 text-quantum-green mt-1" />
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-3">🔐 Quantum-Ready Infrastructure</h3>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>✅ HTTPS + TLS 1.3 encryption</p>
-              <p>✅ Post-quantum cryptography ready (ML-KEM)</p>
-              <p>✅ AES-256-GCM symmetric encryption</p>
-            </div>
-          </div>
-        </div>
-      </Card>
+      <QuantumSafeIndicator />
       
       {/* Upload Zone */}
       <Card className={cn(
@@ -180,34 +157,38 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
           : "border-glass-border hover:border-quantum-green/50"
       )}>
         <div
-          className="text-center space-y-4"
+          className="text-center"
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
           onClick={() => document.getElementById('file-input')?.click()}
         >
-          <div className="relative inline-block">
+          <div className="relative inline-block mb-4">
             <Upload className={cn(
               "w-16 h-16 mx-auto transition-colors",
               dragActive ? "text-quantum-green" : "text-muted-foreground"
             )} />
             <Shield className="w-6 h-6 absolute -top-1 -right-1 text-quantum-green" />
           </div>
-          <div>
-            <h3 className="text-2xl font-semibold text-foreground mb-2">
-              Upload Transaction Data
-            </h3>
-            <p className="text-muted-foreground mb-1">
-              Drag and drop files here, or click to browse
-            </p>
-            <p className="text-sm text-muted-foreground">
-              CSV, XLSX, or JSON • Max 50MB per file
-            </p>
+          <h3 className="text-xl font-semibold text-foreground mb-2">
+            Upload Transaction Data
+          </h3>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Badge variant="outline" className="border-quantum-green text-quantum-green">
+              <Shield className="w-3 h-3 mr-1" />
+              TLS 1.3 Encrypted
+            </Badge>
           </div>
-          <Badge className="bg-quantum-green text-background">
-            🔒 TLS 1.3 Encrypted
-          </Badge>
+          <p className="text-muted-foreground mb-2">
+            Drag and drop your files here, or click to browse
+          </p>
+          <p className="text-sm text-muted-foreground mb-2">
+            Supports CSV, XLSX, and JSON files up to 50MB
+          </p>
+          <p className="text-xs text-quantum-green/70">
+            🔐 Secured with HTTPS/TLS 1.3 + quantum-ready infrastructure
+          </p>
           <input
             id="file-input"
             type="file"
@@ -222,67 +203,49 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
       {/* Uploaded Files */}
       {uploadedFiles.length > 0 && (
         <Card className="glass-card p-6">
-          <h4 className="text-lg font-semibold text-foreground mb-4">📁 Upload Status</h4>
+          <h4 className="text-lg font-semibold text-foreground mb-4">Uploaded Files</h4>
           <div className="space-y-3">
-            {uploadedFiles.map((upload) => (
-              <div key={upload.file.name} className="flex items-center gap-3 p-4 rounded-lg bg-glass-background border border-glass-border hover:border-quantum-green/50 transition-colors">
-                <File className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            {uploadedFiles.map((upload, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-glass-background">
+                <File className="w-5 h-5 text-muted-foreground" />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {upload.file.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground ml-2">
-                      {formatFileSize(upload.file.size)}
-                    </p>
-                  </div>
-                  
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {upload.file.name}
+                  </p>
+                   <p className="text-xs text-muted-foreground">
+                    {formatFileSize(upload.file.size)}
+                  </p>
                   {upload.status === "uploading" && (
                     <>
-                      <div className="w-full bg-glass-border rounded-full h-2 mb-1">
+                      <div className="w-full bg-glass-border rounded-full h-1.5 mt-1">
                         <div 
-                          className="bg-gradient-to-r from-quantum-green to-quantum-green/60 h-2 rounded-full transition-all duration-300"
+                          className="bg-quantum-green h-1.5 rounded-full transition-all duration-300"
                           style={{ width: `${upload.progress}%` }}
                         />
                       </div>
-                      <p className="text-xs text-quantum-green">
-                        {upload.progress < 30 ? "📄 Reading..." : 
-                         upload.progress < 60 ? "📤 Uploading..." : 
-                         upload.progress < 90 ? "🔍 Analyzing..." : 
-                         "✅ Finalizing..."}
+                      <p className="text-xs text-quantum-green mt-1">
+                        {upload.progress < 30 ? "📄 Parsing..." : 
+                         upload.progress < 85 ? "📤 Uploading..." : 
+                         "✅ Analyzing..."}
                       </p>
                     </>
                   )}
-
-                  {upload.status === "error" && (
-                    <p className="text-xs text-red-400">{upload.error}</p>
-                  )}
-
-                  {upload.status === "success" && (
-                    <p className="text-xs text-quantum-green">✅ Successfully processed</p>
-                  )}
                 </div>
-                
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2">
                   {upload.status === "success" && (
                     <CheckCircle className="w-5 h-5 text-quantum-green" />
-                  )}
-                  {upload.status === "uploading" && (
-                    <Loader2 className="w-5 h-5 text-quantum-green animate-spin" />
                   )}
                   {upload.status === "error" && (
                     <AlertCircle className="w-5 h-5 text-red-500" />
                   )}
-                  {upload.status !== "uploading" && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeFile(upload.file.name)}
-                      className="text-muted-foreground hover:text-red-500"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeFile(upload.file)}
+                    className="text-muted-foreground hover:text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
             ))}
