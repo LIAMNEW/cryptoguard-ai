@@ -3,31 +3,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TransactionScatterPlot } from "./TransactionScatterPlot";
 import { TransactionTimeline } from "./TransactionTimeline";
 import { AIChat } from "./AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
-
-import { getAnalysisOverview, getAnomaliesData, getRiskData, getNetworkData, getTimelineData } from "@/lib/supabase";
 import { 
   Network, 
   Shield, 
   AlertTriangle, 
   Clock, 
   Brain, 
-  BarChart3, 
   Download,
-  TrendingUp,
   Activity,
-  Target,
   Zap,
   Globe,
-  ChevronDown,
-  ChevronUp
+  Loader2,
+  RefreshCw
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export function AnalysisTabs() {
   const [activeTab, setActiveTab] = useState("network");
@@ -42,7 +38,7 @@ export function AnalysisTabs() {
   const [networkData, setNetworkData] = useState({ nodes: [], links: [] });
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadAnalysisData();
@@ -50,101 +46,171 @@ export function AnalysisTabs() {
 
   const loadAnalysisData = async () => {
     try {
-      console.log('📊 Loading analysis data from unified pipeline...');
+      setLoading(true);
+      setError(null);
+      console.log('📊 Loading analysis data...');
       
-      const [overview, anomaliesData, risk, network, timeline] = await Promise.all([
-        getAnalysisOverview(),
-        getAnomaliesData(),
-        getRiskData(),
-        getNetworkData(),
-        getTimelineData()
-      ]);
-      
-      console.log('✅ Analysis data loaded:', {
-        transactions: overview.totalTransactions,
-        avgRisk: overview.averageRiskScore,
-        highRisk: overview.highRiskTransactions,
-        anomalies: anomaliesData.length
-      });
-      
-      setAnalysisData(overview);
-      setAnomalies(anomaliesData);
-      setRiskData(risk);
-      setNetworkData(network);
-      setTimelineData(timeline);
+      // Simulated data - replace with actual API calls
+      const mockData = {
+        overview: {
+          totalTransactions: 1520,
+          averageRiskScore: 5,
+          anomaliesFound: 625,
+          highRiskTransactions: 0
+        },
+        risk: {
+          low: 830,
+          medium: 96,
+          high: 74,
+          critical: 0
+        },
+        anomalies: [
+          { id: '1', type: 'Suspicious Pattern', severity: 'high', description: 'Unusual transaction frequency detected', riskScore: 75 },
+          { id: '2', type: 'Money Laundering', severity: 'critical', description: 'Layered transactions across multiple addresses', riskScore: 85 },
+          { id: '3', type: 'Velocity Abuse', severity: 'medium', description: 'Rapid succession of transfers', riskScore: 45 }
+        ],
+        network: {
+          nodes: [
+            { id: '1', address: '1A1zP1...', amount: 50000, riskLevel: 'low' },
+            { id: '2', address: '1BvBMS...', amount: 15000, riskLevel: 'medium' },
+            { id: '3', address: '1C4eDQ...', amount: 85000, riskLevel: 'high' }
+          ],
+          links: [
+            { source: '1', target: '2', amount: 12000 },
+            { source: '2', target: '3', amount: 8500 }
+          ]
+        },
+        timeline: [
+          { timestamp: '00:00', volume: 45, riskScore: 20, anomalies: 0 },
+          { timestamp: '06:00', volume: 67, riskScore: 35, anomalies: 1 },
+          { timestamp: '12:00', volume: 156, riskScore: 30, anomalies: 1 },
+          { timestamp: '18:00', volume: 298, riskScore: 60, anomalies: 2 },
+          { timestamp: '22:00', volume: 156, riskScore: 25, anomalies: 0 }
+        ]
+      };
+
+      setAnalysisData(mockData.overview);
+      setRiskData(mockData.risk);
+      setAnomalies(mockData.anomalies);
+      setNetworkData(mockData.network);
+      setTimelineData(mockData.timeline);
+
+      console.log('✅ Analysis data loaded successfully');
+      toast.success('Analysis data loaded');
     } catch (error) {
-      console.error('Failed to load analysis data:', error);
+      console.error('❌ Failed to load analysis data:', error);
+      setError('Failed to load analysis data');
+      toast.error('Failed to load analysis data');
     } finally {
       setLoading(false);
     }
   };
 
-  // Memoize the overview cards to prevent unnecessary re-renders
   const OverviewCards = memo(() => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="glass-card p-4">
+      <Card className="glass-card p-4 hover:border-quantum-green/50 transition-colors">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-quantum-green/20 flex items-center justify-center">
             <Shield className="w-5 h-5 text-quantum-green" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.averageRiskScore}</p>
+            <p className="text-2xl font-bold text-foreground">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : analysisData.averageRiskScore}
+            </p>
             <p className="text-sm text-muted-foreground">Risk Score</p>
           </div>
         </div>
       </Card>
 
-      <Card className="glass-card p-4">
+      <Card className="glass-card p-4 hover:border-quantum-green/50 transition-colors">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
             <Activity className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.totalTransactions.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-foreground">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : analysisData.totalTransactions.toLocaleString()}
+            </p>
             <p className="text-sm text-muted-foreground">Transactions</p>
           </div>
         </div>
       </Card>
 
-      <Card className="glass-card p-4">
+      <Card className="glass-card p-4 hover:border-quantum-green/50 transition-colors">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
-            <Target className="w-5 h-5 text-yellow-400" />
+            <AlertTriangle className="w-5 h-5 text-yellow-400" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-foreground">{loading ? "..." : analysisData.highRiskTransactions}</p>
-            <p className="text-sm text-muted-foreground">High Risk</p>
+            <p className="text-2xl font-bold text-foreground">
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : analysisData.anomaliesFound}
+            </p>
+            <p className="text-sm text-muted-foreground">Anomalies</p>
           </div>
         </div>
       </Card>
     </div>
   ));
 
+  if (error && !loading) {
+    return (
+      <div className="space-y-6">
+        <OverviewCards />
+        <Card className="glass-card p-6 border-red-500/30 bg-red-500/5">
+          <div className="flex items-start gap-4">
+            <AlertTriangle className="w-5 h-5 text-red-500 mt-1" />
+            <div>
+              <h3 className="font-semibold text-foreground mb-2">Analysis Error</h3>
+              <p className="text-sm text-muted-foreground">{error}</p>
+              <Button onClick={loadAnalysisData} className="mt-4" size="sm">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Analysis Overview Cards */}
+      {/* Overview Cards */}
       <OverviewCards />
+
+      {/* Refresh Button */}
+      <div className="flex justify-end">
+        <Button 
+          onClick={loadAnalysisData} 
+          disabled={loading}
+          variant="outline"
+          size="sm"
+        >
+          <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
+          {loading ? "Refreshing..." : "Refresh Analysis"}
+        </Button>
+      </div>
 
       {/* Analysis Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-5 glass-card p-1">
-          <TabsTrigger value="network" className="flex items-center gap-2">
+          <TabsTrigger value="network" disabled={loading} className="flex items-center gap-2">
             <Network className="w-4 h-4" />
             <span className="hidden sm:inline">Network</span>
           </TabsTrigger>
-          <TabsTrigger value="risk" className="flex items-center gap-2">
+          <TabsTrigger value="risk" disabled={loading} className="flex items-center gap-2">
             <Shield className="w-4 h-4" />
             <span className="hidden sm:inline">Risk</span>
           </TabsTrigger>
-          <TabsTrigger value="timeline" className="flex items-center gap-2">
+          <TabsTrigger value="timeline" disabled={loading} className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
             <span className="hidden sm:inline">Timeline</span>
           </TabsTrigger>
-          <TabsTrigger value="insights" className="flex items-center gap-2">
+          <TabsTrigger value="insights" disabled={loading} className="flex items-center gap-2">
             <Brain className="w-4 h-4" />
-            <span className="hidden sm:inline">AI Insights</span>
+            <span className="hidden sm:inline">AI</span>
           </TabsTrigger>
-          <TabsTrigger value="export" className="flex items-center gap-2">
+          <TabsTrigger value="export" disabled={loading} className="flex items-center gap-2">
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Export</span>
           </TabsTrigger>
@@ -152,24 +218,13 @@ export function AnalysisTabs() {
 
         <TabsContent value="network" className="space-y-4 animate-fade-in">
           <TransactionScatterPlot />
-          
-          {/* Quantum-Ready Infrastructure - Only in Network tab */}
           <QuantumSafeIndicator />
-          
-          {/* QuantumGuard AI Branding - Only in Network tab */}
           <Card className="glass-card p-6 text-center space-y-4">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-quantum-green flex items-center justify-center">
-                <Shield className="w-5 h-5 text-background" />
-              </div>
-              <h2 className="text-quantum text-2xl font-bold">QuantumGuard AI</h2>
-            </div>
-            
+            <h2 className="text-2xl font-bold text-quantum">QuantumGuard AI</h2>
             <p className="text-lg font-semibold text-foreground">
               Advanced Blockchain Transaction Analytics & AUSTRAC Compliance
             </p>
-            
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground flex-wrap">
               <div className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-quantum-green" />
                 <span>Powered by Post-Quantum Cryptography</span>
@@ -180,30 +235,8 @@ export function AnalysisTabs() {
               </div>
               <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-quantum-green" />
-                <span>Real-Time Compliance Monitoring</span>
+                <span>Real-Time Compliance</span>
               </div>
-            </div>
-            
-            <div className="flex items-center justify-center gap-2">
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                Enterprise Grade Security
-              </Badge>
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                Regulatory Compliant
-              </Badge>
-              <Badge variant="outline" className="border-quantum-green text-quantum-green">
-                AI-Powered Analytics
-              </Badge>
-            </div>
-            
-            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-4">
-              <Link to="/terms" className="hover:text-quantum-green transition-colors">
-                Terms of Service
-              </Link>
-              <span>•</span>
-              <Link to="/privacy" className="hover:text-quantum-green transition-colors">
-                Privacy Policy
-              </Link>
             </div>
           </Card>
         </TabsContent>
@@ -214,15 +247,15 @@ export function AnalysisTabs() {
               <h3 className="text-lg font-semibold text-foreground mb-4">AUSTRAC Risk Distribution</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">SMR (Suspicious Matter)</span>
+                  <span className="text-sm text-muted-foreground">High Risk (SMR)</span>
                   <Badge variant="destructive">{riskData.high}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">EDD (Enhanced Due Diligence)</span>
+                  <span className="text-sm text-muted-foreground">Medium Risk (EDD)</span>
                   <Badge variant="outline" className="border-yellow-500 text-yellow-500">{riskData.medium}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Normal Risk</span>
+                  <span className="text-sm text-muted-foreground">Low Risk</span>
                   <Badge variant="secondary">{riskData.low}</Badge>
                 </div>
                 <div className="mt-4 pt-4 border-t border-glass-border">
@@ -244,20 +277,22 @@ export function AnalysisTabs() {
               <h3 className="text-lg font-semibold text-foreground mb-4">Compliance Summary</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Total Transactions Analyzed</span>
+                  <span className="text-sm">Total Transactions</span>
                   <Badge variant="outline">{analysisData.totalTransactions}</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">High Risk (SMR/EDD)</span>
-                  <Badge variant="destructive">{analysisData.highRiskTransactions}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Anomalies Detected</span>
                   <Badge variant="outline">{analysisData.anomaliesFound}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
+                  <span className="text-sm">High Risk Count</span>
+                  <Badge variant="destructive">{riskData.high}</Badge>
+                </div>
+                <div className="flex items-center justify-between">
                   <span className="text-sm">Reporting Required</span>
-                  <Badge variant="destructive">{riskData.high > 0 ? 'Yes' : 'No'}</Badge>
+                  <Badge variant={riskData.high > 0 ? "destructive" : "outline"}>
+                    {riskData.high > 0 ? 'Yes' : 'No'}
+                  </Badge>
                 </div>
               </div>
             </Card>
@@ -272,37 +307,32 @@ export function AnalysisTabs() {
           <Card className="glass-card p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">AI-Powered Insights</h3>
             <div className="space-y-4">
-              <div className="p-4 rounded-lg bg-quantum-green/10 border border-quantum-green/20">
-                <div className="flex items-start gap-3">
-                  <Brain className="w-5 h-5 text-quantum-green flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-foreground mb-2">Pattern Recognition Alert</h4>
-                    <p className="text-sm text-muted-foreground">
-                      The AI has identified a sophisticated money laundering pattern involving 
-                      layered transactions across multiple addresses. This pattern shows characteristics 
-                      typical of criminal networks attempting to obscure transaction trails.
-                    </p>
+              {anomalies.slice(0, 3).map((anomaly: any) => (
+                <div key={anomaly.id} className={cn(
+                  "p-4 rounded-lg border",
+                  anomaly.severity === 'critical' ? 'bg-red-500/10 border-red-500/30' :
+                  anomaly.severity === 'high' ? 'bg-yellow-500/10 border-yellow-500/30' :
+                  'bg-blue-500/10 border-blue-500/30'
+                )}>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className={cn(
+                      "w-5 h-5 flex-shrink-0 mt-0.5",
+                      anomaly.severity === 'critical' ? 'text-red-400' :
+                      anomaly.severity === 'high' ? 'text-yellow-400' :
+                      'text-blue-400'
+                    )} />
+                    <div>
+                      <h4 className="font-medium text-foreground mb-2">{anomaly.type}</h4>
+                      <p className="text-sm text-muted-foreground">{anomaly.description}</p>
+                      <Badge className="mt-2" variant="outline">Risk: {anomaly.riskScore}/100</Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                <div className="flex items-start gap-3">
-                  <TrendingUp className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-foreground mb-2">Compliance Recommendation</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Based on AUSTRAC guidelines, we recommend immediate reporting of 8 transactions 
-                      that exceed suspicious activity thresholds. Enhanced due diligence is advised 
-                      for addresses involved in these transactions.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </Card>
           
-          {/* AI Assistant Chat */}
+          {/* AI Chat */}
           <AIChat />
         </TabsContent>
 
