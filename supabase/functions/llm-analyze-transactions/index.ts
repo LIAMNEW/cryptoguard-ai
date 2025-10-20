@@ -26,29 +26,37 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY not configured')
     }
 
-    // Use LLM to extract and parse transactions from file
-    const extractionPrompt = `You are a financial data analyst. Parse the following transaction data and extract ALL transactions.
+    // Use LLM to intelligently extract and parse ANY transaction data format
+    const extractionPrompt = `You are QuantumGuard AI, an intelligent financial transaction analyzer capable of understanding ANY data format.
 
 File: ${fileName}
 Content:
 ${fileContent.substring(0, 15000)}
 
-TASK: Extract all transactions and return them as a JSON array. Each transaction MUST include:
-- transaction_id (string): unique identifier
-- amount (number): transaction amount
-- timestamp (ISO 8601 string): when it occurred
-- from_address OR merchant_name (string): sender/merchant
-- to_address OR country_of_origin (string): recipient/country
-- transaction_type (string): "blockchain", "banking", "cash_deposit", or "transfer"
+MISSION: Intelligently analyze this data and extract ALL financial transactions, regardless of format (CSV, JSON, XML, plain text, tables, etc.).
 
-IMPORTANT:
-- If data has merchant/country fields, use those and set type to "banking"
-- If data has from_address/to_address, use those and set type to "blockchain"
-- Convert all dates to ISO 8601 format
-- Include ALL transactions found
-- Return ONLY valid JSON array, no explanations`
+For EACH transaction you find, extract and standardize:
+- transaction_id: Create unique ID if none exists (use row number, hash, or generate)
+- amount: The monetary value (extract numbers, handle currencies, decimals)
+- timestamp: When it occurred (convert ANY date format to ISO 8601: YYYY-MM-DDTHH:mm:ssZ)
+- from_address: Who sent it (account, wallet, merchant, person name, ID - whatever identifies sender)
+- to_address: Who received it (account, wallet, customer, person, country - whatever identifies recipient)
+- transaction_type: Best guess from: "blockchain", "banking", "cash_deposit", "wire_transfer", "card_payment", "transfer"
 
-    console.log('🤖 Calling LLM for data extraction...')
+INTELLIGENCE GUIDELINES:
+- Handle CSV, JSON, XML, Excel-like tables, plain text, mixed formats
+- Infer missing fields intelligently (e.g., if only "merchant" exists, use it as from_address)
+- Convert all date formats (MM/DD/YYYY, DD-MM-YYYY, timestamps, etc.) to ISO 8601
+- Handle currency symbols ($, €, £, etc.) - extract just the number
+- If transaction_id missing, generate: "tx_[row_number]" or use any unique identifier in the data
+- Recognize patterns: debits/credits, purchases/sales, sends/receives
+- If unsure about type, use "transfer" as default
+- Extract ALL rows that look like transactions
+
+OUTPUT: Return ONLY a valid JSON array with NO explanations, markdown, or extra text:
+[{"transaction_id":"...","amount":123.45,"timestamp":"2023-01-01T12:00:00Z","from_address":"...","to_address":"...","transaction_type":"..."}]`
+
+    console.log('🤖 Calling QuantumGuard AI for intelligent data extraction...')
     
     const extractionResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -59,10 +67,9 @@ IMPORTANT:
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are a precise data extraction system. Return only valid JSON.' },
+          { role: 'system', content: 'You are QuantumGuard AI, an intelligent financial data extraction system. You can understand and parse ANY data format. Return ONLY valid JSON arrays with no markdown formatting.' },
           { role: 'user', content: extractionPrompt }
-        ],
-        temperature: 0.1,
+        ]
       }),
     })
 
