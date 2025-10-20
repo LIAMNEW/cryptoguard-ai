@@ -43,86 +43,15 @@ export function AnalysisTabs() {
   const [timelineData, setTimelineData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedAnomalies, setExpandedAnomalies] = useState<Set<string>>(new Set());
-  const [autoReanalyzing, setAutoReanalyzing] = useState(false);
 
   useEffect(() => {
     loadAnalysisData();
-    checkAndReanalyze();
   }, []);
-
-  const checkAndReanalyze = async () => {
-    try {
-      const { supabase } = await import('@/integrations/supabase/client');
-      
-      // Check if there are analysis results with old unusual_time detection
-      const { data: oldAnomalies, error } = await supabase
-        .from('analysis_results')
-        .select('id')
-        .like('anomaly_type', '%unusual_time%')
-        .limit(1);
-
-      if (error) {
-        console.error('Error checking for old anomalies:', error);
-        return;
-      }
-
-      // If we found old unusual_time anomalies, trigger automatic re-analysis
-      if (oldAnomalies && oldAnomalies.length > 0) {
-        console.log('Found old unusual_time anomalies, triggering automatic re-analysis...');
-        await performReanalysis();
-      }
-    } catch (error) {
-      console.error('Error in checkAndReanalyze:', error);
-    }
-  };
-
-  const performReanalysis = async () => {
-    setAutoReanalyzing(true);
-    try {
-      const { supabase } = await import('@/integrations/supabase/client');
-      
-      // Fetch all existing transactions
-      const { data: transactions, error: fetchError } = await supabase
-        .from('transactions')
-        .select('*')
-        .order('timestamp', { ascending: false });
-
-      if (fetchError) throw fetchError;
-
-      if (!transactions || transactions.length === 0) {
-        console.log('No transactions found to re-analyze.');
-        return;
-      }
-
-      console.log(`Re-analyzing ${transactions.length} transactions with improved detection...`);
-
-      // Delete old analysis results
-      const { error: deleteError } = await supabase
-        .from('analysis_results')
-        .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
-
-      if (deleteError) throw deleteError;
-
-      // Re-analyze transactions with new logic
-      const { error: analyzeError } = await supabase.functions.invoke('analyze-transactions', {
-        body: { transactions }
-      });
-
-      if (analyzeError) throw analyzeError;
-
-      // Reload data
-      await loadAnalysisData();
-      console.log('✓ Auto re-analysis complete with improved detection');
-    } catch (error) {
-      console.error('Failed to auto re-analyze transactions:', error);
-    } finally {
-      setAutoReanalyzing(false);
-    }
-  };
 
   const loadAnalysisData = async () => {
     try {
+      console.log('📊 Loading analysis data from unified pipeline...');
+      
       const [overview, anomaliesData, risk, network, timeline] = await Promise.all([
         getAnalysisOverview(),
         getAnomaliesData(),
@@ -130,6 +59,13 @@ export function AnalysisTabs() {
         getNetworkData(),
         getTimelineData()
       ]);
+      
+      console.log('✅ Analysis data loaded:', {
+        transactions: overview.totalTransactions,
+        avgRisk: overview.averageRiskScore,
+        highRisk: overview.highRiskTransactions,
+        anomalies: anomaliesData.length
+      });
       
       setAnalysisData(overview);
       setAnomalies(anomaliesData);
@@ -275,40 +211,53 @@ export function AnalysisTabs() {
         <TabsContent value="risk" className="space-y-4 animate-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Overall Risk Assessment</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">AUSTRAC Risk Distribution</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Risk Level</span>
-                  <Badge variant="destructive">High Risk</Badge>
+                  <span className="text-sm text-muted-foreground">SMR (Suspicious Matter)</span>
+                  <Badge variant="destructive">{riskData.high}</Badge>
                 </div>
-                <div className="w-full bg-glass-border rounded-full h-3">
-                  <div 
-                    className="bg-gradient-to-r from-quantum-green via-yellow-500 to-red-500 h-3 rounded-full"
-                    style={{ width: `${analysisData.averageRiskScore}%` }}
-                  />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">EDD (Enhanced Due Diligence)</span>
+                  <Badge variant="outline" className="border-yellow-500 text-yellow-500">{riskData.medium}</Badge>
                 </div>
-                <p className="text-2xl font-bold text-foreground">{analysisData.averageRiskScore}/100</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Normal Risk</span>
+                  <Badge variant="secondary">{riskData.low}</Badge>
+                </div>
+                <div className="mt-4 pt-4 border-t border-glass-border">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Average Risk Score</span>
+                    <p className="text-2xl font-bold text-foreground">{analysisData.averageRiskScore}/100</p>
+                  </div>
+                  <div className="w-full bg-glass-border rounded-full h-3 mt-2">
+                    <div 
+                      className="bg-gradient-to-r from-quantum-green via-yellow-500 to-red-500 h-3 rounded-full transition-all"
+                      style={{ width: `${analysisData.averageRiskScore}%` }}
+                    />
+                  </div>
+                </div>
               </div>
             </Card>
 
             <Card className="glass-card p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-4">Risk Factors</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Compliance Summary</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Unusual Transaction Amounts</span>
-                  <Badge variant="outline">Medium</Badge>
+                  <span className="text-sm">Total Transactions Analyzed</span>
+                  <Badge variant="outline">{analysisData.totalTransactions}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Frequency Patterns</span>
-                  <Badge variant="destructive">High</Badge>
+                  <span className="text-sm">High Risk (SMR/EDD)</span>
+                  <Badge variant="destructive">{analysisData.highRiskTransactions}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Geographic Distribution</span>
-                  <Badge variant="secondary">Low</Badge>
+                  <span className="text-sm">Anomalies Detected</span>
+                  <Badge variant="outline">{analysisData.anomaliesFound}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Time-based Clustering</span>
-                  <Badge variant="destructive">High</Badge>
+                  <span className="text-sm">Reporting Required</span>
+                  <Badge variant="destructive">{riskData.high > 0 ? 'Yes' : 'No'}</Badge>
                 </div>
               </div>
             </Card>
