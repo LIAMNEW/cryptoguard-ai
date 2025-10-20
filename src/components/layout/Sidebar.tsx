@@ -28,11 +28,10 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { id: "analytics", label: "Analytics", icon: BarChart3 },
-  { id: "dashboard", label: "Dashboard", icon: Activity },
-  { id: "blockchain", label: "Live Blockchain", icon: Network },
-  { id: "saved", label: "Saved Analyses", icon: Settings },
-  { id: "audit", label: "Audit Logs", icon: ScrollText },
+  { id: "upload", label: "Upload Data", icon: Upload },
+  { id: "risk-score", label: "Risk Score", icon: AlertTriangle },
+  { id: "ai-insights", label: "AI Insights", icon: BarChart3 },
+  { id: "reports", label: "Export", icon: FileText },
   { id: "settings", label: "Settings", icon: User },
 ];
 

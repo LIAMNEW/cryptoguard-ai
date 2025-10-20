@@ -186,13 +186,7 @@ export function AnalysisTabs() {
         </TabsContent>
 
         <TabsContent value="export" className="space-y-4 animate-fade-in">
-          <ReportGenerator 
-            analysisData={analysisData}
-            anomalies={anomalies}
-            riskData={riskData}
-            networkData={networkData}
-            timelineData={timelineData}
-          />
+          <ReportGenerator />
         </TabsContent>
       </Tabs>
     </div>

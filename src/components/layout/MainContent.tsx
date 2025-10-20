@@ -1,15 +1,9 @@
-import { AnalysisTabs } from "@/components/dashboard/AnalysisTabs";
-import { SavedAnalysesDashboard } from "@/components/dashboard/SavedAnalysesDashboard";
-import { AuditLogsViewer } from "@/components/dashboard/AuditLogsViewer";
-import { BlockchainSourceManager } from "@/components/dashboard/BlockchainSourceManager";
-import { LiveTransactionFeed } from "@/components/realtime/LiveTransactionFeed";
-import { QuantumSafeIndicator } from "@/components/security/QuantumSafeIndicator";
+import { TransactionUpload } from "@/components/upload/TransactionUpload";
+import { RiskScoreDashboard } from "@/components/dashboard/RiskScoreDashboard";
+import { AIChat } from "@/components/dashboard/AIChat";
+import { ReportGenerator } from "@/components/reports/ReportGenerator";
 import { UserSettings } from "@/components/settings/UserSettings";
-import { Analytics } from "@/components/analytics/Analytics";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Shield, Zap, Globe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Shield } from "lucide-react";
 
 interface MainContentProps {
   activeSection: string;
@@ -20,46 +14,64 @@ interface MainContentProps {
 export function MainContent({ activeSection, hasData, onFileUpload }: MainContentProps) {
   const renderContent = () => {
     switch (activeSection) {
-      case "analytics":
-        return <Analytics onFileUpload={onFileUpload} hasData={hasData} />;
-
-      case "saved":
-        return <SavedAnalysesDashboard />;
-
-      case "audit":
-        return <AuditLogsViewer />;
-
-      case "blockchain":
+      case "upload":
         return (
           <div className="space-y-6">
             <div className="text-center space-y-4">
               <h1 className="text-3xl font-bold text-foreground">
-                Live Blockchain Address Analysis
+                Upload Transaction Data
               </h1>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Connect directly to Ethereum and Bitcoin networks to analyze transactions in real-time. 
-                All fetched transactions are automatically analyzed by QuantumGuard AI for risks and anomalies.
+                Upload your transaction files (CSV, JSON, TXT, Excel) for AI-powered AUSTRAC-compliant analysis.
+                Our system extracts, scores, and flags high-risk transactions automatically.
               </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <BlockchainSourceManager />
-              <div className="md:col-span-2 space-y-4">
-                <LiveTransactionFeed />
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Cross-Chain Analysis</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Pull transactions directly from Ethereum and Bitcoin networks. 
-                      All fetched transactions are automatically analyzed for risks and anomalies 
-                      using the AI-powered detection system.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+            <TransactionUpload onFileUpload={onFileUpload} />
+          </div>
+        );
+
+      case "risk-score":
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                AUSTRAC Risk Score Dashboard
+              </h1>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Real-time risk scoring based on AUSTRAC regulations. Monitor high-risk transactions and compliance status.
+              </p>
             </div>
+            <RiskScoreDashboard />
+          </div>
+        );
+
+      case "ai-insights":
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                AI Insights
+              </h1>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Ask questions about your transactions, get risk analysis, and receive compliance guidance from our AI assistant.
+              </p>
+            </div>
+            <AIChat />
+          </div>
+        );
+
+      case "reports":
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                Export Reports
+              </h1>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Generate and export comprehensive reports for compliance, auditing, and analysis.
+              </p>
+            </div>
+            <ReportGenerator />
           </div>
         );
 
@@ -80,39 +92,14 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
           </div>
         );
 
-      case "dashboard":
-      case "network":
-      case "anomalies":
-      case "reports":
-        if (!hasData) {
-          return (
-            <div className="space-y-6">
-              <div className="text-center space-y-6 py-12">
-                <Shield className="w-24 h-24 text-quantum-green mx-auto opacity-50" />
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">No Data Available</h2>
-                  <p className="text-muted-foreground">
-                    Please upload transaction data first to view analysis results.
-                  </p>
-                </div>
-              </div>
-              {/* No longer showing upload section here */}
-            </div>
-          );
-        }
-        return (
-          <div className="space-y-6">
-            <AnalysisTabs />
-          </div>
-        );
-
       default:
         return (
           <div className="text-center space-y-6 py-12">
+            <Shield className="w-24 h-24 text-quantum-green mx-auto opacity-50" />
             <div>
               <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to QuantumGuard AI</h2>
               <p className="text-muted-foreground">
-                Advanced blockchain analytics platform for fraud detection and compliance.
+                Upload transaction data to begin AUSTRAC-compliant risk analysis
               </p>
             </div>
           </div>

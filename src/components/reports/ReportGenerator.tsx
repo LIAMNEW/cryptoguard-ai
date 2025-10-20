@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,29 +12,52 @@ import { supabase } from "@/integrations/supabase/client";
 import { AIGraphGenerator } from "./AIGraphGenerator";
 import { DocumentAnalyzer } from "./DocumentAnalyzer";
 
-interface ReportGeneratorProps {
-  analysisData: {
-    totalTransactions: number;
-    averageRiskScore: number;
-    anomaliesFound: number;
-    highRiskTransactions: number;
-  };
-  anomalies: any[];
-  riskData: any;
-  networkData: any;
-  timelineData: any[];
-}
-
-export function ReportGenerator({
-  analysisData,
-  anomalies,
-  riskData,
-  networkData,
-  timelineData,
-}: ReportGeneratorProps) {
+export function ReportGenerator() {
   const [saving, setSaving] = useState(false);
   const [analysisName, setAnalysisName] = useState("");
   const [analysisDescription, setAnalysisDescription] = useState("");
+  const [analysisData, setAnalysisData] = useState({
+    totalTransactions: 0,
+    averageRiskScore: 0,
+    anomaliesFound: 0,
+    highRiskTransactions: 0,
+  });
+
+  useEffect(() => {
+    fetchReportData();
+  }, []);
+
+  const fetchReportData = async () => {
+    try {
+      // Fetch transactions count
+      const { count: txCount } = await supabase
+        .from('transactions')
+        .select('*', { count: 'exact', head: true });
+
+      // Fetch scorecards for risk data
+      const { data: scorecards } = await supabase
+        .from('transaction_scorecards')
+        .select('final_score, risk_level');
+
+      const avgScore = scorecards?.reduce((sum, s) => sum + s.final_score, 0) / (scorecards?.length || 1) || 0;
+      const highRisk = scorecards?.filter(s => s.risk_level === 'SMR' || s.risk_level === 'EDD').length || 0;
+
+      // Fetch anomalies
+      const { count: anomalyCount } = await supabase
+        .from('analysis_results')
+        .select('*', { count: 'exact', head: true })
+        .eq('anomaly_detected', true);
+
+      setAnalysisData({
+        totalTransactions: txCount || 0,
+        averageRiskScore: Math.round(avgScore),
+        anomaliesFound: anomalyCount || 0,
+        highRiskTransactions: highRisk,
+      });
+    } catch (error) {
+      console.error('Error fetching report data:', error);
+    }
+  };
 
   const handleDownloadPDF = async () => {
     try {
@@ -69,63 +92,11 @@ export function ReportGenerator({
       doc.text(`High Risk Transactions: ${analysisData.highRiskTransactions || 0}`, 14, yPos);
       yPos += 12;
       
-      // Risk Distribution
-      if (riskData) {
-        doc.setFontSize(14);
-        doc.text("Risk Distribution", 14, yPos);
-        yPos += 8;
-        doc.setFontSize(10);
-        const riskLevels = ['low', 'medium', 'high'];
-        riskLevels.forEach(level => {
-          if (riskData[level] !== undefined) {
-            doc.text(`${level.charAt(0).toUpperCase() + level.slice(1)} Risk: ${riskData[level]}`, 14, yPos);
-            yPos += lineHeight;
-          }
-        });
-        yPos += 6;
-      }
+      // Risk Distribution - simplified for now
+      yPos += 12;
       
-      // Key Findings
-      if (anomalies && anomalies.length > 0) {
-        if (yPos > 240) {
-          doc.addPage();
-          yPos = 20;
-        }
-        doc.setFontSize(14);
-        doc.text("Key Findings", 14, yPos);
-        yPos += 8;
-        doc.setFontSize(10);
-        
-        anomalies.slice(0, 10).forEach((anomaly, index) => {
-          if (yPos > 270) {
-            doc.addPage();
-            yPos = 20;
-          }
-          const anomalyType = anomaly.type || anomaly.anomaly_type || "Unknown";
-          const anomalyDesc = anomaly.description || anomaly.rationale || "No description";
-          const text = `${index + 1}. ${anomalyType}: ${anomalyDesc}`;
-          const lines = doc.splitTextToSize(text, pageWidth - 28);
-          doc.text(lines, 14, yPos);
-          yPos += lineHeight * lines.length + 2;
-        });
-      }
-      
-      // Timeline Summary
-      if (timelineData && timelineData.length > 0) {
-        if (yPos > 220) {
-          doc.addPage();
-          yPos = 20;
-        }
-        yPos += 6;
-        doc.setFontSize(14);
-        doc.text("Timeline Summary", 14, yPos);
-        yPos += 8;
-        doc.setFontSize(10);
-        doc.text(`Period: ${timelineData.length} days analyzed`, 14, yPos);
-        yPos += lineHeight;
-        const totalVolume = timelineData.reduce((sum, d) => sum + (d.volume || 0), 0);
-        doc.text(`Total Volume: ${totalVolume.toLocaleString()} transactions`, 14, yPos);
-      }
+      // Key Findings - simplified
+      yPos += 6;
       
       const fileName = `quantumguard-report-${new Date().toISOString().split('T')[0]}.pdf`;
       doc.save(fileName);
@@ -151,48 +122,9 @@ export function ReportGenerator({
         ["Average Risk Score", (analysisData.averageRiskScore || 0).toFixed(2)],
         ["Anomalies Found", (analysisData.anomaliesFound || 0).toString()],
         ["High Risk Transactions", (analysisData.highRiskTransactions || 0).toString()],
-        [""]
+        [""],
+        ["Report End"]
       ];
-      
-      // Risk Distribution
-      if (riskData) {
-        csvRows.push(["Risk Distribution"]);
-        csvRows.push(["Risk Level", "Count"]);
-        if (riskData.low !== undefined) csvRows.push(["Low", riskData.low.toString()]);
-        if (riskData.medium !== undefined) csvRows.push(["Medium", riskData.medium.toString()]);
-        if (riskData.high !== undefined) csvRows.push(["High", riskData.high.toString()]);
-        csvRows.push([""]);
-      }
-      
-      // Anomalies Detail
-      if (anomalies && anomalies.length > 0) {
-        csvRows.push(["Detected Anomalies"]);
-        csvRows.push(["#", "Type", "Risk Score", "Description", "Transaction ID"]);
-        anomalies.forEach((anomaly, index) => {
-          csvRows.push([
-            (index + 1).toString(),
-            anomaly.type || anomaly.anomaly_type || "Unknown",
-            (anomaly.risk_score || anomaly.final_score || "N/A").toString(),
-            (anomaly.description || anomaly.rationale || "").replace(/,/g, ";"),
-            anomaly.transaction_id || anomaly.id || "N/A"
-          ]);
-        });
-        csvRows.push([""]);
-      }
-      
-      // Timeline Data
-      if (timelineData && timelineData.length > 0) {
-        csvRows.push(["Timeline Data"]);
-        csvRows.push(["Date", "Volume", "Average Risk", "Anomalies"]);
-        timelineData.forEach(data => {
-          csvRows.push([
-            data.date || data.timestamp || "N/A",
-            (data.volume || 0).toString(),
-            (data.avgRisk || data.average_risk || 0).toString(),
-            (data.anomalies || data.anomaly_count || 0).toString()
-          ]);
-        });
-      }
       
       const csvContent = csvRows.map(row => row.join(",")).join("\n");
       const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -256,14 +188,7 @@ export function ReportGenerator({
           averageRiskScore: analysisData.averageRiskScore || 0,
           anomaliesFound: analysisData.anomaliesFound || 0,
           highRiskTransactions: analysisData.highRiskTransactions || 0,
-        },
-        riskDistribution: riskData ? safeSerialize(riskData) : null,
-        anomalies: anomalies ? safeSerialize(anomalies) : [],
-        networkAnalysis: networkData ? {
-          nodes: networkData.nodes ? safeSerialize(networkData.nodes) : [],
-          edges: networkData.edges ? safeSerialize(networkData.edges) : [],
-        } : null,
-        timeline: timelineData ? safeSerialize(timelineData) : [],
+        }
       };
 
       const jsonString = JSON.stringify(jsonData, null, 2);
@@ -301,10 +226,6 @@ export function ReportGenerator({
         average_risk_score: analysisData.averageRiskScore,
         snapshot_data: {
           analysis: analysisData,
-          anomalies: anomalies,
-          riskData: riskData,
-          networkData: networkData,
-          timelineData: timelineData,
         },
       });
 
