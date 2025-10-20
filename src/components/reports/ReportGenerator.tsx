@@ -42,103 +42,245 @@ export function ReportGenerator({
       
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
+      const lineHeight = 6;
+      let yPos = 20;
       
       // Title
       doc.setFontSize(20);
-      doc.text("QuantumGuard AI - Analysis Report", pageWidth / 2, 20, { align: "center" });
+      doc.text("QuantumGuard AI - Analysis Report", pageWidth / 2, yPos, { align: "center" });
+      yPos += 10;
       
       // Date
       doc.setFontSize(10);
-      doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth / 2, 28, { align: "center" });
+      doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth / 2, yPos, { align: "center" });
+      yPos += 15;
       
       // Overview Section
       doc.setFontSize(14);
-      doc.text("Analysis Overview", 14, 40);
+      doc.text("Analysis Overview", 14, yPos);
+      yPos += 8;
       doc.setFontSize(10);
-      doc.text(`Total Transactions: ${analysisData.totalTransactions.toLocaleString()}`, 14, 50);
-      doc.text(`Average Risk Score: ${analysisData.averageRiskScore}/100`, 14, 56);
-      doc.text(`Anomalies Found: ${analysisData.anomaliesFound}`, 14, 62);
-      doc.text(`High Risk Transactions: ${analysisData.highRiskTransactions}`, 14, 68);
+      doc.text(`Total Transactions: ${analysisData.totalTransactions?.toLocaleString() || 0}`, 14, yPos);
+      yPos += lineHeight;
+      doc.text(`Average Risk Score: ${analysisData.averageRiskScore?.toFixed(2) || 0}/100`, 14, yPos);
+      yPos += lineHeight;
+      doc.text(`Anomalies Found: ${analysisData.anomaliesFound || 0}`, 14, yPos);
+      yPos += lineHeight;
+      doc.text(`High Risk Transactions: ${analysisData.highRiskTransactions || 0}`, 14, yPos);
+      yPos += 12;
+      
+      // Risk Distribution
+      if (riskData) {
+        doc.setFontSize(14);
+        doc.text("Risk Distribution", 14, yPos);
+        yPos += 8;
+        doc.setFontSize(10);
+        const riskLevels = ['low', 'medium', 'high'];
+        riskLevels.forEach(level => {
+          if (riskData[level] !== undefined) {
+            doc.text(`${level.charAt(0).toUpperCase() + level.slice(1)} Risk: ${riskData[level]}`, 14, yPos);
+            yPos += lineHeight;
+          }
+        });
+        yPos += 6;
+      }
       
       // Key Findings
-      doc.setFontSize(14);
-      doc.text("Key Findings", 14, 80);
-      doc.setFontSize(10);
-      
-      let yPos = 90;
-      anomalies.slice(0, 5).forEach((anomaly, index) => {
-        if (yPos > 270) {
+      if (anomalies && anomalies.length > 0) {
+        if (yPos > 240) {
           doc.addPage();
           yPos = 20;
         }
-        doc.text(`${index + 1}. ${anomaly.type}: ${anomaly.description}`, 14, yPos);
-        yPos += 10;
-      });
+        doc.setFontSize(14);
+        doc.text("Key Findings", 14, yPos);
+        yPos += 8;
+        doc.setFontSize(10);
+        
+        anomalies.slice(0, 10).forEach((anomaly, index) => {
+          if (yPos > 270) {
+            doc.addPage();
+            yPos = 20;
+          }
+          const anomalyType = anomaly.type || anomaly.anomaly_type || "Unknown";
+          const anomalyDesc = anomaly.description || anomaly.rationale || "No description";
+          const text = `${index + 1}. ${anomalyType}: ${anomalyDesc}`;
+          const lines = doc.splitTextToSize(text, pageWidth - 28);
+          doc.text(lines, 14, yPos);
+          yPos += lineHeight * lines.length + 2;
+        });
+      }
       
-      doc.save("quantumguard-analysis-report.pdf");
+      // Timeline Summary
+      if (timelineData && timelineData.length > 0) {
+        if (yPos > 220) {
+          doc.addPage();
+          yPos = 20;
+        }
+        yPos += 6;
+        doc.setFontSize(14);
+        doc.text("Timeline Summary", 14, yPos);
+        yPos += 8;
+        doc.setFontSize(10);
+        doc.text(`Period: ${timelineData.length} days analyzed`, 14, yPos);
+        yPos += lineHeight;
+        const totalVolume = timelineData.reduce((sum, d) => sum + (d.volume || 0), 0);
+        doc.text(`Total Volume: ${totalVolume.toLocaleString()} transactions`, 14, yPos);
+      }
+      
+      const fileName = `quantumguard-report-${new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(fileName);
       toast.success("PDF report downloaded successfully!");
     } catch (error) {
       console.error("PDF generation error:", error);
-      toast.error("Failed to generate PDF report");
+      toast.error(`Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   const handleExportCSV = () => {
     try {
-      const csvContent = [
-        ["Transaction Analysis Report"],
+      toast.info("Generating CSV export...");
+      
+      // Header section
+      const csvRows = [
+        ["QuantumGuard AI - Transaction Analysis Report"],
         ["Generated", new Date().toISOString()],
         [""],
+        ["Summary Metrics"],
         ["Metric", "Value"],
-        ["Total Transactions", analysisData.totalTransactions.toString()],
-        ["Average Risk Score", analysisData.averageRiskScore.toString()],
-        ["Anomalies Found", analysisData.anomaliesFound.toString()],
-        ["High Risk Transactions", analysisData.highRiskTransactions.toString()],
-      ]
-        .map((row) => row.join(","))
-        .join("\n");
-
-      const blob = new Blob([csvContent], { type: "text/csv" });
+        ["Total Transactions", (analysisData.totalTransactions || 0).toString()],
+        ["Average Risk Score", (analysisData.averageRiskScore || 0).toFixed(2)],
+        ["Anomalies Found", (analysisData.anomaliesFound || 0).toString()],
+        ["High Risk Transactions", (analysisData.highRiskTransactions || 0).toString()],
+        [""]
+      ];
+      
+      // Risk Distribution
+      if (riskData) {
+        csvRows.push(["Risk Distribution"]);
+        csvRows.push(["Risk Level", "Count"]);
+        if (riskData.low !== undefined) csvRows.push(["Low", riskData.low.toString()]);
+        if (riskData.medium !== undefined) csvRows.push(["Medium", riskData.medium.toString()]);
+        if (riskData.high !== undefined) csvRows.push(["High", riskData.high.toString()]);
+        csvRows.push([""]);
+      }
+      
+      // Anomalies Detail
+      if (anomalies && anomalies.length > 0) {
+        csvRows.push(["Detected Anomalies"]);
+        csvRows.push(["#", "Type", "Risk Score", "Description", "Transaction ID"]);
+        anomalies.forEach((anomaly, index) => {
+          csvRows.push([
+            (index + 1).toString(),
+            anomaly.type || anomaly.anomaly_type || "Unknown",
+            (anomaly.risk_score || anomaly.final_score || "N/A").toString(),
+            (anomaly.description || anomaly.rationale || "").replace(/,/g, ";"),
+            anomaly.transaction_id || anomaly.id || "N/A"
+          ]);
+        });
+        csvRows.push([""]);
+      }
+      
+      // Timeline Data
+      if (timelineData && timelineData.length > 0) {
+        csvRows.push(["Timeline Data"]);
+        csvRows.push(["Date", "Volume", "Average Risk", "Anomalies"]);
+        timelineData.forEach(data => {
+          csvRows.push([
+            data.date || data.timestamp || "N/A",
+            (data.volume || 0).toString(),
+            (data.avgRisk || data.average_risk || 0).toString(),
+            (data.anomalies || data.anomaly_count || 0).toString()
+          ]);
+        });
+      }
+      
+      const csvContent = csvRows.map(row => row.join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "quantumguard-analysis.csv";
+      a.download = `quantumguard-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
       toast.success("CSV exported successfully!");
     } catch (error) {
       console.error("CSV export error:", error);
-      toast.error("Failed to export CSV");
+      toast.error(`Failed to export CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   const handleExportJSON = () => {
     try {
+      toast.info("Generating JSON export...");
+      
+      // Helper to safely serialize objects and avoid circular references
+      const safeSerialize = (obj: any): any => {
+        const seen = new WeakSet();
+        
+        const replacer = (key: string, value: any): any => {
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+              return '[Circular Reference]';
+            }
+            seen.add(value);
+          }
+          
+          // Handle special types
+          if (value instanceof Date) {
+            return value.toISOString();
+          }
+          if (typeof value === 'bigint') {
+            return value.toString();
+          }
+          if (value === undefined) {
+            return null;
+          }
+          
+          return value;
+        };
+        
+        return JSON.parse(JSON.stringify(obj, replacer));
+      };
+      
       const jsonData = {
         metadata: {
           generatedAt: new Date().toISOString(),
           reportVersion: "1.0",
+          generatedBy: "QuantumGuard AI",
         },
-        analysis: analysisData,
-        anomalies: anomalies,
-        riskData: riskData,
-        networkData: networkData,
-        timelineData: timelineData,
+        summary: {
+          totalTransactions: analysisData.totalTransactions || 0,
+          averageRiskScore: analysisData.averageRiskScore || 0,
+          anomaliesFound: analysisData.anomaliesFound || 0,
+          highRiskTransactions: analysisData.highRiskTransactions || 0,
+        },
+        riskDistribution: riskData ? safeSerialize(riskData) : null,
+        anomalies: anomalies ? safeSerialize(anomalies) : [],
+        networkAnalysis: networkData ? {
+          nodes: networkData.nodes ? safeSerialize(networkData.nodes) : [],
+          edges: networkData.edges ? safeSerialize(networkData.edges) : [],
+        } : null,
+        timeline: timelineData ? safeSerialize(timelineData) : [],
       };
 
-      const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
+      const jsonString = JSON.stringify(jsonData, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "quantumguard-analysis.json";
+      a.download = `quantumguard-analysis-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
       toast.success("JSON exported successfully!");
     } catch (error) {
       console.error("JSON export error:", error);
-      toast.error("Failed to export JSON");
+      toast.error(`Failed to export JSON: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
