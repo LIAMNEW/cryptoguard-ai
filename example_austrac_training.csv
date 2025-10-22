@@ -1,0 +1,1001 @@
+TransactionID,Date,CustomerID,MerchantName,TransactionType,AmountAUD,Location,Channel,Notes,RiskLabel
+98dd1613-9045-40a1-8e15-e284b1eea147,2025-08-13 07:34:00,44390,EnergyAustralia,Payment,1511.23,Melbourne,Mobile,Grocery payment,Low
+39faf89d-93ba-4bfb-b2f2-9ddeebdb1b47,2025-08-05 01:01:00,85047,Coles,Deposit,445.09,Adelaide,In-Person,Online purchase,Low
+f97cf346-e59c-4934-bcf5-aaf78c3aa45d,2025-06-18 14:34:00,21721,Telstra,Payment,421.45,Adelaide,In-Person,Utility bill,Low
+3102630d-b07c-498f-b153-0ce43592b38d,2025-06-13 21:22:00,22258,Coles,Withdrawal,1104.49,Brisbane,In-Person,Subscription,Low
+35089a29-c627-4031-a6ce-95b986a93858,2025-06-24 05:06:00,43563,PayPal,Withdrawal,3236.44,Hong Kong,Online,Travel expense,Medium
+db6c4dd6-73b8-4033-baaf-89573306d851,2025-10-24 18:14:00,67416,Woolworths,Payment,1171.21,Adelaide,ATM,Utility bill,Low
+ad45170a-893d-4838-9239-85291086ec51,2025-10-04 20:19:00,96154,ShopZone,Deposit,6271.52,Perth,Mobile,Multiple transfers this week,Medium
+dd1d9c3c-b480-4809-a94d-c43b922a2d6b,2025-07-18 00:35:00,52331,Netflix,Withdrawal,458.91,Perth,Online,Subscription,Low
+884ab176-98e4-4c0e-90cd-2884719c7e3e,2025-04-27 03:15:00,30190,ShopZone,Deposit,8959.09,Adelaide,ATM,Multiple transfers this week,Medium
+2a16a46a-6be9-405e-b870-b92d5160e5b5,2025-01-05 15:08:00,71272,EnergyAustralia,Crypto Purchase,1632.28,Adelaide,ATM,Online purchase,Low
+4860b944-63a5-4759-a7cb-9b2820ebe82a,2025-08-30 00:55:00,73398,UAE Gold Brokers,Payment,18363.62,London,ATM,Transfer to high-risk country,High
+df6632c3-b9bd-45d1-adfc-31e51355591f,2025-01-23 13:23:00,52226,EnergyAustralia,Crypto Purchase,1939.48,Brisbane,In-Person,Online purchase,Low
+c96178c4-bd9d-4c68-9c20-b598984f60c4,2025-09-09 13:45:00,33724,Optus,Deposit,982.51,Adelaide,In-Person,Grocery payment,Low
+f6450898-8ece-4708-b838-6f1f66e9a894,2025-02-03 09:45:00,27975,Qantas,Deposit,279.94,Adelaide,In-Person,Online purchase,Low
+b7c00798-61ea-48c2-b52d-8c09474e11f6,2025-04-13 05:53:00,48944,ShopZone,Transfer,4315.71,Perth,Mobile,Multiple transfers this week,Medium
+f42b78e4-061c-43b9-84c9-6e03c74cfc71,2025-01-19 17:35:00,98434,Woolworths,Transfer,1653.56,Adelaide,In-Person,Online purchase,Low
+9402fc26-aebf-4473-8dce-9d8209d26a61,2025-07-25 22:37:00,32026,eBay,Transfer,7931.46,Perth,In-Person,Travel expense,Medium
+9cccdfa7-7c62-4819-bc4f-85963e2b4908,2025-08-26 21:46:00,73374,GlobalTrust Offshore,Payment,22005.2,London,Online,Crypto purchase from unknown wallet,High
+870c51a9-a76d-411c-8e70-1bad669d9298,2025-08-08 05:39:00,85168,Telstra,Payment,1571.85,Sydney,Mobile,Utility bill,Low
+fabec088-02f8-4eb6-bab8-37a22a8f2059,2025-02-17 07:43:00,78865,Netflix,Deposit,457.03,Melbourne,Online,Utility bill,Low
+13299802-b0cc-4f2a-b945-952ba6d7581e,2025-03-27 22:28:00,29497,Spotify,Crypto Purchase,899.79,Adelaide,Mobile,Subscription,Low
+4e2fe619-af0e-40d8-b71b-bee1c65c96f2,2025-06-03 08:52:00,60334,Telstra,Payment,71.85,Perth,In-Person,Salary deposit,Low
+f1b038d9-9c40-4d52-88fc-4c7b5c2a3062,2025-09-07 07:17:00,34363,Qantas,Crypto Purchase,976.43,Brisbane,In-Person,Salary deposit,Low
+2f1e0301-041d-4915-afcf-ac5e78d48288,2025-01-17 10:05:00,69689,Telstra,Payment,121.52,Sydney,ATM,Salary deposit,Low
+a98249f2-5b8e-4183-9e49-58560c647e22,2025-02-27 19:11:00,12312,TravelPay,Withdrawal,7911.74,Singapore,Mobile,Multiple transfers this week,Medium
+ece91f42-5372-453b-9f24-3bf71cf0211a,2025-08-18 12:24:00,96655,Coles,Transfer,1368.63,Melbourne,Online,Online purchase,Low
+5179093e-61e4-45e5-8aad-ff21a9e64cc1,2025-02-24 03:58:00,27582,Coles,Deposit,1354.87,Adelaide,Online,Salary deposit,Low
+50000f2c-900a-426f-b229-5b9282fa4e35,2025-04-19 22:24:00,20698,ShopZone,Deposit,7888.83,Perth,Online,Foreign transfer,Medium
+cc858ca9-741b-42f4-8a60-ed77c5af44de,2025-02-02 10:27:00,52316,Oceanic Holdings,Withdrawal,18881.01,Hong Kong,ATM,Repeated deposits below threshold,High
+4bb72751-f16b-4fd4-81ee-54dca7dcfad5,2025-05-23 02:19:00,53579,Coles,Payment,1027.5,Melbourne,Mobile,Utility bill,Low
+4aff8f51-578e-430b-8715-801a55e41c44,2025-02-22 18:43:00,39912,Coles,Deposit,464.52,Sydney,Online,Online purchase,Low
+df85948f-199d-4fac-81e6-137c4a9687eb,2025-10-15 19:39:00,93622,Woolworths,Withdrawal,1221.9,Sydney,Mobile,Subscription,Low
+b3c34fe7-553f-4fe1-992d-ea7200e906dc,2025-09-14 08:26:00,19771,TravelPay,Payment,6610.82,Perth,ATM,Gift to friend,Medium
+1486b65e-617b-48c6-9267-635b16f05dc5,2025-01-29 00:13:00,73401,Netflix,Transfer,1891.19,Brisbane,Mobile,Utility bill,Low
+51e916d7-4b4c-45e5-b73a-42c6904b59d3,2025-05-31 13:43:00,49028,TravelPay,Crypto Purchase,9453.77,Singapore,ATM,Multiple transfers this week,Medium
+5452ad02-2e2a-4668-9117-06968d9cda05,2025-01-25 03:09:00,75735,Telstra,Deposit,1586.24,Adelaide,ATM,Salary deposit,Low
+de399675-56e2-4b12-aa96-92dde8d5479b,2025-01-21 04:43:00,71101,TravelPay,Payment,2935.01,Dubai,In-Person,Gift to friend,Medium
+7fa12611-c0ae-4249-8597-a558bbee8731,2025-01-11 09:12:00,66577,eBay,Payment,2176.29,Hong Kong,Mobile,Travel expense,Medium
+289d2631-200d-4707-b3d7-4f6b72ab24f7,2025-01-01 20:04:00,30631,ShopZone,Deposit,9147.48,London,Mobile,Foreign transfer,Medium
+c3185801-3b5a-411d-a43b-396fe988c6c8,2025-01-17 13:48:00,51004,Woolworths,Withdrawal,1851.62,Melbourne,In-Person,Salary deposit,Low
+33d340bd-0a87-4ad7-9735-6f44f3b7e8fc,2025-05-30 17:33:00,36197,Spotify,Crypto Purchase,1407.17,Melbourne,In-Person,Grocery payment,Low
+7e8570c8-7df7-4a7f-a1c5-155291a31a8f,2025-02-07 17:13:00,55139,Netflix,Withdrawal,273.59,Sydney,Mobile,Subscription,Low
+5e9a5ddf-62c9-4b1a-a605-aa88039bc3d8,2025-06-18 00:58:00,85688,CryptoXchange Ltd,Crypto Purchase,19343.09,Hong Kong,Online,Repeated deposits below threshold,High
+f64fce85-2b8c-4eda-b26b-3e0870b3394a,2025-09-22 21:23:00,99042,Oceanic Holdings,Deposit,16081.26,Hong Kong,Online,Repeated deposits below threshold,High
+b3711f07-5ca0-46e9-abf5-385c68514a08,2025-08-30 15:57:00,71384,Netflix,Withdrawal,191.36,Perth,Mobile,Online purchase,Low
+a476648f-aa97-424a-bd72-25210c890b00,2025-09-26 23:36:00,26457,EnergyAustralia,Payment,1956.01,Adelaide,Online,Subscription,Low
+7e1fc4ee-1b5a-45f0-9d73-611e9666564b,2025-10-26 15:05:00,91388,Optus,Payment,1619.3,Melbourne,ATM,Salary deposit,Low
+7aab9ecc-30db-4b05-bfbf-c87381d2e30c,2025-01-02 12:16:00,62395,Optus,Withdrawal,577.65,Perth,In-Person,Online purchase,Low
+36cd9f8a-68b3-4c17-a680-e32f70a599a4,2025-06-02 18:25:00,36668,PayPal,Payment,6996.58,New York,Online,Gift to friend,Medium
+f407b3fd-4cb7-423a-8172-4984cfc0f4da,2025-03-22 01:06:00,94862,Spotify,Payment,419.05,Perth,Mobile,Utility bill,Low
+cd9f0575-ca21-4d5f-bd7c-a7f82b6d81ba,2025-03-15 06:19:00,60967,ShopZone,Payment,9907.06,Perth,ATM,Foreign transfer,Medium
+3d539de2-6fdb-41e0-b4cf-0d939f76b82d,2025-01-29 07:38:00,30662,EnergyAustralia,Transfer,49.66,Sydney,In-Person,Salary deposit,Low
+4181d1ee-c83d-4156-bbcb-5556a6d98eda,2025-03-07 15:55:00,78613,Western Transfers,Transfer,7982.59,Singapore,Mobile,Multiple transfers this week,Medium
+1ddf96de-2b26-4c1f-939f-abe2d1e7ee20,2025-02-27 18:47:00,53379,TravelPay,Deposit,9463.48,Dubai,In-Person,Foreign transfer,Medium
+990c1912-17c5-47af-b529-c540aff731ec,2025-01-17 13:56:00,37678,eBay,Crypto Purchase,5069.04,Hong Kong,ATM,Foreign transfer,Medium
+34858b42-c4a1-4cbd-9ac8-c4b17f34ebf0,2025-05-04 08:13:00,20750,EnergyAustralia,Transfer,413.51,Adelaide,In-Person,Utility bill,Low
+1257c67d-0a78-406d-b670-e0611b74e9b1,2025-04-25 03:22:00,21613,Spotify,Withdrawal,238.62,Adelaide,ATM,Subscription,Low
+723a3ffb-74b9-48f1-83a6-285f32e1683b,2025-08-10 00:37:00,16043,Eastern Union,Crypto Purchase,22448.12,Singapore,In-Person,Transfer to high-risk country,High
+5f9aed09-01fb-409c-905b-5d7677cd0228,2025-07-11 04:48:00,18793,Coles,Payment,233.62,Melbourne,In-Person,Grocery payment,Low
+790a23f3-9941-48ec-ac4f-921b2bc63ed1,2025-10-03 21:52:00,58702,EnergyAustralia,Payment,1526.1,Sydney,ATM,Online purchase,Low
+0ce8a878-2b46-4be3-8c0a-c7beb1be5faa,2025-03-03 16:43:00,68000,Woolworths,Crypto Purchase,366.9,Sydney,Online,Online purchase,Low
+fbecd3fd-b9ce-436c-a385-d5c253d6e6d8,2025-03-16 01:42:00,19332,Netflix,Deposit,668.91,Sydney,ATM,Grocery payment,Low
+f62176db-3d89-4400-b0bd-b9772b5dc3ec,2025-09-06 14:21:00,18977,Netflix,Payment,1389.98,Adelaide,Mobile,Utility bill,Low
+bab0f7d3-4596-4055-9b4b-215becf2b2b4,2025-02-19 17:40:00,10286,Western Transfers,Transfer,9649.47,London,Mobile,Multiple transfers this week,Medium
+3eae5493-c13d-481b-98a6-a553acbbe343,2025-03-24 10:59:00,63075,EnergyAustralia,Deposit,698.59,Brisbane,Mobile,Online purchase,Low
+5cdedb9d-6cc7-4559-b13b-0e80856043e3,2025-06-27 17:27:00,75117,Spotify,Crypto Purchase,147.22,Sydney,ATM,Subscription,Low
+a1a4c5f4-9cc9-4333-99c6-09ef63b601b9,2025-01-13 15:06:00,10874,Netflix,Withdrawal,837.79,Sydney,Mobile,Grocery payment,Low
+ca9c17ee-7a95-44e8-ab58-3cdfed6fad0b,2025-01-14 02:22:00,92604,Coles,Deposit,1197.88,Perth,Mobile,Subscription,Low
+f367c25c-6d5f-4ed6-a27f-ea29e64b3f1a,2025-07-16 11:14:00,82763,PayPal,Crypto Purchase,5398.17,London,In-Person,Gift to friend,Medium
+126a9a82-3ba2-4547-ba8b-88526f043b24,2025-03-01 11:35:00,54870,Optus,Transfer,1169.78,Adelaide,ATM,Salary deposit,Low
+4a5b9fc4-8312-4cf0-9603-74257096ead4,2025-07-30 19:09:00,21992,Telstra,Withdrawal,1250.19,Brisbane,Mobile,Online purchase,Low
+e5376b7e-e48f-4898-a243-d6f4a26eb882,2025-07-15 16:43:00,60276,EnergyAustralia,Crypto Purchase,840.49,Melbourne,Mobile,Online purchase,Low
+2473ac27-407b-4c7d-8632-6c39844c5997,2025-07-13 17:30:00,52007,Woolworths,Crypto Purchase,1277.13,Sydney,ATM,Utility bill,Low
+23a6a76a-e719-4e7e-9aef-2c9085e13397,2025-02-22 00:38:00,74583,Oceanic Holdings,Withdrawal,18486.18,Hong Kong,Mobile,Transfer to high-risk country,High
+ec641f53-eb82-4d51-aa27-208ff2811299,2025-10-19 21:28:00,26610,Telstra,Deposit,1226.53,Adelaide,In-Person,Subscription,Low
+5a02f9c7-0b43-4d7b-b5c4-0818e74a84f6,2025-08-11 10:00:00,22050,Telstra,Crypto Purchase,1590.84,Sydney,In-Person,Online purchase,Low
+f25190c2-ea03-40c9-a937-bbee4f7955e8,2025-06-25 20:16:00,83306,UAE Gold Brokers,Withdrawal,13368.21,London,ATM,Crypto purchase from unknown wallet,High
+1ed9a340-22c7-43d4-84ec-64fcbba4262a,2025-02-16 21:13:00,34182,Woolworths,Withdrawal,110.65,Melbourne,In-Person,Subscription,Low
+b45a4367-08b5-4428-a63e-9736660f9118,2025-07-04 16:56:00,84278,Optus,Withdrawal,937.35,Brisbane,Mobile,Salary deposit,Low
+20115a24-8c99-4588-ac6e-c1034fecd944,2025-06-22 08:04:00,72077,TravelPay,Withdrawal,8409.49,Dubai,Mobile,Multiple transfers this week,Medium
+64f48be7-b8c1-441f-90c1-6279b5958979,2025-06-19 18:54:00,69031,Coles,Withdrawal,1790.63,Melbourne,ATM,Grocery payment,Low
+d3dc48ec-1926-4141-aebf-77d895f10842,2025-03-12 03:54:00,47856,CryptoXchange Ltd,Withdrawal,16025.74,Singapore,ATM,Offshore layering transaction,High
+42905614-8e85-4f6d-b5ff-7297b33b90b7,2025-05-07 22:04:00,84386,Coles,Crypto Purchase,543.26,Melbourne,Mobile,Salary deposit,Low
+548d8df5-21b1-4421-8f62-98f378f7a403,2025-06-24 09:32:00,43503,CryptoXchange Ltd,Transfer,10363.74,New York,In-Person,Crypto purchase from unknown wallet,High
+72afe634-adaa-44f6-ad9b-5c58fc8ed9f5,2025-04-06 03:18:00,94967,Netflix,Withdrawal,258.83,Sydney,Online,Salary deposit,Low
+0a8c17be-d498-43de-a64c-b35fcf7dd040,2025-06-16 15:11:00,89407,Optus,Payment,1653.15,Sydney,Mobile,Online purchase,Low
+961d5fab-c386-42f1-b28a-284437354c0a,2025-05-26 02:13:00,27754,Optus,Withdrawal,1216.99,Perth,In-Person,Salary deposit,Low
+87bae7a0-b298-4f80-87d2-dc8081a1b686,2025-09-30 19:54:00,51769,ShopZone,Withdrawal,9477.09,London,Mobile,Gift to friend,Medium
+a994978c-f468-4458-9f55-2425128410a3,2025-02-09 17:01:00,80135,UAE Gold Brokers,Payment,19755.93,New York,Mobile,Crypto purchase from unknown wallet,High
+c4cb0929-76b0-43af-8ca2-8ea6c3847b8d,2025-03-21 08:12:00,54689,Coles,Deposit,74.11,Adelaide,In-Person,Salary deposit,Low
+fd4e4af8-0b0c-4b8c-a695-ab10af135882,2025-03-23 10:59:00,68442,Spotify,Payment,387.77,Perth,ATM,Utility bill,Low
+0624582c-2422-40f1-8215-fa920c891a21,2025-05-21 03:00:00,16634,Coles,Transfer,421.09,Adelaide,Mobile,Subscription,Low
+b700caa3-fc22-4d0a-bdda-9ff5943f5483,2025-07-31 01:12:00,95878,Spotify,Deposit,1249.04,Perth,In-Person,Salary deposit,Low
+a7f845d5-6a1e-4af1-98e6-d08fdebf2ea3,2025-01-15 02:02:00,94785,Netflix,Payment,1305.75,Perth,Online,Online purchase,Low
+c9c2b645-b369-4375-890e-59fd728ceafb,2025-01-29 16:58:00,64533,Western Transfers,Transfer,9103.82,Dubai,ATM,Gift to friend,Medium
+0e465dd1-e24d-464f-a106-2052083d527a,2025-05-09 10:44:00,47419,Telstra,Deposit,1439.57,Sydney,ATM,Grocery payment,Low
+b83dec4f-e56d-4433-b962-f8d82836308c,2025-08-26 21:46:00,63312,Qantas,Crypto Purchase,1068.55,Melbourne,Mobile,Utility bill,Low
+2f2ca18a-eb14-4dbf-8810-672997ca6132,2025-10-07 10:52:00,81694,Telstra,Withdrawal,1662.46,Perth,In-Person,Salary deposit,Low
+2c1ac2a6-a316-4938-8b73-d898ad82e057,2025-10-03 06:13:00,96151,Netflix,Deposit,1102.11,Melbourne,ATM,Online purchase,Low
+62dbb5a5-8cbd-4015-b6f0-a8c863052609,2025-02-03 09:42:00,11571,eBay,Withdrawal,8036.4,London,In-Person,Gift to friend,Medium
+599de349-7909-4b2a-8f83-aa1923dd10b3,2025-07-06 16:00:00,31682,EnergyAustralia,Payment,1697.48,Melbourne,In-Person,Online purchase,Low
+3775d721-4fbc-4aeb-9055-b0982cf71a34,2025-08-28 04:39:00,14548,Woolworths,Deposit,1814.79,Adelaide,Online,Online purchase,Low
+fdf82c87-ac1a-4995-8337-37f510f82e4c,2025-06-29 09:18:00,84487,GlobalTrust Offshore,Withdrawal,19758.94,Hong Kong,Online,Offshore layering transaction,High
+00fbf29a-546a-40a1-8d50-83887eccf55b,2025-05-19 01:59:00,50586,Coles,Payment,1372.01,Adelaide,Online,Subscription,Low
+716120dd-8339-4e91-899a-95abed9696dd,2025-09-30 04:08:00,77501,Optus,Payment,1894.23,Brisbane,ATM,Utility bill,Low
+1d69d6c8-3ff0-45ab-84cd-a75563d946ee,2025-02-06 02:10:00,51416,Spotify,Transfer,464.15,Brisbane,ATM,Subscription,Low
+7dd20dc6-b9f3-4be7-b64e-b307e93e5dbb,2025-04-19 01:35:00,70384,Netflix,Withdrawal,1091.5,Perth,Mobile,Online purchase,Low
+7faf9a79-a1b0-4b1c-aeec-bacfae1d4096,2025-01-04 16:56:00,47885,Telstra,Payment,885.4,Sydney,Mobile,Utility bill,Low
+5ba1d5e1-ead2-49f6-b556-38ea55bb8ff1,2025-03-03 00:31:00,83147,Qantas,Withdrawal,359.63,Adelaide,Mobile,Salary deposit,Low
+96c65741-7b42-4f00-acac-aadfcf42036a,2025-10-02 00:54:00,60851,Coles,Crypto Purchase,867.55,Brisbane,Mobile,Subscription,Low
+2e7645f4-275b-4134-a269-0ea2fd06dccd,2025-04-05 01:16:00,69795,Optus,Crypto Purchase,237.03,Perth,Online,Grocery payment,Low
+7ed76ea5-426a-44b8-bdec-e4b59d5facee,2025-10-04 11:33:00,59832,Netflix,Transfer,1662.64,Perth,Mobile,Subscription,Low
+8e5f5831-8278-4a63-8dd2-4c9675d52dd8,2025-10-05 11:29:00,68804,Woolworths,Withdrawal,1554.08,Perth,Online,Online purchase,Low
+e32fa150-4dae-4638-8046-0f64ceb1999f,2025-04-07 05:58:00,69548,Qantas,Withdrawal,48.06,Melbourne,Online,Utility bill,Low
+eeead420-87bf-4646-9c64-ae74a9c6fd6c,2025-07-15 13:34:00,60707,PayPal,Withdrawal,7299.9,Adelaide,ATM,Multiple transfers this week,Medium
+f9f30690-1096-4795-8060-a2cb30804c56,2025-07-28 20:14:00,25366,Oceanic Holdings,Withdrawal,13306.56,Singapore,In-Person,Unverified merchant - possible scam,High
+f0b46cbb-d8ee-4d3f-ab31-9396071abf0f,2025-02-15 00:26:00,41305,Western Transfers,Payment,5316.11,New York,In-Person,Multiple transfers this week,Medium
+36e526eb-c197-48ac-b8f9-05c8ad57c5df,2025-10-01 00:00:00,99467,UAE Gold Brokers,Crypto Purchase,10866.85,New York,ATM,Transfer to high-risk country,High
+b8540c66-7b47-46a4-8d35-493f253fb386,2025-10-28 22:58:00,13796,Telstra,Deposit,1550.99,Brisbane,Mobile,Online purchase,Low
+fc116528-e44f-43d8-a9e2-e7d4ff393d84,2025-01-27 10:00:00,86169,Oceanic Holdings,Crypto Purchase,19086.56,New York,Mobile,Offshore layering transaction,High
+1908295e-ffc3-4f4b-9e5b-1b57403861f3,2025-06-22 00:31:00,56181,Spotify,Transfer,371.86,Brisbane,Mobile,Utility bill,Low
+68726c45-52aa-418e-a1fa-7ba14088eb19,2025-02-10 21:27:00,16457,EnergyAustralia,Transfer,1994.57,Adelaide,Mobile,Utility bill,Low
+b43d36e8-c722-480b-8faa-e2081576951a,2025-07-25 08:04:00,82487,EnergyAustralia,Withdrawal,1827.14,Brisbane,ATM,Online purchase,Low
+c59c7df0-d09a-451d-b979-2c7ff3a11e94,2025-07-24 11:42:00,93243,Qantas,Deposit,816.85,Adelaide,Online,Utility bill,Low
+84de5d8b-d417-45ac-a3fd-adf3b568160e,2025-09-28 06:45:00,35067,PayPal,Payment,9714.11,Hong Kong,Online,Travel expense,Medium
+bf9a5f91-b3ac-4216-ae74-a26fe9272024,2025-07-23 10:01:00,47416,Netflix,Withdrawal,1569.26,Perth,Mobile,Salary deposit,Low
+bf1b5a1d-964b-44d0-8756-61c5d2862a2b,2025-10-04 14:03:00,36951,Telstra,Crypto Purchase,67.7,Sydney,Online,Grocery payment,Low
+455eae79-1924-4594-ae34-e07a0e1f39ad,2025-03-17 22:54:00,33845,ShopZone,Transfer,4957.04,Perth,Mobile,Foreign transfer,Medium
+b6fd8635-841c-447d-b25b-970a844dd7f4,2025-01-14 06:10:00,30343,Netflix,Transfer,1954.34,Sydney,ATM,Salary deposit,Low
+11cd3b36-ad9e-47ae-abb7-0d770f62db0b,2025-10-16 06:37:00,87480,Telstra,Crypto Purchase,1366.61,Sydney,In-Person,Online purchase,Low
+91279ff0-50b3-4299-a440-4ee54686a997,2025-02-08 22:57:00,22209,Telstra,Payment,1095.72,Adelaide,In-Person,Subscription,Low
+841d81b9-9b5e-4392-9bca-dbdb13f6b72e,2025-08-27 09:49:00,97934,Netflix,Deposit,661.33,Perth,Mobile,Online purchase,Low
+8bb073e1-2e37-4492-b7c9-2fb20f356808,2025-08-24 22:58:00,12987,Spotify,Crypto Purchase,185.38,Melbourne,ATM,Grocery payment,Low
+d183fc7f-3743-4cc6-a9e5-34ee000a6320,2025-08-17 11:05:00,53496,Western Transfers,Payment,2440.27,London,In-Person,Travel expense,Medium
+0f6d43da-7d14-4a81-9831-24685467f74e,2025-10-21 23:00:00,37410,UAE Gold Brokers,Payment,14423.68,Hong Kong,In-Person,Transfer to high-risk country,High
+a4e931f0-cd9a-40d4-b412-4fec3fd2f975,2025-08-26 01:06:00,38394,Telstra,Transfer,1749.54,Brisbane,ATM,Subscription,Low
+9a16a069-f4b2-43ed-bc1e-dd145327e45f,2025-02-27 00:47:00,45457,Netflix,Payment,497.33,Sydney,Online,Utility bill,Low
+bd10e4e5-29df-4cb7-ad4f-c1757ea80db6,2025-03-09 18:14:00,40999,Optus,Crypto Purchase,28.48,Sydney,In-Person,Subscription,Low
+4f3a589f-c306-40b2-88b8-9f941b7e803c,2025-08-27 06:18:00,28513,ShopZone,Transfer,5922.0,London,Online,Foreign transfer,Medium
+9cbf42a4-b9c2-40a9-93b1-bc1ae22d2ebd,2025-04-24 13:18:00,81590,Qantas,Crypto Purchase,304.54,Sydney,Online,Subscription,Low
+efe4ef5c-b981-4760-baaa-a5e4b37e3b35,2025-01-24 05:47:00,42844,GlobalTrust Offshore,Crypto Purchase,18009.31,Singapore,Online,Crypto purchase from unknown wallet,High
+501dae8a-0f56-4dbc-8084-2efeb0e526e8,2025-06-02 21:56:00,33980,Spotify,Payment,1915.21,Adelaide,In-Person,Grocery payment,Low
+594cfbe3-68ce-4169-b1f8-3247ecb1d904,2025-02-02 22:49:00,55594,Optus,Withdrawal,83.6,Sydney,Online,Utility bill,Low
+ae7d6eec-84d8-4905-8ad5-1f7b79f5d9fa,2025-10-02 04:47:00,24475,TravelPay,Withdrawal,3863.89,Perth,ATM,Gift to friend,Medium
+7d6c2ced-fb8d-46a3-a977-ec0fb3614041,2025-03-05 23:57:00,66907,Netflix,Crypto Purchase,1019.17,Brisbane,Mobile,Salary deposit,Low
+5b043d31-544a-4377-85ff-84fd2f99e011,2025-07-03 07:37:00,59841,Spotify,Withdrawal,41.4,Sydney,ATM,Subscription,Low
+40dbff5a-32c4-4281-bbda-b6ae29e0d60b,2025-08-28 08:55:00,26586,Telstra,Transfer,147.06,Perth,Mobile,Utility bill,Low
+c5537cb9-2f5e-49a5-9408-7286eeae467e,2025-06-03 18:50:00,54788,Western Transfers,Transfer,9348.01,New York,Online,Multiple transfers this week,Medium
+d652342e-3317-4800-b363-638b4adb7980,2025-08-25 05:27:00,10505,Netflix,Withdrawal,1230.14,Adelaide,ATM,Grocery payment,Low
+28a29816-b90c-49da-a2ab-742ba5422645,2025-04-08 09:22:00,30769,Woolworths,Deposit,1732.94,Brisbane,Mobile,Subscription,Low
+f650eea6-ecf9-434d-8b8d-0baf0aacdbc7,2025-07-05 16:14:00,13639,Coles,Crypto Purchase,1970.41,Melbourne,Online,Utility bill,Low
+044ad1af-0411-43b8-8311-7aaf4b76bac6,2025-03-29 05:05:00,91468,Qantas,Payment,1243.22,Perth,In-Person,Utility bill,Low
+2ce5e553-2d05-4661-be07-ffba5870b8c2,2025-09-17 09:54:00,24917,Telstra,Transfer,1682.87,Melbourne,Online,Online purchase,Low
+5ec79232-ede3-430d-b48e-8487fba15a81,2025-04-12 20:28:00,89565,Telstra,Deposit,193.04,Sydney,ATM,Subscription,Low
+6d8e024e-653c-478b-982e-882535188873,2025-04-10 15:20:00,17373,TravelPay,Transfer,6840.62,New York,ATM,Gift to friend,Medium
+6c13db93-079a-4494-82cd-3e4159dc0e29,2025-09-01 17:54:00,63844,PayPal,Crypto Purchase,6053.48,Singapore,ATM,Multiple transfers this week,Medium
+a9a51d80-1668-42a0-8f9a-d0742fcf21f1,2025-06-20 21:19:00,52145,ShopZone,Payment,2441.56,Singapore,Mobile,Gift to friend,Medium
+014f649b-eb8d-4e9c-928d-e028ff80d2af,2025-07-08 03:37:00,26261,ShopZone,Payment,9693.9,Adelaide,Mobile,Gift to friend,Medium
+ebc1dcce-8990-4203-98bb-567fdfd7c479,2025-05-25 22:47:00,23294,Oceanic Holdings,Withdrawal,19672.9,Dubai,In-Person,Transfer to high-risk country,High
+132c4528-66a7-403a-ac34-86948a7667f7,2025-06-01 04:12:00,37792,Spotify,Crypto Purchase,467.74,Melbourne,Mobile,Online purchase,Low
+12630a74-34ec-498f-aaef-6301953129bc,2025-07-05 19:55:00,27209,Netflix,Transfer,382.43,Melbourne,ATM,Subscription,Low
+161fe406-d420-42cb-b9f8-418b40716bc6,2025-03-03 02:54:00,85512,TravelPay,Withdrawal,3039.26,Perth,Mobile,Travel expense,Medium
+c886855f-a71d-4caa-baaa-42b0f1dde185,2025-08-12 12:47:00,95158,Optus,Withdrawal,1790.33,Brisbane,ATM,Salary deposit,Low
+1ea36c05-72f6-4c12-b592-d242661c96ea,2025-05-31 04:11:00,14862,Woolworths,Payment,1898.09,Perth,Online,Online purchase,Low
+7cc6c448-9e15-4b53-af37-9eafe620306f,2025-07-31 10:28:00,52999,Woolworths,Crypto Purchase,365.97,Melbourne,Online,Online purchase,Low
+00f6a173-ae6f-4799-b2b2-c86e45fd0482,2025-02-04 17:34:00,30486,Coles,Transfer,376.43,Sydney,ATM,Utility bill,Low
+bf694cec-845b-42b3-a94b-5728976d7caf,2025-07-19 15:02:00,66952,Qantas,Transfer,1962.27,Sydney,Online,Subscription,Low
+5c7beb43-47ca-428f-b958-c2fed5e8eedb,2025-08-27 16:05:00,65940,TravelPay,Crypto Purchase,9119.32,Adelaide,Online,Gift to friend,Medium
+1ab3288e-9e58-458e-9f9f-1c0529050f48,2025-05-25 12:26:00,62493,Spotify,Deposit,1361.01,Brisbane,Mobile,Grocery payment,Low
+8a4036d5-7601-47d3-9bea-9288c0d2a9c1,2025-03-09 09:46:00,33669,UAE Gold Brokers,Withdrawal,24356.85,New York,In-Person,Crypto purchase from unknown wallet,High
+b7306501-fabf-457e-a70f-4a8766821176,2025-09-28 00:23:00,62993,Spotify,Transfer,272.65,Perth,In-Person,Online purchase,Low
+8a6120c4-8aa1-4247-accc-c5f379c3e3dc,2025-03-24 09:43:00,36124,Netflix,Withdrawal,301.39,Brisbane,Online,Grocery payment,Low
+0e923b8a-0c59-4e7d-af1e-6a66ed5de3e1,2025-10-13 01:01:00,23855,Eastern Union,Withdrawal,23094.5,Dubai,Online,Crypto purchase from unknown wallet,High
+4fd291b1-73a9-4743-bbef-c18ac3c5526f,2025-05-30 20:24:00,62260,EnergyAustralia,Transfer,1959.79,Sydney,ATM,Online purchase,Low
+a1cabdea-72ce-4471-9873-2058a8f92f47,2025-06-01 20:03:00,11228,EnergyAustralia,Crypto Purchase,994.83,Melbourne,Online,Grocery payment,Low
+f9e7af9d-12ac-449b-8e10-6895b6b2b8bd,2025-03-22 00:26:00,84934,Optus,Deposit,1381.85,Brisbane,In-Person,Salary deposit,Low
+bbe702cf-204c-47a9-8227-5f12201eeade,2025-04-08 23:07:00,49018,Optus,Crypto Purchase,1829.74,Melbourne,In-Person,Online purchase,Low
+aa131868-3be5-446d-8543-8159377ec605,2025-04-26 09:43:00,44120,Coles,Crypto Purchase,1310.93,Sydney,ATM,Grocery payment,Low
+98797ff7-925a-4f11-aa06-9058d455575f,2025-06-03 23:28:00,17043,Spotify,Deposit,546.15,Adelaide,In-Person,Salary deposit,Low
+9eb3e62b-e455-40c5-ba9c-6538ffffc0a2,2025-09-24 07:26:00,64093,Netflix,Withdrawal,557.56,Adelaide,ATM,Online purchase,Low
+5ee8ca4c-235a-431f-982e-e906ff9e1410,2025-08-05 11:22:00,51115,EnergyAustralia,Transfer,648.27,Sydney,In-Person,Online purchase,Low
+252c1e88-3fc6-487d-b52c-eb8751625d9a,2025-05-31 07:25:00,78015,EnergyAustralia,Crypto Purchase,619.35,Brisbane,Mobile,Online purchase,Low
+e5b7e096-b57d-4ea9-afad-6eb1e096976f,2025-03-30 10:04:00,73409,eBay,Transfer,4191.15,Adelaide,In-Person,Multiple transfers this week,Medium
+646a89b8-b287-4257-8328-ef6e54d70af7,2025-05-26 05:28:00,47844,Netflix,Payment,1227.24,Sydney,Mobile,Online purchase,Low
+db85159e-2815-4026-b2b4-80a4a66163ec,2025-05-26 02:48:00,37759,Telstra,Crypto Purchase,552.85,Melbourne,Online,Online purchase,Low
+e5ca038e-86bc-4535-a441-126208068a0f,2025-06-20 17:48:00,70141,Qantas,Withdrawal,916.14,Melbourne,ATM,Subscription,Low
+4b4b0fbf-4951-4eff-a81a-a5aedca96c91,2025-10-23 17:54:00,98429,PayPal,Withdrawal,2691.79,Hong Kong,ATM,Multiple transfers this week,Medium
+83e9249b-59e9-42d9-ba6f-985ad4bfdfcb,2025-07-08 14:31:00,68854,Spotify,Transfer,1168.09,Perth,Online,Grocery payment,Low
+827d4a66-23a6-48c6-bf6f-462f61c2213a,2025-06-17 19:20:00,91106,Telstra,Payment,791.98,Brisbane,Mobile,Online purchase,Low
+66075754-9984-41c9-927d-851362134c7a,2025-05-18 18:03:00,52165,Telstra,Transfer,1506.95,Sydney,ATM,Grocery payment,Low
+0833ad75-4825-46f0-80e7-179cc23bf645,2025-10-04 18:19:00,16411,TravelPay,Deposit,2422.19,London,ATM,Foreign transfer,Medium
+25c2a1cc-fc1f-44bb-a5cf-07d025cbe8ae,2025-07-06 22:28:00,80784,Coles,Transfer,203.9,Sydney,Mobile,Utility bill,Low
+b87fa63a-700d-465a-988b-3b05065e747b,2025-04-05 17:41:00,36432,Woolworths,Deposit,1052.65,Sydney,ATM,Grocery payment,Low
+ba2f2933-adc2-4098-92b7-5fe18a94de79,2025-02-13 16:23:00,63026,Coles,Payment,1907.27,Adelaide,Online,Online purchase,Low
+028964db-eb7e-4a0b-81cf-ea5e69fa6116,2025-01-04 08:24:00,68123,EnergyAustralia,Transfer,899.0,Brisbane,Online,Subscription,Low
+8ee27a92-06e5-4c43-b7a3-a3271fa86163,2025-07-16 20:31:00,77809,Optus,Withdrawal,84.56,Perth,ATM,Subscription,Low
+b56efe98-70b2-4c32-b79f-01a4a7039a66,2025-01-06 20:59:00,56548,Telstra,Withdrawal,1016.08,Perth,Online,Salary deposit,Low
+360abb90-d7b2-4fa0-86d8-184bf2c463e1,2025-09-11 07:05:00,55121,TravelPay,Withdrawal,8024.63,Adelaide,Mobile,Multiple transfers this week,Medium
+123f23d8-2e5f-4be8-bde7-c954422f247b,2025-07-27 17:53:00,97339,Woolworths,Payment,614.71,Perth,Mobile,Utility bill,Low
+2c35a750-0c87-4a41-9987-137a859a1dd7,2025-01-16 07:12:00,84069,Woolworths,Crypto Purchase,1246.46,Melbourne,Online,Utility bill,Low
+ae862152-f1b3-4681-9d2f-a98d3a6c6c01,2025-08-26 10:35:00,34721,Coles,Crypto Purchase,1645.83,Brisbane,Online,Utility bill,Low
+741861dd-7ed1-40da-95f1-9e6d1a12cad5,2025-09-19 11:03:00,70720,Optus,Withdrawal,1720.13,Brisbane,Mobile,Utility bill,Low
+cbf424d8-0321-4905-a2f4-ba002fa05a6e,2025-07-26 07:05:00,85372,Optus,Deposit,893.94,Perth,ATM,Online purchase,Low
+2d736b70-4caa-4348-964d-9eb73b98dbeb,2025-05-26 20:48:00,44952,CryptoXchange Ltd,Transfer,10929.63,New York,In-Person,Offshore layering transaction,High
+72f52ac2-70af-4402-9d01-f23904e9efce,2025-09-09 03:50:00,59881,UAE Gold Brokers,Withdrawal,24088.88,London,In-Person,Offshore layering transaction,High
+0d8ea328-18ea-48ee-9c8f-4fb8ea418dfd,2025-06-04 11:26:00,70110,eBay,Payment,6461.68,Perth,Online,Travel expense,Medium
+e3e0bc03-f649-41cf-b826-aad3951cb6b5,2025-08-22 10:23:00,83884,Woolworths,Payment,1635.01,Brisbane,ATM,Salary deposit,Low
+14e6fa3b-0cf0-423b-8867-353fac8b155e,2025-02-20 23:03:00,92564,eBay,Crypto Purchase,5985.08,Adelaide,Mobile,Gift to friend,Medium
+01695ac3-730c-4405-8f5f-c2f9146f823c,2025-01-08 23:09:00,96851,Qantas,Crypto Purchase,1743.16,Sydney,Mobile,Utility bill,Low
+3d5c8aff-b39d-4701-89e5-be0def9d479e,2025-09-10 17:47:00,36466,ShopZone,Transfer,3796.16,Adelaide,Mobile,Gift to friend,Medium
+3c7ec0ab-f341-4dd0-bcbe-9ddfc58229ef,2025-01-10 15:09:00,79414,eBay,Withdrawal,9463.15,Singapore,Mobile,Multiple transfers this week,Medium
+8558b0f0-0134-4021-a0f0-d1619becf97f,2025-06-26 04:18:00,44684,Woolworths,Crypto Purchase,582.38,Brisbane,Mobile,Grocery payment,Low
+ded29562-1b14-42b4-9b5b-5b82b0c6d663,2025-07-22 18:06:00,90066,Spotify,Crypto Purchase,610.51,Melbourne,ATM,Utility bill,Low
+2f83ed25-3185-4111-adbd-abe1c43148a9,2025-06-17 16:37:00,50462,CryptoXchange Ltd,Deposit,22165.48,New York,In-Person,Crypto purchase from unknown wallet,High
+af5be10a-17b1-4dab-a787-d319fba645c8,2025-08-26 03:30:00,26474,Woolworths,Payment,1734.12,Adelaide,Online,Online purchase,Low
+c4bd5d4e-a512-483e-868d-0d4692ca1d54,2025-01-26 14:51:00,20825,UAE Gold Brokers,Payment,24402.35,Singapore,Online,Repeated deposits below threshold,High
+f9c7e386-8108-4d78-946f-1069546932a8,2025-07-24 14:17:00,39861,Qantas,Withdrawal,1382.91,Perth,Online,Salary deposit,Low
+2f1a0b85-657d-42c8-a831-0de72a3ee65b,2025-07-30 18:21:00,23526,Western Transfers,Transfer,5889.19,Dubai,In-Person,Multiple transfers this week,Medium
+4588de0f-8574-429b-8275-8f54340e0a7d,2025-01-29 05:16:00,11463,Telstra,Payment,1038.11,Adelaide,Online,Salary deposit,Low
+c897afb6-c6df-49b6-b5e6-fb5aa813b9aa,2025-04-11 03:02:00,20793,TravelPay,Transfer,6745.41,Perth,Online,Multiple transfers this week,Medium
+40f8845a-afec-421c-8d32-859b6f6d72a9,2025-03-09 22:46:00,56701,Woolworths,Crypto Purchase,1963.32,Sydney,ATM,Utility bill,Low
+ed6aed85-5446-40c0-a0c2-ace4b0cb34ad,2025-10-25 18:17:00,10395,ShopZone,Payment,4848.78,Dubai,Mobile,Multiple transfers this week,Medium
+a90cbd1b-ae40-489d-9b71-ac92e30f9a3d,2025-09-27 03:47:00,76955,Coles,Payment,957.73,Adelaide,Online,Subscription,Low
+197213e4-9cc9-49ca-b308-c72d875f2f46,2025-10-03 05:10:00,69870,eBay,Withdrawal,5880.49,Perth,ATM,Gift to friend,Medium
+b4a6538b-c870-4bc9-a69e-851823bfd7a1,2025-04-14 16:55:00,83575,Qantas,Withdrawal,1654.76,Sydney,ATM,Online purchase,Low
+d13a0283-cafd-4d55-a6a0-493d28871590,2025-05-09 06:02:00,36973,eBay,Withdrawal,6955.18,London,Online,Gift to friend,Medium
+7a861c8b-f6c5-4f88-aba7-f5f6e197e548,2025-02-14 13:07:00,33404,Optus,Withdrawal,1228.47,Brisbane,Online,Grocery payment,Low
+106e4ddb-eabc-46d5-976d-ab433c536745,2025-07-20 18:40:00,92793,Coles,Deposit,627.24,Melbourne,In-Person,Salary deposit,Low
+4455b609-b2ca-4206-8bb4-02ee486081bc,2025-08-21 11:42:00,13743,Qantas,Deposit,1178.81,Perth,ATM,Utility bill,Low
+b6b44724-855b-4718-ab84-6a57511e79e4,2025-06-20 19:24:00,58175,Spotify,Withdrawal,886.04,Adelaide,Mobile,Salary deposit,Low
+56c95510-651d-4243-be75-7feb7f41e6fb,2025-05-21 11:52:00,88604,Optus,Withdrawal,1015.2,Sydney,Mobile,Grocery payment,Low
+830768af-e601-4c04-90e8-9863bc21a5f7,2025-08-18 04:55:00,39143,Eastern Union,Crypto Purchase,10429.04,Hong Kong,ATM,Unverified merchant - possible scam,High
+a0b07a29-dccc-4557-934f-c89d40b773a9,2025-02-05 17:13:00,16419,EnergyAustralia,Withdrawal,1627.98,Brisbane,Online,Utility bill,Low
+ec34e06e-8ee8-471e-87ec-d9b92ad80744,2025-09-08 09:08:00,26326,Telstra,Deposit,636.01,Adelaide,Mobile,Salary deposit,Low
+77df05c3-d733-4452-9d48-61e982cc6fbd,2025-04-13 06:39:00,17977,Netflix,Payment,1376.36,Melbourne,Mobile,Utility bill,Low
+cbcfaf1e-b1b2-4911-945e-de3d931218f3,2025-05-01 09:13:00,50655,PayPal,Crypto Purchase,9327.13,Hong Kong,Online,Foreign transfer,Medium
+34dcf4e2-cffd-4cff-a6cb-c4108de00711,2025-02-16 17:18:00,15713,Spotify,Payment,701.48,Melbourne,In-Person,Subscription,Low
+b1469dc3-04a4-40c7-9458-0ef223435dd8,2025-02-07 14:22:00,72654,Netflix,Crypto Purchase,1281.49,Brisbane,Mobile,Salary deposit,Low
+dd402513-850e-4918-b6ab-207f9c72f391,2025-09-02 23:08:00,38653,Western Transfers,Transfer,3387.83,Hong Kong,In-Person,Foreign transfer,Medium
+2d171e7f-2f71-4511-8391-ae8ca24d6d4e,2025-07-01 02:09:00,56771,Netflix,Payment,1683.07,Perth,In-Person,Subscription,Low
+13cde140-18d8-4cfa-bff6-6825de057699,2025-08-27 20:50:00,54656,Coles,Crypto Purchase,1477.56,Adelaide,ATM,Utility bill,Low
+02bb795b-dba6-4346-9454-27f599141f79,2025-04-11 20:35:00,62672,Netflix,Payment,259.09,Adelaide,Online,Subscription,Low
+8a320d9c-d4fe-4ebe-9aed-e32235225449,2025-05-18 18:38:00,17554,UAE Gold Brokers,Payment,10443.56,London,In-Person,Offshore layering transaction,High
+d71200f0-85ec-4f41-b333-3a0b978ca6fd,2025-09-07 09:39:00,91501,GlobalTrust Offshore,Deposit,14771.66,London,In-Person,Offshore layering transaction,High
+d89c1744-d2bb-481d-9fe1-04a4c2ea1f8a,2025-09-01 23:53:00,95042,GlobalTrust Offshore,Crypto Purchase,11124.95,Hong Kong,ATM,Transfer to high-risk country,High
+d22944bd-d151-4d53-ad20-56fca2510283,2025-08-30 04:47:00,18226,Netflix,Transfer,1453.12,Melbourne,Online,Online purchase,Low
+0b64494a-644b-4dd4-b6f9-4748a934a502,2025-02-20 06:58:00,66116,TravelPay,Payment,8810.37,Singapore,In-Person,Multiple transfers this week,Medium
+be9ea928-df62-4866-bd0c-f18e5dec3170,2025-03-20 01:43:00,66020,Qantas,Payment,1942.37,Adelaide,Online,Online purchase,Low
+82ecf63b-0f15-4de1-af7e-031c84937496,2025-08-09 09:38:00,49589,EnergyAustralia,Withdrawal,1595.57,Brisbane,ATM,Online purchase,Low
+c1d3e1e1-f6aa-4e8e-9713-39f34d4cf53a,2025-03-12 01:18:00,15001,Optus,Crypto Purchase,1395.18,Perth,Online,Utility bill,Low
+0b3fd636-a5f7-4be0-b66a-759218e44bee,2025-09-17 09:40:00,67530,Qantas,Payment,852.91,Sydney,In-Person,Salary deposit,Low
+112c4577-6977-4c4e-a2df-2706015cee7a,2025-03-12 13:38:00,17320,Netflix,Payment,1687.72,Brisbane,In-Person,Online purchase,Low
+f249969b-33db-4f8a-8767-9954cb7f96f7,2025-09-02 17:02:00,90992,Spotify,Deposit,793.5,Perth,ATM,Utility bill,Low
+2e2c1fa6-01ec-4f13-9378-fdd48f4a7e9b,2025-07-28 15:35:00,49219,EnergyAustralia,Deposit,1384.31,Perth,Online,Salary deposit,Low
+e2f9ffca-1610-4e0a-80b6-c8bb308a9f3e,2025-02-11 14:48:00,36663,Western Transfers,Deposit,7182.34,London,ATM,Travel expense,Medium
+85088c82-2fd8-49b4-a56b-e999d935c3a3,2025-10-03 15:29:00,23463,Qantas,Transfer,1653.21,Brisbane,In-Person,Online purchase,Low
+3bc6fa17-b387-47a5-b589-591c3da56a40,2025-04-09 09:17:00,14812,Spotify,Withdrawal,1547.85,Brisbane,In-Person,Grocery payment,Low
+af391935-0570-4258-8778-b9ca68982f21,2025-01-20 12:56:00,29903,Spotify,Transfer,1384.12,Perth,Mobile,Grocery payment,Low
+ebae640b-b1fe-40a0-9a30-a2fa63d2915a,2025-10-27 13:57:00,25481,Qantas,Crypto Purchase,730.37,Adelaide,Online,Utility bill,Low
+fd52e157-bb01-4177-9512-2c25a44894cd,2025-08-02 22:51:00,12090,ShopZone,Transfer,7538.87,Adelaide,ATM,Travel expense,Medium
+3a564a1d-561b-40a9-9bf1-e9b30c9a968e,2025-05-23 11:41:00,33807,Qantas,Deposit,1362.24,Brisbane,Online,Online purchase,Low
+7518a545-2965-416c-9591-d4d66a3af3b2,2025-10-19 19:01:00,72242,Telstra,Crypto Purchase,396.09,Perth,Online,Subscription,Low
+289c7e7b-85a3-41e3-a6da-aacb4c78c349,2025-03-14 23:40:00,47466,Woolworths,Crypto Purchase,192.6,Melbourne,ATM,Online purchase,Low
+cace2f9b-fda5-472c-875a-bbc5cc56bed1,2025-04-09 15:22:00,71310,UAE Gold Brokers,Transfer,12713.65,Hong Kong,ATM,Transfer to high-risk country,High
+167350f3-c9fd-4a9b-b233-1ac50c2a9eb4,2025-06-23 20:43:00,47248,Oceanic Holdings,Withdrawal,16265.23,Hong Kong,Online,Crypto purchase from unknown wallet,High
+e3fc00bb-c20a-466b-b4cd-088b274d9874,2025-03-19 16:26:00,70508,CryptoXchange Ltd,Crypto Purchase,11207.91,New York,ATM,Offshore layering transaction,High
+544a613e-0dd3-4305-97e5-f55e472de33f,2025-02-02 23:37:00,89924,Woolworths,Payment,1404.76,Brisbane,Online,Grocery payment,Low
+7fc47a25-c9ec-496c-b886-1ce4c3d79920,2025-01-25 21:06:00,66217,Woolworths,Crypto Purchase,105.99,Perth,ATM,Grocery payment,Low
+82f70b93-56c5-4f52-a590-839e71ab5363,2025-10-01 23:46:00,49404,Woolworths,Withdrawal,1827.33,Perth,Online,Utility bill,Low
+53c724c6-a321-475c-b361-3b688b01f634,2025-10-23 20:43:00,68641,Woolworths,Deposit,311.94,Brisbane,In-Person,Online purchase,Low
+b9d8b3a9-f5db-41a3-bc1e-bef0c9e4b107,2025-10-01 06:46:00,76608,Spotify,Withdrawal,1900.64,Adelaide,Online,Subscription,Low
+681a8404-fd44-4207-b948-dd1ff7fa698b,2025-08-20 17:18:00,14069,ShopZone,Withdrawal,6924.58,Adelaide,Mobile,Multiple transfers this week,Medium
+e690478f-226f-4ef6-af8b-cd1c663b6f97,2025-03-04 22:55:00,35466,Netflix,Withdrawal,665.12,Adelaide,In-Person,Salary deposit,Low
+3132703f-8fb6-40bb-9808-429d66b050ee,2025-03-09 02:58:00,13869,Netflix,Withdrawal,660.17,Melbourne,In-Person,Salary deposit,Low
+25011491-721b-4711-9ad4-e50bdd34c8ae,2025-05-15 23:56:00,75493,Coles,Deposit,1457.58,Adelaide,ATM,Grocery payment,Low
+52cad1f6-5f38-4981-8440-cdd78502bf53,2025-04-02 09:00:00,81264,Telstra,Transfer,555.88,Adelaide,In-Person,Grocery payment,Low
+38a47cc2-e3e8-4290-9a2f-039d08d8c441,2025-06-13 08:06:00,63873,Coles,Deposit,690.2,Melbourne,Online,Salary deposit,Low
+37893392-35d0-4d37-8e2d-9147a32f32ae,2025-03-10 10:07:00,25335,EnergyAustralia,Withdrawal,617.71,Brisbane,ATM,Utility bill,Low
+d365a604-6610-406b-a049-52ca166157cb,2025-06-06 03:21:00,63660,PayPal,Crypto Purchase,2157.7,Perth,ATM,Foreign transfer,Medium
+d213838f-d0af-452e-a5e9-c0b2d4df2fa2,2025-01-17 22:36:00,88885,eBay,Crypto Purchase,4244.83,Hong Kong,ATM,Gift to friend,Medium
+43be83b1-87a8-4bcd-bbf2-5ba50fac8ec1,2025-06-06 05:50:00,59480,Western Transfers,Deposit,3814.26,Singapore,In-Person,Foreign transfer,Medium
+7d83df3c-c8f8-4461-b2fe-93e9eae95343,2025-01-27 04:10:00,47128,Woolworths,Crypto Purchase,1351.2,Perth,ATM,Subscription,Low
+41b5bcb4-12dc-4ea0-a629-8a620de7f87c,2025-08-06 13:05:00,34980,Oceanic Holdings,Withdrawal,9995.1,New York,ATM,Transfer to high-risk country,High
+12bdd974-8e9e-467f-9cfb-a0e60c2850b1,2025-06-16 15:29:00,53522,Netflix,Withdrawal,1101.61,Adelaide,ATM,Utility bill,Low
+7b36fb7b-3b39-4464-b4d7-b4eca7703f94,2025-08-19 14:19:00,31302,Qantas,Payment,617.71,Sydney,Online,Online purchase,Low
+87d3f1c0-1de9-4284-925f-f0b1f5ac108e,2025-09-29 20:59:00,87444,eBay,Deposit,6110.93,Hong Kong,In-Person,Travel expense,Medium
+4c02a554-65ee-4575-abe4-4868b21e167c,2025-02-18 17:43:00,79215,Qantas,Transfer,575.45,Melbourne,Online,Online purchase,Low
+dc3be350-500b-4a5b-a6a5-a2ac19472cba,2025-09-16 04:31:00,92234,UAE Gold Brokers,Deposit,11070.16,Hong Kong,In-Person,Unverified merchant - possible scam,High
+2c701c58-671a-4fd4-a6b6-44827eabd67f,2025-02-03 09:25:00,27124,Optus,Deposit,1056.13,Adelaide,In-Person,Salary deposit,Low
+9bfd687b-8e3a-4ce9-aceb-d72e334d4c3d,2025-08-29 23:49:00,93973,TravelPay,Deposit,2268.96,Dubai,ATM,Multiple transfers this week,Medium
+a33fa57a-5c2a-4767-8b6d-db85cb2fb7b5,2025-01-11 10:52:00,96220,Netflix,Withdrawal,628.79,Sydney,In-Person,Salary deposit,Low
+ed84f598-6560-473b-97d3-e96130e1d626,2025-03-20 21:28:00,84935,Spotify,Withdrawal,750.31,Adelaide,Mobile,Grocery payment,Low
+a10527ce-7951-425d-abd1-b2fd1746b995,2025-05-22 04:08:00,18686,Netflix,Withdrawal,1599.04,Sydney,Online,Grocery payment,Low
+668bc7fc-c416-48d7-97d2-4ea375fba15e,2025-07-11 01:39:00,23306,Optus,Payment,1321.98,Sydney,ATM,Grocery payment,Low
+dcd1882e-c4a7-413c-afcb-b14314bbcd36,2025-06-16 21:32:00,86726,Optus,Crypto Purchase,1551.74,Sydney,Mobile,Salary deposit,Low
+db51c273-098e-4e86-a3e5-5578b3bdc21c,2025-10-21 12:45:00,73510,Qantas,Transfer,586.14,Sydney,In-Person,Salary deposit,Low
+8f442380-90d1-4ae8-9c42-4b69d0f216b6,2025-04-09 06:53:00,48251,Woolworths,Transfer,506.49,Sydney,In-Person,Salary deposit,Low
+10bfd835-ee15-49a4-afed-d810f947291e,2025-06-30 16:34:00,42310,Woolworths,Transfer,1404.63,Melbourne,Online,Subscription,Low
+de868aea-59c1-4e72-8bd0-d40514fd9570,2025-05-15 05:47:00,82122,Optus,Deposit,1107.84,Adelaide,Online,Salary deposit,Low
+dfdcdc1a-f07c-40cd-ad6e-0cdee42368f0,2025-08-21 19:37:00,54088,Coles,Deposit,467.33,Melbourne,Online,Salary deposit,Low
+d8452dbb-ab2b-4624-a1ad-47bbccabc86c,2025-04-05 21:22:00,95986,eBay,Transfer,2726.23,London,Mobile,Foreign transfer,Medium
+010c5c71-8996-4286-b656-7f3202312d3e,2025-06-04 17:29:00,57873,Qantas,Withdrawal,1185.17,Adelaide,In-Person,Utility bill,Low
+369c0a43-22ee-433b-8f55-ca47096064dd,2025-05-06 01:30:00,44967,Spotify,Deposit,772.13,Melbourne,ATM,Utility bill,Low
+4b42a2da-25c1-412f-bb66-7b8778bee4c2,2025-08-02 22:19:00,51850,Eastern Union,Payment,18395.33,New York,Mobile,Offshore layering transaction,High
+8a975913-e511-489b-8b83-6e020ca513bb,2025-01-28 04:08:00,24771,EnergyAustralia,Withdrawal,691.91,Perth,Mobile,Online purchase,Low
+3aed78e5-f099-4887-acfe-44cebe2cc081,2025-01-14 19:39:00,74881,Netflix,Payment,1215.15,Melbourne,In-Person,Online purchase,Low
+555d66df-65c6-4c3e-bc0b-0d3ccfbbb405,2025-06-12 05:45:00,70713,Spotify,Crypto Purchase,454.24,Melbourne,Mobile,Online purchase,Low
+381a09ee-92ac-42f2-9685-74adc0ba5ea0,2025-04-03 06:57:00,20140,Netflix,Withdrawal,1636.33,Sydney,ATM,Grocery payment,Low
+7fa6a72d-dd06-4c97-b707-9f6aa23b5a2f,2025-05-30 01:17:00,19118,EnergyAustralia,Payment,1079.84,Perth,ATM,Utility bill,Low
+f97228e1-51b3-42d5-b3dd-5aab4eade4ed,2025-10-20 19:24:00,73916,Telstra,Deposit,1194.43,Brisbane,Mobile,Subscription,Low
+8819bacd-a7f0-485f-a94c-cfa20360cb4f,2025-06-23 19:39:00,80206,Optus,Payment,1411.96,Melbourne,ATM,Salary deposit,Low
+3f74e186-4b62-4c9b-ba0d-2f5ef1332814,2025-08-27 14:28:00,58983,EnergyAustralia,Transfer,1027.24,Sydney,Mobile,Utility bill,Low
+89f7206b-6ccd-499c-856d-ddc45be4b9c6,2025-07-21 11:37:00,95930,eBay,Deposit,8695.82,Perth,ATM,Travel expense,Medium
+537ad916-341f-498e-957b-4fc11059538c,2025-06-26 09:30:00,95024,Woolworths,Transfer,1378.66,Perth,Online,Salary deposit,Low
+5f77d9f8-ccee-478f-948e-94b43d16ba60,2025-03-24 16:49:00,24666,TravelPay,Payment,3934.58,Perth,Online,Gift to friend,Medium
+b8cef67e-3800-49e8-a523-e65fb416abca,2025-05-14 05:37:00,89495,Netflix,Transfer,86.13,Perth,Mobile,Online purchase,Low
+d7b7e058-f2dd-417b-b8d7-afe1626868e6,2025-05-19 08:51:00,67877,eBay,Withdrawal,4042.75,Dubai,In-Person,Multiple transfers this week,Medium
+4cea4404-7580-4730-bb68-089a627e9601,2025-05-20 22:39:00,14262,Optus,Deposit,383.7,Melbourne,Online,Grocery payment,Low
+5558ccbe-1e23-4f20-851a-79d196f1978b,2025-05-29 21:04:00,65030,Netflix,Transfer,205.42,Perth,Mobile,Online purchase,Low
+734c2258-6a80-4e1f-ba8c-649033ede8b5,2025-07-18 07:16:00,31617,EnergyAustralia,Transfer,667.22,Perth,Online,Grocery payment,Low
+f2fd1605-2903-4feb-99e5-18576e40c915,2025-04-19 13:57:00,88824,Telstra,Transfer,330.3,Adelaide,In-Person,Utility bill,Low
+9d882811-b8bf-4f0f-a0d8-e61ac7fad3f9,2025-03-09 07:09:00,15815,Spotify,Withdrawal,1658.68,Perth,Mobile,Salary deposit,Low
+ac281590-9c70-49bc-b5b3-33860dbbd79b,2025-07-05 18:12:00,51811,Coles,Deposit,101.19,Brisbane,In-Person,Utility bill,Low
+a5b83c79-a76f-4d6c-98a9-0b0f432664d8,2025-08-15 22:16:00,62934,eBay,Transfer,2278.89,London,ATM,Gift to friend,Medium
+9bdc39ac-6136-4a2e-a80e-15f2d92ac8b4,2025-01-27 10:59:00,49384,PayPal,Payment,5767.46,London,Online,Foreign transfer,Medium
+5850440b-dd5d-4aab-9e19-34df93bda2fe,2025-06-26 07:46:00,78439,Coles,Deposit,1545.29,Melbourne,Mobile,Subscription,Low
+0556557f-9b51-49f4-9f50-39361f43feff,2025-09-30 02:11:00,36933,EnergyAustralia,Deposit,1006.3,Adelaide,Online,Salary deposit,Low
+50920140-fb10-461b-ab3c-a6869092f261,2025-09-11 19:39:00,80647,EnergyAustralia,Deposit,921.14,Brisbane,ATM,Utility bill,Low
+f81611ca-fb73-4307-95ef-336ad2a6a819,2025-06-24 03:18:00,90886,Qantas,Payment,324.73,Brisbane,In-Person,Grocery payment,Low
+a2bc3521-b26d-4f97-ad41-13ea8b70c056,2025-10-02 23:53:00,42034,EnergyAustralia,Payment,112.56,Adelaide,Online,Salary deposit,Low
+55dbf1fa-3e97-4ab2-a6d4-b8e69f8a4814,2025-10-21 17:09:00,53599,Telstra,Deposit,662.95,Perth,In-Person,Online purchase,Low
+00200965-543a-486b-99d0-09c404ca7674,2025-03-23 08:08:00,14995,eBay,Payment,4067.17,New York,In-Person,Foreign transfer,Medium
+dbd637cf-479d-4028-bafc-091055226781,2025-10-01 18:22:00,11987,PayPal,Crypto Purchase,2103.18,Singapore,ATM,Foreign transfer,Medium
+0a8f33b2-6a3e-4736-98a5-781bbfe1c831,2025-06-11 13:10:00,53227,Woolworths,Transfer,633.3,Perth,Mobile,Utility bill,Low
+94641b7a-e255-4312-8d5b-1ef66364f8b1,2025-08-19 18:27:00,99775,Qantas,Transfer,18.86,Melbourne,Online,Utility bill,Low
+88b55987-70d4-4c73-a937-cf082950f543,2025-05-26 14:40:00,54896,Telstra,Deposit,271.24,Sydney,Mobile,Utility bill,Low
+8c66b19a-483c-40b0-a18b-d2a2d89a8d58,2025-02-26 09:15:00,32878,Netflix,Payment,252.48,Perth,ATM,Utility bill,Low
+f9bcdfd3-b9de-4d26-bd6e-e37050e5731a,2025-08-23 15:07:00,33638,PayPal,Transfer,2989.23,Adelaide,In-Person,Gift to friend,Medium
+a6cf7db0-8cf4-4f27-a47d-52f57a5b35f4,2025-06-08 17:24:00,96171,Spotify,Crypto Purchase,1628.24,Sydney,Mobile,Online purchase,Low
+6d150d05-e470-4801-b642-57a7dd7d6466,2025-02-21 21:33:00,59973,Netflix,Deposit,1249.37,Perth,Online,Utility bill,Low
+e3583283-511f-4611-97b0-193da1cad5d1,2025-02-18 14:06:00,73363,Telstra,Withdrawal,251.69,Melbourne,In-Person,Grocery payment,Low
+6054eac6-3852-42a7-aa18-04e2e803db1c,2025-08-13 19:17:00,35144,Coles,Deposit,751.52,Melbourne,ATM,Subscription,Low
+bf77f9e4-fe57-45d6-97ea-3b18f0330d5f,2025-07-01 13:30:00,45009,GlobalTrust Offshore,Deposit,16113.99,Dubai,Online,Transfer to high-risk country,High
+7220b6ed-962a-49c6-af64-50f6ea20e2f4,2025-08-15 12:36:00,89446,Optus,Crypto Purchase,1542.23,Perth,Online,Subscription,Low
+b54dd3c2-778a-4bcb-aec3-735a2c5e7881,2025-07-17 09:29:00,83946,TravelPay,Payment,7889.4,Adelaide,ATM,Multiple transfers this week,Medium
+80a8f676-b5c7-45be-be3e-5b0fd48b6241,2025-05-09 01:41:00,64308,Optus,Payment,1749.49,Sydney,Online,Online purchase,Low
+a4eb5c10-5a98-4b3a-b64c-36a59ae4c9bd,2025-08-26 18:48:00,89526,Optus,Transfer,1365.46,Adelaide,Mobile,Online purchase,Low
+a72ad9e3-d0c9-4a24-bf96-bb44401d487e,2025-02-23 04:16:00,49944,Coles,Transfer,1780.53,Melbourne,Mobile,Online purchase,Low
+9b24fd05-d6f0-4cf4-845e-c2c6aa726cc2,2025-03-12 20:14:00,35766,Coles,Payment,1417.27,Melbourne,ATM,Grocery payment,Low
+3576efcf-1c85-4ae9-9ce1-6a90f8812b6e,2025-09-16 05:07:00,64364,Spotify,Transfer,1425.11,Perth,Online,Grocery payment,Low
+9109bac9-944d-4fa9-8a04-2c609485a64d,2025-03-06 16:04:00,98827,Western Transfers,Transfer,4016.41,Singapore,Online,Foreign transfer,Medium
+42379f85-d392-40cd-a735-63d0830ee108,2025-05-16 06:15:00,72726,Coles,Deposit,707.46,Sydney,ATM,Grocery payment,Low
+b4b8e579-5236-4d0b-88a6-dadcfefa2e2f,2025-01-03 08:32:00,72734,TravelPay,Transfer,5047.5,New York,In-Person,Multiple transfers this week,Medium
+c4ffd156-dc54-42cb-b403-17105a050072,2025-07-31 12:49:00,66529,Coles,Payment,1452.44,Melbourne,In-Person,Online purchase,Low
+c70c5fbc-80fd-4550-9341-052ac79fc914,2025-07-23 00:46:00,55192,Woolworths,Payment,1966.08,Sydney,In-Person,Online purchase,Low
+152ada2c-570a-4437-aa49-5a51e8277260,2025-02-22 03:04:00,22952,Optus,Payment,1101.38,Perth,Online,Grocery payment,Low
+a7cd079f-32b4-4f8d-8c91-a7385d90d0cd,2025-05-12 21:38:00,90224,PayPal,Withdrawal,5246.93,Adelaide,Online,Gift to friend,Medium
+d600c53e-bd6f-4918-8477-36275ce2e114,2025-03-03 07:14:00,10737,Coles,Withdrawal,682.79,Adelaide,In-Person,Online purchase,Low
+787ab09a-cddf-4865-9151-62da47844c4d,2025-08-30 16:22:00,65800,EnergyAustralia,Withdrawal,1948.22,Melbourne,Mobile,Grocery payment,Low
+ab68737d-d9ca-48a3-b604-354c5694f764,2025-05-15 22:54:00,66493,PayPal,Transfer,2398.26,London,In-Person,Multiple transfers this week,Medium
+69f30fe9-8e80-430d-9180-e6203e63ef09,2025-10-26 00:39:00,13492,TravelPay,Transfer,5233.58,Hong Kong,Online,Travel expense,Medium
+da649725-c416-49ee-96a7-a60f359651fd,2025-01-14 02:14:00,75420,Woolworths,Deposit,1999.15,Adelaide,In-Person,Subscription,Low
+94ceefd3-091c-4641-94e1-46e2d949a091,2025-09-29 17:38:00,85604,Spotify,Payment,1900.58,Adelaide,ATM,Salary deposit,Low
+980fd0a5-f0f6-4e19-9b69-3e46c0abbf3a,2025-10-16 06:53:00,69358,Optus,Deposit,1088.83,Perth,Online,Utility bill,Low
+3eef280a-25ae-4c48-9bc7-f59819e7bf7a,2025-02-10 16:47:00,73654,Spotify,Deposit,116.86,Melbourne,Mobile,Salary deposit,Low
+ce18d599-a945-4948-a8b4-7001cf5b2a65,2025-07-01 08:50:00,73830,Qantas,Payment,167.25,Perth,In-Person,Salary deposit,Low
+c8ec39bf-4eb6-4a62-903a-527a8c74f0fb,2025-02-05 15:02:00,30178,Netflix,Transfer,823.65,Perth,ATM,Utility bill,Low
+7934f83f-742c-45ab-b45d-a43349f50794,2025-09-23 12:58:00,29839,Coles,Withdrawal,530.94,Perth,Mobile,Subscription,Low
+65772cb9-0365-4c0c-a46a-ddec8abde189,2025-05-13 10:50:00,31540,Eastern Union,Withdrawal,21309.98,London,Online,Unverified merchant - possible scam,High
+4f8d141a-8619-48f3-ba7c-851cc50b0891,2025-10-14 01:37:00,27272,PayPal,Crypto Purchase,4082.33,Singapore,In-Person,Multiple transfers this week,Medium
+17676ef2-42f9-4072-b6dc-8bc54f4e1729,2025-07-31 02:31:00,31526,EnergyAustralia,Payment,749.45,Melbourne,Mobile,Subscription,Low
+a208580e-2af1-4044-a5b5-81c99d8abcd9,2025-10-09 16:07:00,27281,Coles,Payment,543.1,Brisbane,Online,Online purchase,Low
+9411a7a6-8f24-48c6-9d14-d0adc2c094bf,2025-07-04 13:09:00,97178,Western Transfers,Deposit,9979.65,Adelaide,Online,Travel expense,Medium
+fae1ca4a-7230-4167-b4c3-17361ff3b50f,2025-09-15 00:07:00,84559,UAE Gold Brokers,Deposit,11872.84,New York,Online,Transfer to high-risk country,High
+ac2ae699-a9da-43fe-8475-b77edf701f16,2025-09-05 15:07:00,30709,Qantas,Transfer,886.97,Brisbane,Online,Grocery payment,Low
+02c5ca3e-90a0-4326-af34-09c77de91177,2025-05-20 19:16:00,52815,UAE Gold Brokers,Payment,24987.87,Hong Kong,Mobile,Transfer to high-risk country,High
+cb7efa40-2ee1-420b-8618-440f8a83c68b,2025-02-01 15:54:00,43605,Qantas,Crypto Purchase,858.28,Perth,Online,Grocery payment,Low
+981aee0c-b732-4eca-9050-b4b12f32c82e,2025-06-02 12:06:00,52778,Eastern Union,Crypto Purchase,11279.37,London,Online,Crypto purchase from unknown wallet,High
+f339cb5c-17b1-4602-a110-d227f7d25404,2025-08-22 23:37:00,46541,Spotify,Transfer,1863.64,Brisbane,Mobile,Grocery payment,Low
+eaea927b-1911-47ab-9a81-aa63121f8977,2025-10-10 06:42:00,87070,GlobalTrust Offshore,Withdrawal,19754.81,Hong Kong,Online,Unverified merchant - possible scam,High
+21f94575-bb2a-44db-ae48-87aec42fb1e6,2025-08-01 12:28:00,81439,Coles,Payment,1270.92,Perth,Mobile,Grocery payment,Low
+64a01112-7d4f-45b7-be28-2526f0826f9d,2025-09-09 18:50:00,43050,EnergyAustralia,Transfer,658.51,Perth,Online,Subscription,Low
+742c1f9d-9332-4cac-b534-f750a1075c50,2025-09-05 08:46:00,82549,Netflix,Withdrawal,1961.22,Brisbane,Mobile,Utility bill,Low
+d618d342-1211-45d7-8d4c-4fb4a796f7c4,2025-07-11 05:34:00,41159,Woolworths,Deposit,1201.9,Sydney,Mobile,Salary deposit,Low
+0257c09d-3f78-4533-a98d-d918e661b1e0,2025-04-19 04:11:00,56934,Telstra,Crypto Purchase,730.82,Melbourne,Mobile,Grocery payment,Low
+5c0522c1-4c61-4288-bdab-156c95ef35ee,2025-09-07 07:04:00,99184,Netflix,Payment,745.18,Melbourne,Mobile,Grocery payment,Low
+1a5c976a-5761-4ef5-856c-c898a9b9a247,2025-09-08 16:40:00,64722,Spotify,Payment,1197.97,Perth,Online,Online purchase,Low
+9b783af4-c92e-4c1e-af53-69602dc5a4e1,2025-02-18 01:29:00,88134,Spotify,Payment,320.65,Brisbane,In-Person,Subscription,Low
+497c467f-04e8-41fa-bcaf-a5b688cf7300,2025-04-30 19:50:00,29012,GlobalTrust Offshore,Crypto Purchase,9169.7,New York,Online,Offshore layering transaction,High
+0c12be4a-0b1b-4b43-963f-5b4013aa58d0,2025-06-24 01:52:00,28207,Eastern Union,Payment,17314.8,Singapore,ATM,Transfer to high-risk country,High
+5f5b816f-59a5-44c4-8d6a-e933599b06d9,2025-06-26 05:53:00,13567,Netflix,Deposit,1500.43,Brisbane,ATM,Grocery payment,Low
+c69363ae-2190-4bfd-af14-693249b7a89a,2025-02-16 16:04:00,32257,Coles,Transfer,1810.51,Perth,Mobile,Utility bill,Low
+82eb3e4c-02d0-4b37-be81-42c0d054fc61,2025-10-10 02:58:00,82545,Oceanic Holdings,Crypto Purchase,17214.63,New York,Online,Unverified merchant - possible scam,High
+e96d02e9-1703-4e1e-876e-4a6e6810cee3,2025-09-18 05:44:00,70379,Telstra,Crypto Purchase,1463.68,Sydney,Mobile,Utility bill,Low
+a5389312-4c08-4c13-87e2-c8409f802d36,2025-04-03 13:50:00,64403,PayPal,Payment,2230.18,Adelaide,ATM,Foreign transfer,Medium
+038fa6aa-7201-4ea4-a615-8926f417d3d1,2025-05-07 16:19:00,12972,Spotify,Transfer,984.97,Sydney,Mobile,Utility bill,Low
+516dc6b6-42ff-4a24-a39c-3b81b3d6e9b1,2025-02-24 13:23:00,30743,Optus,Payment,1417.54,Melbourne,Mobile,Salary deposit,Low
+28ab4f48-83d7-473c-8b16-b9bcd810c52a,2025-04-18 22:21:00,12464,EnergyAustralia,Crypto Purchase,1378.12,Adelaide,Mobile,Subscription,Low
+2ccc72ea-6b50-48a0-a863-92bbcc8a779d,2025-02-14 13:25:00,44192,Telstra,Payment,1412.31,Perth,Mobile,Online purchase,Low
+e40a2d63-7fca-4088-88ad-3105944963fb,2025-03-17 11:28:00,76637,TravelPay,Deposit,9803.73,Perth,ATM,Foreign transfer,Medium
+eab0d058-7939-474b-af3b-3876d71a8daa,2025-09-28 00:27:00,47736,GlobalTrust Offshore,Crypto Purchase,14053.6,London,ATM,Repeated deposits below threshold,High
+c9784c3e-5aa0-4aaa-9579-f714cbd2b5cd,2025-03-27 11:08:00,82046,Netflix,Transfer,1468.54,Sydney,ATM,Grocery payment,Low
+6fe6a8ce-078a-4994-b717-dbb1254ae649,2025-01-07 16:06:00,33724,Woolworths,Withdrawal,767.93,Sydney,Mobile,Grocery payment,Low
+a54a7e31-b7ec-47af-8b88-fe76f465d0d9,2025-07-10 03:43:00,77137,EnergyAustralia,Transfer,948.24,Adelaide,In-Person,Online purchase,Low
+4e43b05e-d154-4679-bccc-aac4d132b836,2025-08-06 23:35:00,45750,Spotify,Transfer,710.1,Brisbane,Mobile,Salary deposit,Low
+2a01cb01-e253-4cbc-a107-b7c3a01ceb0a,2025-01-31 11:16:00,71478,GlobalTrust Offshore,Crypto Purchase,14671.57,Singapore,Mobile,Repeated deposits below threshold,High
+e7fc0d0e-f3d9-44fe-a33c-8e3b43679706,2025-03-25 09:06:00,99435,Woolworths,Crypto Purchase,1858.49,Perth,In-Person,Online purchase,Low
+92a4747f-c8c7-4ef4-abd6-9bd32959ad5a,2025-04-30 13:02:00,27064,Spotify,Withdrawal,1491.96,Perth,ATM,Salary deposit,Low
+cae73279-289b-4237-817f-880dfec9271d,2025-02-21 05:44:00,87692,Western Transfers,Payment,6050.68,Dubai,Mobile,Foreign transfer,Medium
+24e2aaff-e665-4f13-9128-b6acdfa6a918,2025-05-23 21:31:00,23076,EnergyAustralia,Crypto Purchase,1083.08,Adelaide,In-Person,Online purchase,Low
+7579e102-3bb7-4735-abc2-91ee13637c15,2025-07-09 17:03:00,88009,eBay,Transfer,7626.83,Perth,Online,Foreign transfer,Medium
+eb74893a-b677-469f-a4f1-f1752c491955,2025-09-02 20:12:00,62261,Netflix,Payment,649.12,Sydney,In-Person,Grocery payment,Low
+2579416c-2967-4e51-a53f-85dba50a4c6c,2025-08-08 10:50:00,88232,Telstra,Payment,503.09,Melbourne,Mobile,Grocery payment,Low
+4c09fe09-3ce4-4267-b94a-b495d938db98,2025-06-01 20:12:00,94487,Spotify,Payment,1032.65,Melbourne,Online,Grocery payment,Low
+3ccb97bd-eb07-49aa-a37d-b0cdc21969d8,2025-03-03 14:11:00,97502,Telstra,Deposit,1944.61,Melbourne,ATM,Utility bill,Low
+affd8a69-dce2-4f60-9800-d903c4500754,2025-09-16 12:26:00,39727,EnergyAustralia,Crypto Purchase,554.46,Brisbane,In-Person,Subscription,Low
+433eeee7-1224-470a-abe3-e8618c0eed02,2025-03-02 07:08:00,51102,PayPal,Withdrawal,7504.38,Adelaide,In-Person,Foreign transfer,Medium
+5ac2537e-1ba4-4f20-b3d6-041d882aa6b8,2025-05-09 06:39:00,34023,Optus,Payment,1661.67,Adelaide,In-Person,Subscription,Low
+d79bb9e9-4a80-47fb-9654-7b6ead77c262,2025-01-26 05:54:00,58809,EnergyAustralia,Transfer,1715.65,Melbourne,ATM,Utility bill,Low
+79fa04cc-4c4e-4643-a2bd-89ed9c1a1d2d,2025-01-03 20:46:00,66932,EnergyAustralia,Withdrawal,460.27,Brisbane,Online,Subscription,Low
+2d4b3159-eafd-49b7-bf8b-b08ccadbef75,2025-05-06 15:39:00,21476,Coles,Crypto Purchase,916.28,Melbourne,ATM,Online purchase,Low
+87c10cae-bf4f-4e05-b8a8-259d181bbe6e,2025-01-28 06:09:00,52439,eBay,Transfer,3838.88,Dubai,In-Person,Gift to friend,Medium
+fa3d6650-dfbf-4408-9344-93cdde62537e,2025-07-06 09:13:00,62035,ShopZone,Deposit,4011.05,Perth,Online,Multiple transfers this week,Medium
+edf61325-247c-4396-a596-6ce081718005,2025-01-23 04:11:00,86259,Woolworths,Deposit,412.14,Melbourne,Online,Salary deposit,Low
+07816ccf-f33b-4515-847a-cef4522974a7,2025-02-01 22:08:00,85011,EnergyAustralia,Crypto Purchase,1126.16,Adelaide,Mobile,Salary deposit,Low
+0f4a06f9-e612-4a96-acd2-757db7905eab,2025-04-08 06:33:00,30827,EnergyAustralia,Payment,1144.36,Adelaide,ATM,Utility bill,Low
+a94179bb-2c7f-46f3-a59d-7e06786ea0a0,2025-05-10 15:40:00,90171,Netflix,Deposit,405.46,Melbourne,In-Person,Grocery payment,Low
+c039fb45-52f6-41df-9eb4-fcfa8adf0388,2025-06-29 09:28:00,48137,TravelPay,Crypto Purchase,2700.79,New York,ATM,Multiple transfers this week,Medium
+926c6a48-67a0-44c3-9825-eff79386806f,2025-10-07 09:20:00,69620,Coles,Crypto Purchase,169.34,Brisbane,ATM,Subscription,Low
+dbdceada-e362-4c45-b2af-ea6fdb95cd20,2025-07-04 03:05:00,86008,Woolworths,Transfer,1886.49,Brisbane,Online,Salary deposit,Low
+41f87db7-6134-4942-b798-71f6b48d888f,2025-06-16 03:43:00,70192,TravelPay,Withdrawal,6367.08,Hong Kong,Online,Foreign transfer,Medium
+9eb10119-8f5c-4941-b75a-d4812db864f0,2025-04-25 10:15:00,86441,Qantas,Deposit,1832.55,Brisbane,Mobile,Subscription,Low
+620c83e0-aa96-4e48-94cb-c9b6ef62869a,2025-04-24 14:56:00,38745,Spotify,Crypto Purchase,1861.64,Sydney,Mobile,Salary deposit,Low
+6d36108b-0c63-408c-9f4e-a9b34994a51c,2025-03-26 09:38:00,95896,Netflix,Crypto Purchase,883.92,Brisbane,Mobile,Salary deposit,Low
+ff7bbe90-645c-4d1b-85a9-5c48062b69b5,2025-06-30 09:48:00,50316,Qantas,Payment,1708.36,Adelaide,In-Person,Salary deposit,Low
+f6cbb597-adf1-4ac0-935f-93d463f5261e,2025-05-01 13:44:00,33617,TravelPay,Crypto Purchase,5154.15,New York,ATM,Foreign transfer,Medium
+ad5c77f6-76b8-4f74-9961-c98df28b4012,2025-04-29 14:40:00,72389,Netflix,Transfer,924.55,Perth,In-Person,Grocery payment,Low
+b0692dfe-ff4c-4e56-bcdb-941cf4ad0e5e,2025-03-15 19:16:00,11528,Spotify,Crypto Purchase,790.23,Brisbane,ATM,Subscription,Low
+a40354e9-0006-4775-a8a7-3678d5e35847,2025-05-23 06:01:00,69674,eBay,Deposit,6307.3,New York,ATM,Multiple transfers this week,Medium
+b5164eaa-6e06-4a5e-aca1-282bea631d28,2025-07-03 14:06:00,90294,EnergyAustralia,Withdrawal,1487.4,Perth,Mobile,Online purchase,Low
+e52769e1-230d-4bca-947d-4e669e2ab434,2025-02-25 15:04:00,49092,Spotify,Transfer,1976.84,Brisbane,Mobile,Subscription,Low
+fcc09e0b-b6e1-4d93-af9c-5c5a6e99720c,2025-10-05 18:48:00,65668,Oceanic Holdings,Crypto Purchase,24316.68,Dubai,Online,Unverified merchant - possible scam,High
+2b5a7f81-32f5-48a4-8929-c13f6393bdf9,2025-09-21 21:52:00,50664,Coles,Transfer,279.82,Sydney,In-Person,Salary deposit,Low
+dbbcadd7-ecc3-4807-93c3-f226580faade,2025-02-09 20:55:00,66446,Coles,Crypto Purchase,1233.87,Perth,Online,Online purchase,Low
+b6fcfda8-8998-42cb-bb7f-42fa8fb92afb,2025-07-14 02:48:00,78694,Qantas,Crypto Purchase,1688.19,Brisbane,In-Person,Grocery payment,Low
+1cf400de-5def-4ebf-8005-58c926272394,2025-07-22 20:29:00,42844,Telstra,Payment,537.11,Adelaide,Mobile,Utility bill,Low
+a1e06656-fb84-4b78-ab7d-3ba1a8abacfc,2025-10-09 08:52:00,83890,Coles,Transfer,266.04,Perth,Mobile,Grocery payment,Low
+cb00f678-6031-4514-98a0-081639ac3ef1,2025-01-30 03:36:00,24847,Coles,Crypto Purchase,972.49,Brisbane,Mobile,Online purchase,Low
+f2458920-af3b-4f5c-987b-76cf84c94090,2025-07-25 19:41:00,26102,Netflix,Withdrawal,1426.1,Sydney,ATM,Online purchase,Low
+9e9e845d-ef45-4c99-a664-a88cf6b3f089,2025-06-01 07:41:00,14249,eBay,Crypto Purchase,2127.44,Adelaide,Online,Foreign transfer,Medium
+f91e37a8-25b8-499e-8246-28b44ca3d0a0,2025-05-06 09:29:00,67377,ShopZone,Deposit,6478.6,Dubai,In-Person,Multiple transfers this week,Medium
+b7588e09-bc71-4c11-9a60-fc3583e0f483,2025-08-02 14:58:00,73645,eBay,Crypto Purchase,2932.53,Perth,Mobile,Travel expense,Medium
+6857443a-fec2-416b-9a50-f157971fd60d,2025-04-13 09:36:00,39538,Netflix,Transfer,1481.76,Perth,ATM,Utility bill,Low
+8319c98c-e40b-4ccd-8d9d-41113a0b4140,2025-07-01 20:19:00,19237,EnergyAustralia,Deposit,1992.03,Brisbane,Mobile,Online purchase,Low
+f79375e2-6b6e-4e57-b0af-63e07f2b7299,2025-04-08 04:02:00,61223,PayPal,Crypto Purchase,2202.92,Dubai,Online,Travel expense,Medium
+b0a5b242-692a-4093-ad23-19269ab9e5ca,2025-10-09 12:32:00,79703,Spotify,Crypto Purchase,1318.49,Adelaide,Mobile,Online purchase,Low
+7d311dc8-3224-4f7a-8d8b-7990983fa270,2025-06-05 18:26:00,27340,UAE Gold Brokers,Withdrawal,10342.53,Dubai,Mobile,Unverified merchant - possible scam,High
+dcf27ab6-3521-453a-b2e4-8edfb30b282c,2025-07-11 05:54:00,63663,Qantas,Withdrawal,987.98,Melbourne,In-Person,Utility bill,Low
+4a84adbf-2ce5-4ddc-80ee-9ca0d6bdfb3b,2025-01-26 05:59:00,46749,Qantas,Deposit,1645.15,Perth,ATM,Salary deposit,Low
+232f1970-2454-4ccc-adbe-35e472c8fcfa,2025-02-21 15:50:00,50396,EnergyAustralia,Transfer,333.69,Sydney,Online,Grocery payment,Low
+48576b2f-6bc3-4237-8748-82804722f231,2025-03-07 21:41:00,60160,EnergyAustralia,Withdrawal,209.09,Sydney,Mobile,Online purchase,Low
+29b3da06-9573-4cff-b667-aa370b679efe,2025-01-07 13:06:00,15209,TravelPay,Withdrawal,2831.26,Singapore,Mobile,Multiple transfers this week,Medium
+77019229-49ad-4417-8fc5-c39a95da728f,2025-08-08 06:44:00,21765,Telstra,Transfer,1765.47,Melbourne,Online,Subscription,Low
+c15c3000-30b8-4754-ad30-148c51af59ac,2025-10-08 12:16:00,35426,Coles,Withdrawal,803.07,Melbourne,ATM,Salary deposit,Low
+c1e15bb7-8ed9-48ea-b26a-87b324df751e,2025-07-20 18:00:00,59991,TravelPay,Crypto Purchase,7660.85,Dubai,ATM,Multiple transfers this week,Medium
+36a70588-bf08-430b-8132-012a4172e794,2025-10-10 04:39:00,27118,Netflix,Deposit,651.97,Sydney,Online,Subscription,Low
+87584ba1-a874-4893-9d7f-9f4629908df2,2025-08-21 10:10:00,67856,Spotify,Payment,630.16,Adelaide,Online,Subscription,Low
+f3d7316d-89e0-4516-8288-5b7e2494a7a3,2025-05-07 04:06:00,45251,Woolworths,Crypto Purchase,587.52,Adelaide,In-Person,Salary deposit,Low
+4402cc57-00a1-46a9-9b8b-3a7c5c81b151,2025-03-03 08:31:00,12797,eBay,Crypto Purchase,6791.13,London,ATM,Foreign transfer,Medium
+6681ceb2-4e53-4da1-ad18-3b0874bcb383,2025-08-09 16:26:00,50211,Spotify,Withdrawal,1750.9,Perth,ATM,Online purchase,Low
+94deecbb-9f05-48b4-b698-1488ad326de9,2025-09-10 05:56:00,29722,EnergyAustralia,Deposit,1420.09,Sydney,Online,Utility bill,Low
+d1bbed78-3bd5-4633-97f2-2c08b8041a94,2025-06-01 18:43:00,23856,EnergyAustralia,Payment,359.23,Perth,Mobile,Salary deposit,Low
+55b8e5c5-2269-455c-b684-a9207fd0381d,2025-06-07 07:03:00,35890,EnergyAustralia,Crypto Purchase,1757.24,Sydney,Online,Grocery payment,Low
+e4a79069-0fef-4f2e-ab95-c9c6dd89f0c2,2025-01-31 08:52:00,33738,Western Transfers,Withdrawal,3423.44,Dubai,ATM,Gift to friend,Medium
+54860d53-4b1e-42e1-9f2f-f9dc0bb3ee97,2025-09-24 19:33:00,96047,Spotify,Crypto Purchase,872.99,Brisbane,Mobile,Utility bill,Low
+b3ae5ebb-993a-4196-b268-cc09df739330,2025-08-14 17:13:00,16006,Qantas,Deposit,213.81,Brisbane,ATM,Utility bill,Low
+74eb2c17-979b-48ed-8954-7dc784790ab4,2025-04-21 18:22:00,27164,Woolworths,Crypto Purchase,110.58,Adelaide,Mobile,Salary deposit,Low
+d984f6bb-1491-4e55-82d1-ca6a69c114e2,2025-03-02 17:48:00,34865,Qantas,Payment,1216.57,Melbourne,ATM,Online purchase,Low
+c7535e13-1397-43e7-a962-c001b771566b,2025-01-09 04:46:00,24388,ShopZone,Withdrawal,7263.41,Perth,ATM,Travel expense,Medium
+7ce02445-f3ce-48ba-81bb-d3c75317bfdc,2025-08-30 06:32:00,43757,Coles,Transfer,1736.32,Adelaide,ATM,Salary deposit,Low
+28a0b8bd-0040-43f6-abcd-dec40bf83062,2025-10-15 20:00:00,46064,Coles,Payment,1341.19,Melbourne,In-Person,Salary deposit,Low
+04049992-4f2c-4837-887b-5a732309cb39,2025-08-20 08:13:00,47821,Telstra,Deposit,1156.8,Perth,In-Person,Utility bill,Low
+5de9d634-93d9-4fe5-8be7-9f3633680234,2025-05-07 22:28:00,47044,Optus,Transfer,1052.9,Melbourne,Mobile,Online purchase,Low
+7680a402-0b9c-476c-adf0-ade99c5dd8d4,2025-05-15 11:55:00,41181,Coles,Withdrawal,883.75,Melbourne,Mobile,Grocery payment,Low
+309b476a-6501-4487-bfe9-cb45fd7c4185,2025-03-17 21:15:00,84763,Woolworths,Deposit,1149.41,Melbourne,ATM,Grocery payment,Low
+71962758-bf08-4942-b2f2-78362fe32aff,2025-03-12 04:04:00,40912,Netflix,Payment,1690.41,Adelaide,Online,Grocery payment,Low
+6500d6df-b151-4160-b28c-8fb126218d13,2025-08-14 08:23:00,78255,PayPal,Transfer,3641.24,New York,Mobile,Gift to friend,Medium
+b5fee1e4-be81-4525-9d4e-15d387bcb93a,2025-06-07 03:29:00,87831,TravelPay,Deposit,3365.52,Hong Kong,Online,Gift to friend,Medium
+024cf808-0c19-4862-b5fd-57666041ca9f,2025-10-18 16:57:00,57634,ShopZone,Deposit,4132.95,London,Mobile,Multiple transfers this week,Medium
+8f2d105f-f902-4b42-b3f5-351928d84a2e,2025-08-15 06:58:00,18945,Qantas,Deposit,1484.48,Brisbane,In-Person,Online purchase,Low
+93808705-02f6-494b-a120-21c195f96fbe,2025-03-11 14:46:00,25417,PayPal,Transfer,7056.17,Adelaide,In-Person,Foreign transfer,Medium
+3d1afd02-37e8-4187-b7b5-585c1971950b,2025-02-06 12:55:00,29121,Woolworths,Transfer,878.08,Sydney,ATM,Salary deposit,Low
+13211b96-572a-49ba-a032-6da8355bcb55,2025-04-05 00:08:00,11055,EnergyAustralia,Withdrawal,1327.42,Melbourne,ATM,Grocery payment,Low
+b460fb72-b490-4a0d-9231-0380738dd707,2025-04-12 12:54:00,55725,Optus,Transfer,222.24,Adelaide,Mobile,Salary deposit,Low
+5baf400d-16b4-4de2-9b52-31b249673e35,2025-06-24 05:13:00,90685,CryptoXchange Ltd,Deposit,10251.53,London,ATM,Unverified merchant - possible scam,High
+dff3d88e-ed67-40f5-a7c6-6c00c3aaba66,2025-01-24 01:08:00,47249,Spotify,Withdrawal,1609.89,Perth,In-Person,Online purchase,Low
+990f247e-9cca-43c2-849f-2f4c23a8fab7,2025-01-20 23:51:00,38431,Qantas,Transfer,166.17,Brisbane,ATM,Grocery payment,Low
+974434c7-6529-4fd6-bc84-0d5619574468,2025-03-02 07:45:00,15004,PayPal,Crypto Purchase,3524.35,Singapore,ATM,Foreign transfer,Medium
+40f427d2-6f39-4fbe-8bcf-e1d369aff79b,2025-07-31 06:54:00,51647,Coles,Crypto Purchase,372.99,Sydney,ATM,Subscription,Low
+1979b053-2f5c-4b41-bb31-8bd15fab62a5,2025-02-20 20:45:00,58747,Coles,Deposit,892.92,Sydney,Mobile,Subscription,Low
+faa595e2-9ecf-43fb-af11-984518559cb6,2025-08-17 10:07:00,88906,Optus,Crypto Purchase,1493.03,Sydney,ATM,Grocery payment,Low
+27e02a88-834e-45d4-b9d5-8284276300be,2025-08-07 08:44:00,33853,TravelPay,Deposit,6339.48,Hong Kong,Mobile,Travel expense,Medium
+a43a1386-a94f-4578-9945-379758a8023d,2025-06-23 10:25:00,58149,CryptoXchange Ltd,Withdrawal,15945.16,Singapore,Online,Offshore layering transaction,High
+73e10a4e-97ef-4351-a8d3-d6f0b1bb7fb7,2025-07-20 07:57:00,52435,Netflix,Deposit,276.42,Adelaide,ATM,Online purchase,Low
+0d6397e2-18cc-42ac-b2a2-396fed5ab9c3,2025-08-15 07:47:00,30829,Woolworths,Withdrawal,406.37,Adelaide,ATM,Grocery payment,Low
+1f5e5196-28d4-4f17-86d4-3bce29c19804,2025-05-15 04:33:00,52023,ShopZone,Transfer,2094.9,Dubai,Online,Multiple transfers this week,Medium
+d87c0e22-b81b-4d30-9629-9e24baa8a363,2025-01-29 16:19:00,21377,Spotify,Payment,1114.8,Melbourne,Mobile,Grocery payment,Low
+ce7e29ff-bae0-4cea-939e-569b258a928b,2025-09-05 16:09:00,51077,EnergyAustralia,Transfer,686.83,Adelaide,Mobile,Salary deposit,Low
+7518ce15-8034-4237-9b7b-b7fffa9eafaa,2025-04-24 23:01:00,51769,Eastern Union,Deposit,19888.87,Dubai,Mobile,Crypto purchase from unknown wallet,High
+3e700ec6-30b8-4918-b4e2-c168d0580751,2025-03-26 23:15:00,54565,Telstra,Crypto Purchase,1108.3,Adelaide,ATM,Subscription,Low
+91e0662e-596a-4407-ac99-5183f3146d51,2025-02-28 15:43:00,89136,Optus,Crypto Purchase,963.25,Melbourne,Online,Online purchase,Low
+4023ccbe-2271-4cfe-bbd8-3f8c0d5398a4,2025-05-23 04:13:00,74952,Spotify,Transfer,213.4,Sydney,Mobile,Salary deposit,Low
+a7dcfc76-62a0-4dd4-a885-3d9448a2bb2a,2025-08-28 23:03:00,62148,Coles,Withdrawal,130.62,Sydney,In-Person,Subscription,Low
+e2f277ea-6efa-4abf-8481-8863d232585f,2025-06-19 21:07:00,46319,Qantas,Crypto Purchase,1171.57,Adelaide,Mobile,Grocery payment,Low
+d1db355d-fb36-4a4a-806f-a85363d2e195,2025-05-06 17:17:00,54855,EnergyAustralia,Transfer,107.35,Sydney,Online,Utility bill,Low
+8f76f4f2-a85c-4a78-8cce-be2018d8482f,2025-08-21 10:21:00,42131,Qantas,Deposit,563.73,Brisbane,ATM,Salary deposit,Low
+280e379c-3930-423d-a2cb-ec7ff819c813,2025-01-24 10:22:00,44250,EnergyAustralia,Transfer,32.48,Brisbane,Online,Utility bill,Low
+f994f659-310b-4d41-b9da-6824749aad5c,2025-02-11 10:38:00,53912,Telstra,Payment,140.71,Adelaide,Mobile,Subscription,Low
+0104e616-358f-478f-8ff5-d087e4ee0789,2025-07-19 18:44:00,41506,Woolworths,Crypto Purchase,1714.9,Perth,Online,Online purchase,Low
+aa5b3f26-40d5-47e7-a5f0-20d94a90c331,2025-05-13 20:43:00,61526,ShopZone,Payment,9794.07,Singapore,Online,Gift to friend,Medium
+5650c503-425e-426d-ad8b-189088290cca,2025-06-30 16:04:00,52210,Netflix,Transfer,928.87,Sydney,Mobile,Grocery payment,Low
+46738490-46b2-4824-84a2-f9b19a2bb42b,2025-01-10 20:45:00,95440,TravelPay,Crypto Purchase,8901.68,Adelaide,Mobile,Multiple transfers this week,Medium
+2b0707af-42ca-4ad4-b903-4ca09ec7ef4a,2025-10-09 12:02:00,25908,Telstra,Withdrawal,1825.38,Melbourne,In-Person,Online purchase,Low
+a8a73459-2998-4a29-81b3-ac9026a098c6,2025-02-28 08:03:00,62975,Eastern Union,Crypto Purchase,16437.18,Singapore,Online,Offshore layering transaction,High
+620fec7b-4026-4cf5-8280-f181818090cc,2025-09-22 01:56:00,35177,CryptoXchange Ltd,Crypto Purchase,9751.43,Hong Kong,Mobile,Offshore layering transaction,High
+3286378a-6955-4934-8fbe-6176f3455c8f,2025-03-21 03:10:00,11781,Optus,Payment,937.45,Sydney,Mobile,Salary deposit,Low
+1ef3baee-e107-48d5-b43d-8dfdbad48f5e,2025-02-22 04:16:00,41399,EnergyAustralia,Withdrawal,355.26,Sydney,ATM,Utility bill,Low
+e40f80a2-8973-4ba0-9893-9b23dcada97b,2025-03-01 03:54:00,35981,Woolworths,Transfer,29.25,Melbourne,Mobile,Utility bill,Low
+0d531150-95af-4c26-b404-101b16cef434,2025-01-24 03:33:00,17484,Netflix,Transfer,54.74,Melbourne,In-Person,Subscription,Low
+c3f4d211-028d-4009-ad80-6448dc6294c8,2025-09-22 10:27:00,91425,PayPal,Withdrawal,4524.34,Hong Kong,ATM,Multiple transfers this week,Medium
+76a97efc-c5d6-46d5-9f91-7ede2614694c,2025-01-07 21:31:00,79005,eBay,Withdrawal,5170.96,Perth,ATM,Gift to friend,Medium
+3a9aabf3-b49e-4b39-ae8d-80e548561506,2025-08-19 18:41:00,20869,EnergyAustralia,Withdrawal,649.84,Adelaide,Online,Salary deposit,Low
+6b8aa796-150c-4e8f-837d-0124c73a06fc,2025-02-13 13:23:00,98655,PayPal,Payment,5147.95,Hong Kong,In-Person,Multiple transfers this week,Medium
+1f1ed6e3-9a8c-43e8-8781-c79a60839504,2025-01-29 10:50:00,79357,eBay,Payment,5244.06,Hong Kong,ATM,Travel expense,Medium
+518d8a9c-0349-44cd-bcf4-89d07e790e50,2025-09-23 14:03:00,89713,EnergyAustralia,Withdrawal,1835.77,Perth,ATM,Grocery payment,Low
+a2714971-f537-4329-b05d-518153860e9a,2025-08-07 12:49:00,86242,Woolworths,Crypto Purchase,1219.78,Brisbane,Online,Salary deposit,Low
+32e2f6f4-9b06-4b97-b315-8c1a4d7fa251,2025-05-24 19:44:00,29319,Netflix,Deposit,1116.02,Melbourne,In-Person,Online purchase,Low
+89b1a668-d6f3-45a0-a61e-b2bbe34c9c66,2025-09-26 02:25:00,55932,Netflix,Withdrawal,1494.15,Brisbane,Online,Utility bill,Low
+75d9ecde-ab4e-4773-a37d-a48216fa7809,2025-05-02 18:20:00,46567,Spotify,Payment,1828.82,Brisbane,In-Person,Grocery payment,Low
+c2773f78-9463-4b94-aa86-9ca16382b864,2025-07-05 17:32:00,17193,PayPal,Deposit,5713.73,Singapore,In-Person,Travel expense,Medium
+afb2df54-3e07-48c1-93a3-a65fed8a757a,2025-04-17 20:13:00,56927,Netflix,Withdrawal,1324.25,Melbourne,Online,Utility bill,Low
+65102ce6-833f-4aac-aef1-9b7efdf6dc45,2025-02-20 20:50:00,14471,Optus,Crypto Purchase,42.4,Perth,Online,Utility bill,Low
+01d7b863-36e0-4340-b48d-4a9772b8bf46,2025-09-13 04:29:00,76020,Western Transfers,Transfer,3248.43,New York,ATM,Foreign transfer,Medium
+5a7a7f6b-0bdd-4d8b-b56a-6c09827946b7,2025-04-18 21:17:00,25465,Coles,Withdrawal,1222.17,Adelaide,In-Person,Utility bill,Low
+d96224cf-2b64-4931-aeff-c6f25e5dab2e,2025-07-18 08:11:00,61047,Woolworths,Transfer,644.57,Sydney,Online,Utility bill,Low
+6c84b0b8-edc5-4feb-812b-e5932d617ef9,2025-03-13 23:35:00,23947,Eastern Union,Payment,23052.47,Hong Kong,Mobile,Transfer to high-risk country,High
+4517c34b-daec-4e18-a5d9-686dfdaf0dc1,2025-07-23 15:11:00,20805,Netflix,Payment,1754.72,Brisbane,Online,Grocery payment,Low
+9fad99af-4d4d-4ad8-bbfe-cb6cb43be505,2025-07-22 04:42:00,76120,Netflix,Crypto Purchase,919.88,Sydney,Online,Grocery payment,Low
+55900bfd-41aa-4a22-b666-87eff976f750,2025-08-11 20:27:00,88033,Oceanic Holdings,Withdrawal,9647.01,New York,In-Person,Crypto purchase from unknown wallet,High
+9f7faf83-5747-4b8c-b03d-055f0ae1417d,2025-04-07 04:33:00,40699,EnergyAustralia,Transfer,1800.38,Perth,In-Person,Online purchase,Low
+bce0e7c2-e1ab-44a7-b1a8-fdaad03b6d72,2025-10-18 01:27:00,21977,Telstra,Crypto Purchase,481.18,Brisbane,Mobile,Subscription,Low
+e8c2cc8f-d773-4af0-99ca-0c53be26705b,2025-07-13 01:27:00,39325,Netflix,Payment,1117.63,Melbourne,Mobile,Utility bill,Low
+018d6464-5bbf-48f0-a4b8-515017aed86e,2025-05-28 22:18:00,28964,Optus,Payment,151.65,Brisbane,In-Person,Utility bill,Low
+5b648c52-2c90-43f3-90b2-b15e96e5c1ae,2025-02-01 11:35:00,86287,Qantas,Transfer,1645.83,Adelaide,Online,Grocery payment,Low
+b00f045c-0ceb-4d76-83f0-362013dd4e2a,2025-05-26 21:43:00,71799,Optus,Withdrawal,1058.6,Sydney,ATM,Subscription,Low
+6a9db3a9-82ab-4615-b731-b35beffa26d6,2025-01-25 09:56:00,45820,Eastern Union,Deposit,12449.3,Singapore,Mobile,Offshore layering transaction,High
+42899b14-45bc-43a9-b516-e14f40b85c76,2025-05-05 01:08:00,59568,Telstra,Payment,278.1,Sydney,In-Person,Online purchase,Low
+c5f4a136-8f7f-476e-874e-c538b32dba21,2025-10-08 14:57:00,18222,Telstra,Transfer,1489.87,Perth,In-Person,Salary deposit,Low
+1a76b4b3-2de6-490a-a896-a5401d81b864,2025-10-16 17:13:00,20548,Qantas,Crypto Purchase,1533.76,Brisbane,ATM,Subscription,Low
+84aa36df-8e89-4fc9-88d8-3dc4e39e85d2,2025-10-26 21:09:00,23405,Spotify,Payment,627.36,Melbourne,Online,Salary deposit,Low
+53ac4ae6-431d-4585-9d59-792ff25c504c,2025-08-09 04:02:00,98344,Netflix,Withdrawal,735.66,Brisbane,In-Person,Grocery payment,Low
+cac5d0da-80dd-40e3-9d0d-8bd0ac3d5a2a,2025-02-05 08:49:00,37376,Qantas,Deposit,686.35,Brisbane,Mobile,Online purchase,Low
+d40e9260-2135-435c-9e20-405a37308c2b,2025-01-18 19:39:00,24104,EnergyAustralia,Payment,1298.08,Perth,ATM,Salary deposit,Low
+bbe6db4a-abc7-4726-9d04-0735e5928228,2025-10-06 22:15:00,85138,Telstra,Crypto Purchase,1328.6,Adelaide,Online,Grocery payment,Low
+6c524dba-8c85-4262-9d50-fd8caabf3fa8,2025-04-25 08:38:00,46699,Netflix,Crypto Purchase,1428.35,Perth,Mobile,Subscription,Low
+b7bf11bf-8207-4918-9a5f-46861db5997b,2025-04-02 20:31:00,54988,eBay,Payment,3150.98,Adelaide,Online,Multiple transfers this week,Medium
+691b6f12-2191-4537-ad08-8a23ea364bbd,2025-08-21 12:36:00,90578,Woolworths,Deposit,529.6,Adelaide,Online,Salary deposit,Low
+982f4381-9d98-4a2d-a7c8-bc25be21ec97,2025-08-11 20:27:00,27411,Qantas,Deposit,863.76,Perth,Online,Salary deposit,Low
+b2e4d3d5-69a2-48cf-a193-bf60b362d76b,2025-04-17 14:19:00,54519,Optus,Withdrawal,537.37,Sydney,Mobile,Grocery payment,Low
+3e162f06-1267-40b7-8213-444fbb885a75,2025-10-11 04:12:00,45222,Qantas,Payment,1333.21,Melbourne,Mobile,Salary deposit,Low
+7ab2b270-2667-4a41-a661-981f844c106d,2025-09-24 00:24:00,87306,EnergyAustralia,Transfer,1378.66,Perth,Online,Subscription,Low
+478851e4-068e-4a7d-b7b6-6b80db8e1b3c,2025-03-03 21:59:00,28107,GlobalTrust Offshore,Withdrawal,11875.89,London,In-Person,Repeated deposits below threshold,High
+3741520f-f2e4-4302-9131-1d0b46d3215c,2025-02-07 06:51:00,24605,EnergyAustralia,Deposit,963.99,Brisbane,In-Person,Subscription,Low
+41b44274-d459-4b3f-a55a-3b53e5da1610,2025-10-21 01:42:00,71054,Western Transfers,Crypto Purchase,8471.17,Singapore,Online,Gift to friend,Medium
+ead1aeaf-f0cc-457c-bd00-75cd75dac2fa,2025-03-08 13:32:00,49227,Woolworths,Transfer,1664.47,Melbourne,In-Person,Online purchase,Low
+75c0c6ec-79de-4171-8b73-50e22ad55e16,2025-10-07 13:14:00,16019,Optus,Crypto Purchase,1182.64,Melbourne,Mobile,Grocery payment,Low
+32bdea69-fdf5-4c0f-bf9e-a39d8468ea18,2025-10-15 13:25:00,17961,EnergyAustralia,Withdrawal,334.91,Perth,Mobile,Salary deposit,Low
+bec4b24c-60b5-4de2-98e2-0ad09babb307,2025-04-13 13:25:00,76267,Western Transfers,Payment,6999.71,New York,In-Person,Multiple transfers this week,Medium
+124f5e46-7411-4897-876b-51b23aa3595e,2025-10-13 11:48:00,52258,Telstra,Payment,406.13,Perth,Online,Online purchase,Low
+da8905d8-d8cc-4d79-8522-eb961041dad6,2025-05-28 05:51:00,13771,ShopZone,Payment,7828.84,Adelaide,Online,Multiple transfers this week,Medium
+28d18b28-b7e2-4a36-b495-95e7c0fea66c,2025-03-04 10:21:00,13734,TravelPay,Withdrawal,7897.89,Dubai,In-Person,Travel expense,Medium
+faa7d5c1-5fea-4a36-a043-5b1ed9fa86c9,2025-03-16 11:30:00,23528,Western Transfers,Payment,8570.92,New York,Online,Gift to friend,Medium
+ba49774b-bc61-4d5b-8958-b848bc316d4a,2025-02-24 05:13:00,21502,Western Transfers,Payment,5515.8,Hong Kong,Online,Foreign transfer,Medium
+f9cc2fca-74b7-4451-b8d7-3760bc5134cf,2025-08-12 00:33:00,39573,EnergyAustralia,Payment,734.8,Brisbane,Mobile,Grocery payment,Low
+ceb8523f-ae36-4869-b915-0c04ef3908d3,2025-07-06 19:15:00,72606,Spotify,Withdrawal,1444.8,Perth,ATM,Online purchase,Low
+5208d1c1-d2d6-459c-b3c8-1488b86fd9d9,2025-06-11 08:20:00,87835,Coles,Deposit,1940.67,Adelaide,ATM,Salary deposit,Low
+d5be0363-bcec-4795-b5b3-36d5d0eccc34,2025-08-30 02:01:00,78307,Coles,Deposit,37.45,Sydney,ATM,Utility bill,Low
+191eefb4-92d7-4c70-8c94-e15b11903907,2025-06-23 17:39:00,95633,Woolworths,Withdrawal,329.87,Sydney,ATM,Grocery payment,Low
+89e29f83-db37-48f9-9649-8cba0b135bc9,2025-02-16 06:52:00,63229,PayPal,Withdrawal,9098.09,Hong Kong,In-Person,Gift to friend,Medium
+c9f42b1f-bddc-41d0-8caf-bbadc9951da7,2025-02-02 13:26:00,13508,Spotify,Withdrawal,1089.8,Sydney,ATM,Salary deposit,Low
+4bdf5406-e53b-4fe3-82ba-36369cf6fcd6,2025-06-30 08:32:00,54064,ShopZone,Transfer,4217.16,Singapore,ATM,Gift to friend,Medium
+e0baf462-12fa-43c4-af66-506cc907f16b,2025-01-05 08:57:00,39419,GlobalTrust Offshore,Crypto Purchase,18766.42,New York,In-Person,Transfer to high-risk country,High
+d1a1cbda-51f1-4c27-91cb-0ab9ca455d4b,2025-09-10 07:13:00,14190,Optus,Payment,912.94,Sydney,Online,Salary deposit,Low
+3ecbed13-f7da-4945-a893-25842242fbd5,2025-08-03 05:48:00,67414,Western Transfers,Withdrawal,3758.83,London,In-Person,Foreign transfer,Medium
+95c50e8e-2659-46ca-84aa-b9e7cd9edbda,2025-04-29 12:40:00,45013,Telstra,Deposit,380.91,Perth,In-Person,Salary deposit,Low
+25f428c0-cf69-4e12-8953-0e33c4044c7d,2025-03-11 00:12:00,37466,Oceanic Holdings,Withdrawal,22055.49,Singapore,ATM,Transfer to high-risk country,High
+7f97147d-dc26-46cb-9b9a-ce2aa14f5d18,2025-05-13 16:36:00,30484,Spotify,Crypto Purchase,1854.94,Adelaide,ATM,Online purchase,Low
+484e92d6-5d7b-44f9-b92d-34b4615b50f5,2025-09-20 00:55:00,15180,Woolworths,Payment,953.45,Melbourne,Online,Utility bill,Low
+a3fa383a-8471-4c2e-a097-c5bd4c74592a,2025-02-03 06:42:00,24074,EnergyAustralia,Withdrawal,1731.25,Sydney,ATM,Salary deposit,Low
+1eb6e0e1-74af-4e0c-a280-a80c072417ed,2025-10-04 18:16:00,72535,CryptoXchange Ltd,Payment,22315.66,New York,Online,Crypto purchase from unknown wallet,High
+6e4c27e9-2105-47bc-9c33-171f1e1f9de4,2025-01-26 11:14:00,60673,Coles,Deposit,36.04,Perth,ATM,Utility bill,Low
+b2cd4147-392e-4c17-af5e-a5cde2e9ddbf,2025-06-24 19:09:00,31428,Spotify,Crypto Purchase,1724.36,Brisbane,In-Person,Subscription,Low
+3d6e5a46-b260-4ae1-a337-574f4ea05aa5,2025-06-21 10:57:00,64477,Coles,Withdrawal,285.36,Perth,In-Person,Utility bill,Low
+34daa608-6850-49fa-8174-d47a47d32096,2025-05-25 03:50:00,23215,Coles,Transfer,1000.5,Melbourne,In-Person,Online purchase,Low
+6c17fd3f-5699-4d30-a6e9-0b325ba8f5b4,2025-05-14 20:23:00,50359,EnergyAustralia,Transfer,133.63,Perth,In-Person,Grocery payment,Low
+6202879f-34cb-43f8-9034-d3da362bc659,2025-01-01 14:53:00,97421,GlobalTrust Offshore,Deposit,13627.99,Singapore,ATM,Transfer to high-risk country,High
+196a1ee4-fe65-4e64-ba6f-4a07b632de4c,2025-01-14 21:56:00,57714,Netflix,Withdrawal,418.84,Adelaide,ATM,Online purchase,Low
+42181f35-82e1-48ed-8593-e641cdf27b7d,2025-10-01 07:19:00,94276,Optus,Payment,1808.91,Brisbane,ATM,Utility bill,Low
+ebce1f2d-a5f6-47cc-9e9d-d9ce77b611be,2025-02-05 17:14:00,51553,eBay,Payment,5075.39,Perth,Mobile,Multiple transfers this week,Medium
+0b0784ff-3d8b-454a-9788-50453608859c,2025-06-30 09:20:00,48158,eBay,Transfer,2225.18,Adelaide,Mobile,Gift to friend,Medium
+f2b8b6a7-4d71-46f1-be40-c4eb24c10e70,2025-10-24 10:26:00,26798,PayPal,Deposit,7976.69,Adelaide,Mobile,Foreign transfer,Medium
+2a2818f8-f5f8-4157-8387-3cd259b36a14,2025-07-24 21:47:00,22822,Spotify,Transfer,161.3,Perth,Mobile,Utility bill,Low
+0a50e440-00c2-4ed6-ad95-672f18244d9a,2025-04-08 09:44:00,29851,ShopZone,Deposit,9171.69,Dubai,ATM,Foreign transfer,Medium
+0355fcac-b3e4-457c-b34a-349324b0a532,2025-06-10 13:02:00,55423,EnergyAustralia,Payment,1485.09,Brisbane,ATM,Grocery payment,Low
+75a8f7b3-3420-4e6b-b7d7-0ff981cc7d0d,2025-04-27 17:03:00,87465,Qantas,Crypto Purchase,1638.63,Adelaide,In-Person,Salary deposit,Low
+533d182a-f71f-4050-be85-c10b17b2fdcb,2025-09-12 20:54:00,69995,eBay,Transfer,8723.04,Singapore,Online,Travel expense,Medium
+27cd07f6-c26f-4d60-85f4-aa98a48c6afd,2025-04-11 23:57:00,58051,EnergyAustralia,Withdrawal,309.63,Sydney,Mobile,Salary deposit,Low
+4bcb4cbf-5f35-42ef-bbe3-657273cf39a0,2025-08-06 03:34:00,84850,EnergyAustralia,Deposit,1298.79,Melbourne,Online,Subscription,Low
+9031a0b2-f731-4d28-9e09-6d9eb5f094fd,2025-08-22 18:03:00,39245,Optus,Crypto Purchase,1348.81,Sydney,Mobile,Subscription,Low
+4876da6d-2bae-49fa-8c5f-7afb1381647d,2025-07-09 16:35:00,16308,Coles,Transfer,645.04,Sydney,ATM,Salary deposit,Low
+6c76e7d0-7b93-47da-890f-1eb41c9fd9e1,2025-05-16 01:46:00,54658,Optus,Payment,1077.09,Sydney,Mobile,Salary deposit,Low
+a1b896c2-6012-4f3a-9bee-90951753a203,2025-02-08 18:44:00,48912,EnergyAustralia,Deposit,212.78,Adelaide,Online,Subscription,Low
+f85ea160-265d-4d82-aa4f-d58b1eb34196,2025-06-21 08:23:00,71569,Spotify,Deposit,1125.1,Brisbane,ATM,Subscription,Low
+c6c4dead-584c-4359-9b86-ade40d6a0399,2025-08-19 03:51:00,46492,Spotify,Withdrawal,1964.95,Adelaide,Online,Grocery payment,Low
+6a28e4d3-2552-463c-a6a9-452332c46b1b,2025-04-29 03:46:00,82479,EnergyAustralia,Withdrawal,637.94,Melbourne,In-Person,Online purchase,Low
+a65b887a-6061-4168-b61c-b0cd8836f47f,2025-04-29 21:01:00,66663,Spotify,Payment,168.16,Melbourne,ATM,Salary deposit,Low
+babb3c21-0cd7-4478-ade9-135f5c3a5ff6,2025-10-28 16:50:00,45188,Qantas,Payment,233.91,Melbourne,Online,Utility bill,Low
+d016da8e-df8a-45c7-9960-ed9af7f25192,2025-06-03 04:24:00,12501,Telstra,Payment,1286.74,Sydney,Online,Utility bill,Low
+bc21f3ec-9db4-4863-90aa-e65bc05620d7,2025-01-27 10:27:00,49716,UAE Gold Brokers,Crypto Purchase,13384.57,New York,Mobile,Unverified merchant - possible scam,High
+f572a285-bfa7-4888-b3df-ae278f090cf1,2025-08-25 12:17:00,26289,EnergyAustralia,Deposit,1372.38,Melbourne,Mobile,Grocery payment,Low
+7b6408a6-87c7-448b-94b4-81e28844491c,2025-05-01 15:11:00,33835,TravelPay,Withdrawal,8896.12,Perth,In-Person,Foreign transfer,Medium
+7cff8d69-73de-4a76-ba50-205881cb57c2,2025-06-29 01:42:00,29584,PayPal,Deposit,3980.91,London,Online,Foreign transfer,Medium
+eac51de8-ce7d-4393-bb8a-8de7eddd0d77,2025-07-08 17:57:00,23313,Spotify,Deposit,130.49,Melbourne,ATM,Subscription,Low
+ffc53548-156f-4200-b945-8f52d34aace7,2025-09-09 10:15:00,53488,Spotify,Withdrawal,1940.59,Adelaide,ATM,Grocery payment,Low
+2bd5ebfd-b29a-418c-83de-8003e3f77f79,2025-08-22 15:02:00,11254,CryptoXchange Ltd,Payment,24105.11,Singapore,ATM,Crypto purchase from unknown wallet,High
+7c2ea9fd-a3df-48eb-840f-9e47dc857a35,2025-05-29 05:02:00,63792,TravelPay,Crypto Purchase,7995.4,Perth,In-Person,Foreign transfer,Medium
+463cb811-91f6-44e1-80e3-f2b225819e49,2025-05-21 02:52:00,36642,ShopZone,Transfer,5768.73,Hong Kong,ATM,Multiple transfers this week,Medium
+038f63d9-2b93-4e89-aa88-1005769833aa,2025-08-13 23:26:00,64914,Telstra,Transfer,1770.26,Perth,ATM,Salary deposit,Low
+0ae4b71c-864e-48a9-a046-c3f2494bad73,2025-07-04 22:18:00,12159,TravelPay,Crypto Purchase,7777.09,Singapore,Online,Gift to friend,Medium
+aa23ab13-ae0c-42a3-9a80-2acefd26ecb0,2025-08-26 20:09:00,82923,Telstra,Payment,1284.76,Perth,ATM,Subscription,Low
+18ac1f73-8227-4800-81fe-83768ca081c3,2025-05-22 16:31:00,65434,EnergyAustralia,Withdrawal,556.45,Brisbane,Mobile,Grocery payment,Low
+fabbd29d-4471-4fa3-b452-b8db15e1b9fc,2025-04-22 18:17:00,83354,Telstra,Withdrawal,1894.77,Perth,In-Person,Utility bill,Low
+9a305c30-e52e-470e-ae12-5c04cc90db42,2025-08-21 14:49:00,77528,PayPal,Transfer,8993.59,Adelaide,ATM,Multiple transfers this week,Medium
+7b6d9eab-bd3d-43ef-b419-545313b9cb74,2025-03-12 09:44:00,61085,Telstra,Withdrawal,865.83,Adelaide,Mobile,Utility bill,Low
+53e8034f-985b-4668-826c-a79b5e55a7e5,2025-03-27 13:31:00,83259,Optus,Withdrawal,435.36,Sydney,ATM,Salary deposit,Low
+63eae337-057b-4d1b-9da1-f9d3bf50155b,2025-01-04 16:42:00,62444,Spotify,Transfer,1127.3,Adelaide,Mobile,Online purchase,Low
+8bb798bd-8520-4092-b90c-776322ae1c3a,2025-10-27 15:03:00,35119,ShopZone,Crypto Purchase,3159.53,Adelaide,Mobile,Multiple transfers this week,Medium
+5aa307a0-b3f8-4c9d-9f70-5b0de60eecec,2025-05-01 12:07:00,86797,EnergyAustralia,Deposit,1162.05,Adelaide,ATM,Grocery payment,Low
+49183f8c-d7bb-425f-b575-0f200d5373c6,2025-05-28 00:21:00,64560,Coles,Transfer,617.18,Sydney,In-Person,Salary deposit,Low
+7ae970d8-9753-4fbe-9a8b-22efa49e68e9,2025-02-25 07:42:00,90381,Spotify,Payment,341.01,Sydney,ATM,Online purchase,Low
+4005b52b-b80b-4a3a-a680-42662fdbd877,2025-09-22 22:49:00,59193,PayPal,Transfer,8775.68,Hong Kong,ATM,Multiple transfers this week,Medium
+75c35b10-9ca7-44ed-a58d-20fff5e4ff4b,2025-08-15 17:06:00,22286,Woolworths,Deposit,1307.77,Sydney,In-Person,Online purchase,Low
+4dcaa5ee-cc8e-40fb-8f38-62d3a5048714,2025-01-13 18:40:00,40445,Eastern Union,Deposit,17976.71,Hong Kong,In-Person,Repeated deposits below threshold,High
+590a1c45-0b99-4b61-a0e9-7dc6df63ad2e,2025-01-11 22:24:00,14431,Spotify,Crypto Purchase,1451.55,Sydney,ATM,Subscription,Low
+a3922396-8901-45f2-ad5a-8b4370caa92e,2025-06-23 03:48:00,29891,Qantas,Crypto Purchase,102.54,Sydney,ATM,Online purchase,Low
+c173c01b-e120-4563-a883-af71a67a77fb,2025-08-11 02:04:00,38096,Netflix,Deposit,451.32,Adelaide,ATM,Grocery payment,Low
+67ca0dc6-b1f5-4f6a-bd1e-ff770a93db5c,2025-09-15 16:10:00,21178,Woolworths,Deposit,1921.95,Melbourne,Online,Grocery payment,Low
+709494cc-edc2-49ed-aae7-4689fb43b921,2025-09-12 20:34:00,94569,Netflix,Withdrawal,1287.4,Perth,ATM,Subscription,Low
+61678f1c-181f-4bea-9b05-f4829c5bb52e,2025-09-04 11:39:00,84774,Spotify,Crypto Purchase,989.76,Brisbane,In-Person,Online purchase,Low
+0b12b8f4-65a7-4b56-b425-1319075664b9,2025-03-20 09:26:00,84694,CryptoXchange Ltd,Deposit,9942.62,Dubai,Online,Crypto purchase from unknown wallet,High
+e149de1a-024f-4590-b287-9c7de2d381ed,2025-09-24 03:28:00,53206,Optus,Payment,1655.75,Melbourne,ATM,Grocery payment,Low
+3920d944-a783-491f-927b-ee039d4cb558,2025-09-12 11:59:00,92680,Netflix,Crypto Purchase,1604.28,Sydney,In-Person,Salary deposit,Low
+f7890810-6cb6-403a-8045-5d36196d8e98,2025-02-17 22:29:00,89280,Coles,Withdrawal,916.61,Perth,In-Person,Salary deposit,Low
+002e0359-eb09-4f87-a82d-214e97630fdf,2025-04-04 05:53:00,36453,PayPal,Transfer,3290.04,Perth,In-Person,Gift to friend,Medium
+f99ddf2e-c98c-450b-b0bb-73a03307794c,2025-07-03 21:06:00,77824,Eastern Union,Crypto Purchase,17202.45,New York,ATM,Offshore layering transaction,High
+c08523c7-3e44-4a52-9f1c-78fcb10a0bad,2025-03-07 09:37:00,26002,UAE Gold Brokers,Payment,17210.01,London,In-Person,Crypto purchase from unknown wallet,High
+f40a4616-fa83-48fe-8d05-e755c28cd8fd,2025-09-06 16:33:00,54343,eBay,Payment,5761.31,Dubai,Mobile,Foreign transfer,Medium
+fb39d5b5-a9d0-4fba-aee5-d8e5e39a4bfa,2025-10-20 20:53:00,48504,Qantas,Payment,1319.26,Adelaide,Mobile,Online purchase,Low
+c57b653a-cd5d-4e7a-9d41-db3e0faa3481,2025-03-07 23:04:00,89263,CryptoXchange Ltd,Payment,13153.99,Dubai,Mobile,Unverified merchant - possible scam,High
+f3b7ed06-fb25-4b8c-b4d4-429504c97df9,2025-08-14 21:06:00,61365,PayPal,Withdrawal,8677.94,Dubai,In-Person,Multiple transfers this week,Medium
+dfa0489e-b2c1-40b9-96ff-340d06ee9b90,2025-06-11 17:20:00,81999,Spotify,Payment,830.56,Brisbane,In-Person,Salary deposit,Low
+7b0e586b-483d-4f7f-9791-e94486e31b96,2025-02-14 08:56:00,23561,Optus,Payment,495.29,Adelaide,ATM,Salary deposit,Low
+d11a5f41-ac35-4650-94ed-b2bde540605e,2025-01-21 21:56:00,91091,Spotify,Transfer,768.93,Perth,Mobile,Grocery payment,Low
+d7d87c45-e6a5-4cf9-8d64-975e300f65f9,2025-09-03 14:40:00,78324,Western Transfers,Deposit,6753.63,Singapore,ATM,Gift to friend,Medium
+3fddbb5a-5710-4922-b149-9655378b87b7,2025-04-02 05:43:00,39957,Netflix,Payment,1226.07,Adelaide,In-Person,Online purchase,Low
+242d9ef4-861c-4b21-8319-f84249aecc53,2025-06-12 20:04:00,55955,Optus,Withdrawal,937.01,Brisbane,In-Person,Online purchase,Low
+793268b7-d811-451b-a456-f416b6b4bab4,2025-10-01 23:03:00,41348,EnergyAustralia,Withdrawal,1155.63,Brisbane,In-Person,Salary deposit,Low
+3afef96a-c746-457e-8379-59b01f6596b8,2025-03-09 02:11:00,66915,Qantas,Crypto Purchase,903.2,Adelaide,Online,Online purchase,Low
+1bba1872-4baf-411f-95a9-ef0fc3af9ebd,2025-05-25 09:15:00,58144,Coles,Crypto Purchase,108.77,Adelaide,In-Person,Online purchase,Low
+c7dc9cfe-b29e-4de9-a36c-65b4ab75ad52,2025-10-14 06:31:00,35260,Qantas,Payment,1307.97,Adelaide,In-Person,Utility bill,Low
+e4c7b35a-8de5-4217-bbe3-8726240d0e31,2025-01-11 00:59:00,66155,TravelPay,Crypto Purchase,7176.85,Perth,In-Person,Travel expense,Medium
+f05c8b1a-1c0f-4e5f-bcae-a01ff23ef838,2025-10-26 00:48:00,83914,Western Transfers,Transfer,5044.59,Singapore,ATM,Multiple transfers this week,Medium
+dad13e03-ebff-409f-9294-b5238d4f2866,2025-08-15 13:17:00,11720,EnergyAustralia,Crypto Purchase,1512.34,Brisbane,Online,Grocery payment,Low
+b401c383-9bc1-46ed-ad33-cdf8e52cc6b7,2025-09-05 15:15:00,86335,Optus,Payment,1107.02,Melbourne,In-Person,Salary deposit,Low
+99ff4a0b-679b-40a9-86d8-b916b1a36047,2025-05-19 14:49:00,58111,Spotify,Crypto Purchase,1498.31,Perth,In-Person,Online purchase,Low
+d3bb3fae-caef-41d7-a98b-4a58cd51ae79,2025-02-16 03:06:00,56921,GlobalTrust Offshore,Transfer,11690.5,Dubai,Online,Transfer to high-risk country,High
+a78ee7f5-a1ba-4049-89d2-612307d5c9bb,2025-01-22 23:31:00,96305,eBay,Payment,2442.62,Singapore,Mobile,Gift to friend,Medium
+f9d13d25-1c93-47ad-a5ec-b918ffab71b9,2025-10-27 15:40:00,66989,UAE Gold Brokers,Withdrawal,24944.19,New York,In-Person,Offshore layering transaction,High
+06ae85fd-39c4-45b2-b3ad-fc21b9f30ea4,2025-08-10 21:46:00,87190,EnergyAustralia,Payment,969.04,Melbourne,Online,Salary deposit,Low
+cbfe7964-e8d5-4241-8b16-58f30f819f9c,2025-06-29 19:52:00,77346,Optus,Withdrawal,1250.13,Sydney,In-Person,Salary deposit,Low
+791d9c60-7841-4f31-852f-ec25a19dc3d4,2025-05-29 13:12:00,22547,eBay,Transfer,9158.04,New York,In-Person,Multiple transfers this week,Medium
+17edde0d-745b-46f2-b152-1ec0462be28f,2025-02-01 02:17:00,84653,Qantas,Withdrawal,283.1,Adelaide,Online,Utility bill,Low
+9f6f79a9-a7c4-4fc8-a659-9e9a15fbf9f4,2025-08-21 16:57:00,58959,ShopZone,Transfer,6591.72,Dubai,Mobile,Foreign transfer,Medium
+b2974ba4-f4a1-490e-9036-cd210c8daf97,2025-01-27 02:40:00,37564,Qantas,Transfer,1660.4,Sydney,In-Person,Grocery payment,Low
+01d6d072-b176-40f3-9e67-1a80212c49c0,2025-07-23 10:41:00,33421,Netflix,Withdrawal,506.73,Sydney,ATM,Grocery payment,Low
+0e8c3579-d9ed-4057-b8ba-956a39824a5d,2025-02-03 05:59:00,46345,Optus,Crypto Purchase,1735.59,Brisbane,In-Person,Salary deposit,Low
+8f2d5603-e38e-4027-95f2-11c29312bbc6,2025-10-06 19:50:00,33947,GlobalTrust Offshore,Withdrawal,19432.59,New York,Mobile,Crypto purchase from unknown wallet,High
+ecdc7931-be45-4127-9435-9089d2cecd92,2025-05-07 08:35:00,77791,Netflix,Withdrawal,457.49,Brisbane,ATM,Subscription,Low
+4c007c4f-4564-4e09-8610-1872f9ba8e8b,2025-10-24 14:05:00,14934,GlobalTrust Offshore,Deposit,18709.68,Hong Kong,ATM,Offshore layering transaction,High
+254dd5a9-9359-43e1-8e06-c92e52695362,2025-04-02 22:03:00,81012,Qantas,Withdrawal,623.04,Brisbane,Online,Salary deposit,Low
+67358c95-b04a-41b4-a426-ecd0357fb2c5,2025-01-03 10:29:00,49521,Telstra,Deposit,89.48,Adelaide,Mobile,Subscription,Low
+710e1fc5-0abe-45e6-bc79-c5fb201c3d97,2025-02-15 10:45:00,84140,TravelPay,Transfer,5463.44,Perth,Online,Foreign transfer,Medium
+0f67c815-8ab8-4201-9a92-92817d7968ab,2025-03-11 15:09:00,34127,Optus,Crypto Purchase,1785.2,Brisbane,ATM,Online purchase,Low
+7c3a5257-9729-4aac-b38c-efd623f012c6,2025-09-19 20:07:00,46054,EnergyAustralia,Withdrawal,1812.79,Brisbane,In-Person,Subscription,Low
+452af693-59ae-4fd8-8586-7ef91c5a0233,2025-01-24 01:19:00,95097,Optus,Withdrawal,241.08,Adelaide,ATM,Utility bill,Low
+a03dd13d-3b89-4446-8f0d-ede5739f4fca,2025-06-04 00:19:00,58670,EnergyAustralia,Transfer,437.5,Sydney,In-Person,Subscription,Low
+c98c841b-2fc5-4ca5-bfac-363d32072390,2025-03-04 11:55:00,88501,EnergyAustralia,Transfer,1157.94,Melbourne,Mobile,Online purchase,Low
+72a0f39b-7b96-4849-bfaf-17f607f0a839,2025-01-05 10:00:00,31542,Qantas,Withdrawal,1699.52,Sydney,In-Person,Subscription,Low
+b07074d5-8601-4bff-901e-b6f7c1db9fcf,2025-09-11 09:42:00,61399,Qantas,Crypto Purchase,1629.0,Sydney,Online,Online purchase,Low
+064c2c49-0245-4f31-88b6-5d74137c80b2,2025-10-02 03:08:00,27523,Optus,Crypto Purchase,473.02,Brisbane,In-Person,Online purchase,Low
+33208a14-7c7e-4915-946c-c5f48f7965ae,2025-02-25 12:55:00,98870,Woolworths,Crypto Purchase,1718.6,Melbourne,Mobile,Utility bill,Low
+39aedd8c-2cea-46af-810a-d4bd576f60e5,2025-02-24 20:36:00,47915,Spotify,Withdrawal,1352.24,Sydney,In-Person,Salary deposit,Low
+b39c5510-d05f-43d6-8218-3c9bdae31bb2,2025-07-04 17:36:00,81246,Spotify,Payment,940.14,Melbourne,Online,Online purchase,Low
+72d5d1f8-178d-49fb-99a5-007deeb3ba22,2025-08-03 15:03:00,38772,Telstra,Withdrawal,1426.19,Sydney,ATM,Grocery payment,Low
+d52f8d56-0ca2-4955-a949-2fce85beb0d7,2025-03-01 15:39:00,28233,Eastern Union,Withdrawal,16173.21,Singapore,Mobile,Offshore layering transaction,High
+4cc1357f-19a2-44dd-ae29-b68f9f6dd2c2,2025-08-17 05:11:00,24490,Telstra,Deposit,1474.48,Brisbane,In-Person,Salary deposit,Low
+f5e8d529-cd04-4fcb-bfab-a0c3c28c9f8f,2025-06-19 13:06:00,26797,Woolworths,Payment,206.23,Adelaide,In-Person,Utility bill,Low
+7c5a3801-5390-420c-a66e-80ee16b5b60d,2025-04-24 06:42:00,20282,Spotify,Payment,668.82,Melbourne,ATM,Subscription,Low
+529aa10f-5950-445e-bd91-4ea5b24a589a,2025-03-30 14:58:00,17848,Spotify,Crypto Purchase,1097.08,Adelaide,In-Person,Subscription,Low
+27fff243-5c56-42a6-b496-e0eff85b4b93,2025-04-08 17:28:00,24611,Telstra,Withdrawal,849.54,Perth,Online,Subscription,Low
+8572df90-dc89-46e9-b8db-75b0bd3a20ae,2025-08-30 03:43:00,30943,Telstra,Crypto Purchase,20.31,Melbourne,ATM,Online purchase,Low
+b290ba92-b471-41a7-b77d-f8cc46ceb466,2025-02-23 08:39:00,40961,Telstra,Withdrawal,177.78,Brisbane,In-Person,Salary deposit,Low
+6e538c0c-8a39-4b45-9603-603659e73cc1,2025-09-07 17:02:00,43876,Coles,Deposit,477.19,Melbourne,ATM,Subscription,Low
+991012b4-1775-4da3-b258-ec82549c2f47,2025-02-10 13:44:00,74893,eBay,Crypto Purchase,2621.88,Hong Kong,Online,Multiple transfers this week,Medium
+bbd5106e-8d5f-4aea-aaa6-69771380b4dd,2025-01-24 12:03:00,60351,EnergyAustralia,Crypto Purchase,731.42,Sydney,ATM,Subscription,Low
+ed0db924-6f34-4bcd-b5d5-f658e20abe0f,2025-07-04 08:05:00,28501,Spotify,Crypto Purchase,1332.37,Sydney,Mobile,Utility bill,Low
+42e92b70-47c4-4b20-a147-4aabcdae621a,2025-01-05 01:37:00,85800,Optus,Deposit,1379.93,Brisbane,In-Person,Utility bill,Low
+4c1e7eb9-5300-49b9-8d1f-91b2b1c52468,2025-02-13 01:34:00,97743,Eastern Union,Payment,15239.9,Hong Kong,Mobile,Transfer to high-risk country,High
+7742bcf1-4ecf-4c2f-8609-34c5f60287b2,2025-02-09 07:22:00,33997,Spotify,Crypto Purchase,344.1,Brisbane,Online,Grocery payment,Low
+61158bd6-f69c-406c-838c-9a7eff2937e7,2025-01-03 09:59:00,64349,Woolworths,Transfer,1377.23,Sydney,ATM,Online purchase,Low
+80f75e33-f714-4caf-bb4f-a636184d5e09,2025-10-26 21:33:00,74546,Woolworths,Withdrawal,518.36,Brisbane,Mobile,Grocery payment,Low
+a339d287-0080-47e0-bf3d-022ede28619a,2025-09-14 17:31:00,64943,Optus,Transfer,170.08,Perth,Mobile,Grocery payment,Low
+d488729c-de2d-4362-a087-851f64abdb49,2025-05-12 05:49:00,56356,eBay,Crypto Purchase,4218.3,Dubai,Mobile,Gift to friend,Medium
+c817464f-de46-4b73-bd71-9474901f2e77,2025-01-02 12:12:00,85926,Western Transfers,Withdrawal,4509.77,Perth,In-Person,Gift to friend,Medium
+b0797488-171a-494d-8a48-4cf7371ca51f,2025-07-18 05:53:00,19402,Oceanic Holdings,Crypto Purchase,10996.22,Dubai,Online,Crypto purchase from unknown wallet,High
+5d7e2940-19bf-4b7a-8eee-3bbb7feb6d84,2025-08-28 13:07:00,55157,ShopZone,Payment,2326.33,New York,ATM,Foreign transfer,Medium
+1afc5bb7-d6ab-4523-9b3b-5c6fc6bb4ccf,2025-02-27 04:43:00,94525,ShopZone,Deposit,5980.12,New York,Online,Travel expense,Medium
+b11cc46c-cb20-4a3b-be03-88988a2fb5e8,2025-10-01 07:54:00,65706,ShopZone,Transfer,5107.77,Singapore,Online,Multiple transfers this week,Medium
+8f926ba4-c511-4a44-b28f-61033378ea11,2025-08-24 01:02:00,10375,PayPal,Withdrawal,6453.33,New York,ATM,Foreign transfer,Medium
+52813540-748b-4c08-a31f-a37792013ee3,2025-06-30 09:29:00,48505,PayPal,Payment,6949.04,New York,Mobile,Travel expense,Medium
+0f8b4eff-1f2c-40ca-9ee6-09a6a4bc47ce,2025-03-17 14:06:00,26364,eBay,Withdrawal,4005.52,Adelaide,Online,Multiple transfers this week,Medium
+7f231d6d-3adb-4385-b268-10718077b240,2025-02-28 05:42:00,88967,Woolworths,Payment,1704.26,Perth,Online,Online purchase,Low
+ffb2fbc8-14b7-4e35-8fc5-08baf5acea3a,2025-09-15 20:10:00,31029,Telstra,Transfer,350.69,Adelaide,Online,Online purchase,Low
+a0721ed6-9a43-4807-bacf-578c0cfd0603,2025-09-09 18:35:00,97778,Spotify,Withdrawal,155.03,Adelaide,In-Person,Subscription,Low
+cecb4307-5cdb-4ef0-bb19-b336cc7936cf,2025-02-06 23:43:00,49529,Telstra,Deposit,57.27,Sydney,Online,Subscription,Low
+f69b22cd-3fd1-4313-9f61-70437c0a877e,2025-05-31 14:42:00,77785,eBay,Crypto Purchase,7110.24,Hong Kong,Mobile,Foreign transfer,Medium
+8e388141-7d05-4bb5-a4f4-1d383e4f30e0,2025-03-28 21:02:00,60519,Spotify,Deposit,486.12,Melbourne,Mobile,Grocery payment,Low
+59765154-5bdb-4194-97c6-e7b26a4355da,2025-06-03 04:08:00,72794,Eastern Union,Transfer,22464.61,New York,Online,Unverified merchant - possible scam,High
+b11361e6-9377-457d-8247-29fe28ab1200,2025-08-07 05:22:00,40023,EnergyAustralia,Crypto Purchase,1817.53,Brisbane,In-Person,Subscription,Low
+b1304ae8-dd7f-4f24-87eb-5943a4f744ca,2025-08-02 03:55:00,10956,EnergyAustralia,Crypto Purchase,1497.88,Sydney,Online,Online purchase,Low
+b515ca99-b407-4acb-9473-8eab94fd04b6,2025-07-27 21:32:00,94843,Netflix,Payment,1383.68,Brisbane,In-Person,Subscription,Low
+22e0866e-a604-41fb-813a-c1799719f765,2025-03-27 14:25:00,81268,ShopZone,Crypto Purchase,4410.94,Dubai,ATM,Travel expense,Medium
+3ad722a8-5aba-44db-93fe-e50819948c94,2025-01-07 22:08:00,50873,Woolworths,Payment,336.03,Adelaide,Mobile,Subscription,Low
+32cb6079-1778-4f73-9a47-e33bf4b423c4,2025-03-08 13:54:00,41163,PayPal,Withdrawal,6800.66,New York,ATM,Foreign transfer,Medium
+536ae62a-54cf-4420-b0e4-47bd47f196b3,2025-06-16 23:46:00,67532,TravelPay,Transfer,3034.56,Hong Kong,Mobile,Gift to friend,Medium
+6746bdd4-ad36-464a-a824-b34dde83ed57,2025-01-19 04:32:00,78439,Spotify,Payment,1740.7,Sydney,ATM,Salary deposit,Low
+d5aafa44-de4b-4438-ade8-b7975abec0d1,2025-04-02 10:01:00,36685,EnergyAustralia,Transfer,1178.2,Sydney,In-Person,Salary deposit,Low
+f20098a9-8746-4ec3-82ab-8b9c52f80838,2025-08-31 05:34:00,32296,EnergyAustralia,Transfer,281.4,Adelaide,In-Person,Salary deposit,Low
+2eb7c2bf-5b7d-4bba-a3ff-c6f8d7622953,2025-07-25 11:43:00,42892,Coles,Deposit,1168.82,Sydney,Online,Subscription,Low
+54bf7604-22fb-44ec-9843-756055204bc8,2025-09-30 08:38:00,41311,Telstra,Payment,654.07,Brisbane,Mobile,Subscription,Low
+36e63351-d846-435f-a833-10daef671fce,2025-03-14 22:51:00,31698,Netflix,Transfer,1152.43,Sydney,Mobile,Utility bill,Low
+e3885a2e-3482-4cd2-83fe-6cc2a265c732,2025-08-30 03:41:00,37056,Western Transfers,Withdrawal,5337.25,New York,Online,Multiple transfers this week,Medium
+a51ef21a-8022-457a-a05f-b0b01c427a35,2025-05-26 19:56:00,65731,Qantas,Payment,523.03,Sydney,Online,Grocery payment,Low
+eebfa424-626e-49ca-b664-c47b961606b3,2025-10-26 18:33:00,31897,Spotify,Withdrawal,1870.07,Brisbane,Mobile,Utility bill,Low
+d51559ae-94e8-49c6-88dd-9fe3e5174cae,2025-01-19 15:25:00,86988,UAE Gold Brokers,Withdrawal,17213.69,New York,Online,Unverified merchant - possible scam,High
+6855ae53-2af6-48da-8389-d04db53e9db5,2025-02-04 01:26:00,88717,UAE Gold Brokers,Transfer,18168.95,New York,ATM,Unverified merchant - possible scam,High
+fdab3f84-1059-48a4-b9a9-149087126708,2025-02-14 12:42:00,67704,Coles,Transfer,377.71,Perth,In-Person,Utility bill,Low
+adb25d1b-7fee-49a0-9eee-671c7aefac49,2025-05-20 16:04:00,61538,Netflix,Crypto Purchase,1427.52,Sydney,ATM,Online purchase,Low
+faa8de8d-b1e9-41ee-a7d0-240d46d0c20d,2025-07-14 05:08:00,86030,Netflix,Deposit,609.25,Melbourne,In-Person,Salary deposit,Low
+579cd27a-6478-4e1a-b52e-9b7b04d3274c,2025-10-10 10:49:00,18440,Netflix,Transfer,767.52,Brisbane,Mobile,Online purchase,Low
+17b62ec2-8a1b-4cd9-9a15-21d34ae1caf6,2025-05-05 01:42:00,63925,EnergyAustralia,Crypto Purchase,1279.51,Sydney,Mobile,Grocery payment,Low
+ebbdd553-dac2-4b30-a247-fff1d75e5832,2025-06-09 22:23:00,91693,PayPal,Transfer,8536.31,Adelaide,Online,Foreign transfer,Medium
+a1fc3b23-4a24-422a-8129-2866a3a09974,2025-10-04 05:50:00,65388,CryptoXchange Ltd,Crypto Purchase,17600.57,Hong Kong,Online,Offshore layering transaction,High
+08e374f4-9c33-4059-af21-513fbd48d483,2025-07-28 03:48:00,41003,Western Transfers,Withdrawal,2988.92,London,ATM,Gift to friend,Medium
+cb905f49-08ac-48f1-91d9-adb186395fa3,2025-08-24 08:13:00,98805,Optus,Crypto Purchase,611.27,Adelaide,Online,Online purchase,Low
+c59db2ee-e6f1-4aff-ae41-86b2b11ab2cd,2025-02-03 04:03:00,79565,UAE Gold Brokers,Deposit,9876.62,New York,Online,Unverified merchant - possible scam,High
+cd8dd207-e36b-4697-89dd-61fccdd1b6a4,2025-07-10 14:47:00,46172,Coles,Crypto Purchase,1165.73,Melbourne,Online,Online purchase,Low
+84ca19d7-8e2d-4e71-ae1f-101bfe674a2e,2025-01-12 10:27:00,41846,CryptoXchange Ltd,Crypto Purchase,15638.98,London,Mobile,Unverified merchant - possible scam,High
+b9a8ac9c-66a3-4713-a627-7d594349a813,2025-09-03 06:12:00,72652,Netflix,Deposit,1866.72,Melbourne,In-Person,Subscription,Low
+cd44f1a1-16db-4cc7-a08e-7c0025ba4907,2025-07-28 08:02:00,18761,Spotify,Transfer,442.37,Melbourne,Online,Salary deposit,Low
+2d5f4c37-8104-4fa0-800b-a795c0e6261c,2025-03-23 09:35:00,64359,Woolworths,Deposit,1108.98,Melbourne,ATM,Grocery payment,Low
+65b533d4-6652-4863-baa8-747e5cb37a0b,2025-06-23 19:44:00,96199,Qantas,Crypto Purchase,1303.17,Adelaide,Mobile,Subscription,Low
+2ac4ad20-38d0-46e6-854b-876847b684b0,2025-01-21 17:24:00,60537,Woolworths,Transfer,387.8,Perth,Mobile,Salary deposit,Low
+a8e79710-6b50-46aa-945c-ca5cb68297bd,2025-03-22 15:05:00,20830,Spotify,Transfer,1862.39,Sydney,In-Person,Grocery payment,Low
+bdabb9e9-2600-4780-a167-cd54acd277a1,2025-07-18 15:58:00,69578,Optus,Deposit,1764.29,Brisbane,Mobile,Grocery payment,Low
+b692981f-9db4-48a0-8449-38ddc8d74f15,2025-10-16 06:29:00,12359,Netflix,Payment,1536.13,Adelaide,Online,Utility bill,Low
+77f79050-c552-4e51-903a-8d825815c744,2025-07-03 22:26:00,56499,Netflix,Withdrawal,329.14,Perth,ATM,Online purchase,Low
+4b9d9cdf-0747-4c7f-9718-cf49cf42b73d,2025-04-22 02:57:00,12339,Coles,Crypto Purchase,288.63,Adelaide,Mobile,Grocery payment,Low
+05ed023d-813e-47e8-b4f1-cf995d6795c4,2025-06-01 06:03:00,83099,Woolworths,Payment,1498.47,Sydney,ATM,Grocery payment,Low
+4374fa6e-6812-47f7-bd6d-5b7a8e5c477f,2025-06-14 19:44:00,95544,EnergyAustralia,Transfer,963.23,Perth,Mobile,Utility bill,Low
+53aec6bb-26ef-4946-beb3-eaad39e928f6,2025-06-09 10:29:00,51205,EnergyAustralia,Deposit,1047.02,Perth,ATM,Subscription,Low
+99635bc9-a1c8-42e7-974a-f98ebe814ee9,2025-10-06 10:55:00,86631,Western Transfers,Transfer,8614.58,Singapore,Online,Foreign transfer,Medium
+662dd556-e656-489a-bfe1-b3f7b374c9bb,2025-02-25 21:52:00,47177,TravelPay,Crypto Purchase,8170.75,Singapore,Online,Multiple transfers this week,Medium
+dcf18610-902d-49a5-be45-a725fe033049,2025-06-11 22:00:00,40101,Woolworths,Deposit,1351.47,Adelaide,Mobile,Salary deposit,Low
+44789aea-d652-4540-84ec-0f6c1a288f04,2025-04-04 19:20:00,70931,EnergyAustralia,Withdrawal,1282.9,Perth,Mobile,Grocery payment,Low
+74c3c3ff-325d-4fda-8208-c3bb6ce9331a,2025-08-11 08:26:00,67783,Netflix,Transfer,973.62,Brisbane,In-Person,Grocery payment,Low
+3e795294-789a-4ce9-aae9-786bc6571608,2025-07-23 03:44:00,12599,Telstra,Deposit,129.47,Perth,ATM,Subscription,Low
+b75e873c-9c74-420d-8250-f7d84c4d11cd,2025-07-15 11:37:00,17337,Coles,Withdrawal,856.72,Perth,Online,Subscription,Low
+ba0f4f44-6ee1-4d9b-b11d-02b233925c96,2025-02-16 15:22:00,77856,Qantas,Transfer,673.28,Melbourne,ATM,Grocery payment,Low
+9493a2eb-b694-4d01-acd5-cb01f46c89bd,2025-07-15 19:29:00,61793,Netflix,Payment,1942.45,Sydney,Mobile,Grocery payment,Low
+338511e3-a972-46a8-a5d5-462d67d30806,2025-07-13 18:24:00,47978,Western Transfers,Withdrawal,6580.31,Perth,Mobile,Multiple transfers this week,Medium
+c9ad1dd9-77d9-49e8-a795-f803f90df833,2025-10-26 22:36:00,92673,EnergyAustralia,Crypto Purchase,692.9,Adelaide,Mobile,Utility bill,Low
+f604bdbc-a960-495e-825d-86f4916d019b,2025-04-02 03:58:00,64808,Coles,Payment,1053.53,Melbourne,Mobile,Utility bill,Low
+931d875b-e411-4b13-aca6-7f38cdfbe3df,2025-02-25 05:17:00,66534,eBay,Withdrawal,7576.66,Adelaide,Online,Multiple transfers this week,Medium
+5f9f36d7-c135-4863-a7f2-5bcaeebce278,2025-05-15 18:34:00,13020,Telstra,Payment,759.55,Brisbane,Online,Salary deposit,Low
+7a3278c6-c0fb-41dd-b9f0-a291bb52de05,2025-05-12 15:46:00,10229,Optus,Withdrawal,927.05,Melbourne,ATM,Subscription,Low
+b37e3726-0f42-4289-ad2a-9ed01bf9977a,2025-02-02 13:57:00,89214,Western Transfers,Withdrawal,7373.38,Dubai,In-Person,Gift to friend,Medium
+3e1b8773-a005-471b-8422-e8fd7f7d7a3c,2025-10-14 17:30:00,42956,Netflix,Crypto Purchase,1977.13,Brisbane,In-Person,Online purchase,Low
+89af3749-f94a-4460-922b-ab8739092af1,2025-05-17 17:08:00,77902,Netflix,Deposit,881.85,Sydney,In-Person,Salary deposit,Low
+61108d0a-b5ce-48d5-ad9e-b4414665310a,2025-01-30 02:42:00,15618,Qantas,Withdrawal,732.99,Sydney,ATM,Utility bill,Low
+984d4318-231c-4856-af57-814a48ce357e,2025-10-23 03:51:00,69464,Telstra,Deposit,737.93,Perth,Mobile,Utility bill,Low
+95520a1d-761a-4821-8031-bfdbda916e76,2025-07-30 09:28:00,12408,Netflix,Withdrawal,312.39,Sydney,In-Person,Utility bill,Low
+d90a6667-fae9-4fa6-bbc2-97748a5ac89a,2025-09-02 02:14:00,55124,Qantas,Transfer,187.77,Sydney,Mobile,Grocery payment,Low
+55ccd1cc-78a8-4121-9231-812ba22c5bb5,2025-09-09 03:55:00,18594,Woolworths,Crypto Purchase,1152.39,Perth,Mobile,Salary deposit,Low
+6b2f9f2a-8e7b-4f69-af2b-c83c3f005a41,2025-03-19 00:31:00,93993,EnergyAustralia,Transfer,690.41,Perth,ATM,Subscription,Low
+e69e66cc-8b0a-46fb-8d61-f83093b35a71,2025-08-25 04:15:00,87540,PayPal,Crypto Purchase,7971.47,Hong Kong,ATM,Foreign transfer,Medium
+7b8bcb09-2da9-4887-81a6-9b34c30a0566,2025-03-28 23:32:00,28034,Western Transfers,Deposit,6505.98,London,In-Person,Travel expense,Medium
+8c57389d-6781-44fb-834d-b60a35eb8e06,2025-01-16 02:30:00,79665,Coles,Transfer,709.37,Melbourne,Mobile,Salary deposit,Low
+bf01a30e-7148-42e5-8ba2-c777eec0d607,2025-06-03 22:09:00,83914,Optus,Crypto Purchase,1830.33,Perth,In-Person,Online purchase,Low
+8ffe0df8-726d-4bcc-9977-bf4085b7ba38,2025-06-06 16:02:00,74113,Spotify,Payment,1084.46,Brisbane,In-Person,Utility bill,Low
+726f9672-a49b-408f-8a94-16e075e03798,2025-09-04 03:16:00,56193,Coles,Transfer,771.52,Melbourne,ATM,Utility bill,Low
+767d4ab3-ef74-40b2-bad9-5eb37a2b8d39,2025-04-24 07:31:00,40181,Eastern Union,Withdrawal,9588.74,Hong Kong,Online,Offshore layering transaction,High
+8506b4be-303c-4b77-aa7b-965beb655e61,2025-10-16 13:33:00,69000,Netflix,Withdrawal,1818.76,Adelaide,Online,Salary deposit,Low
+4cc8145e-7126-4a94-a9d3-784889d00f30,2025-05-29 18:42:00,87084,PayPal,Deposit,8396.61,Singapore,ATM,Multiple transfers this week,Medium
+9184f919-deab-4458-804e-d6b2f532741d,2025-01-10 23:34:00,34822,Woolworths,Deposit,1999.82,Melbourne,Online,Subscription,Low
+a8d3b39a-7373-4576-845c-e046a22ef488,2025-09-04 12:04:00,87997,Spotify,Crypto Purchase,424.39,Perth,Mobile,Online purchase,Low
+a084020a-a64f-4f36-8486-d549687514d1,2025-09-01 09:05:00,93859,Qantas,Payment,1806.53,Adelaide,In-Person,Grocery payment,Low
+2f58214a-14d5-4071-9f1e-debc7d810a01,2025-03-22 00:56:00,78428,ShopZone,Deposit,2645.78,Adelaide,Mobile,Gift to friend,Medium
+c7643f2f-da46-486e-ad04-3554cbe7b829,2025-08-13 00:12:00,10418,Netflix,Payment,397.55,Adelaide,In-Person,Online purchase,Low
+266e2095-b67e-40b1-83fc-0f83e62ab28e,2025-01-18 04:04:00,44553,EnergyAustralia,Crypto Purchase,1559.25,Brisbane,Online,Subscription,Low
+fce950fa-7cc9-4faf-939f-669d6b567bfc,2025-01-20 17:32:00,64911,Coles,Payment,195.45,Adelaide,Online,Utility bill,Low
+cd095102-d83f-4f01-b5e3-47a0830cfd30,2025-04-19 17:48:00,73455,EnergyAustralia,Crypto Purchase,1428.77,Brisbane,ATM,Salary deposit,Low
+0497da35-8f41-4953-8ae0-2cfb5c3db2d0,2025-05-08 11:37:00,32378,ShopZone,Transfer,2685.91,Adelaide,ATM,Multiple transfers this week,Medium
+ca4ba972-e1fa-46cb-b7b8-99a105df7e59,2025-02-02 03:53:00,70135,Optus,Payment,1197.51,Adelaide,In-Person,Grocery payment,Low
+b4c86fa9-69f1-465c-abe8-f28f0511bdee,2025-02-19 20:41:00,84539,Woolworths,Payment,624.78,Sydney,Mobile,Salary deposit,Low
+d6120e44-6ea6-48a6-9dde-54e31672f5d5,2025-09-24 10:43:00,91429,PayPal,Deposit,4506.16,New York,Online,Gift to friend,Medium
+046bc441-6e78-4f54-a542-7c8b3d850bcb,2025-09-09 06:07:00,29035,Telstra,Crypto Purchase,1707.12,Melbourne,Online,Salary deposit,Low
+8bc8b618-895f-4c71-a2ac-550b4c5da188,2025-06-12 15:22:00,82136,Netflix,Crypto Purchase,582.7,Adelaide,ATM,Online purchase,Low
+74382d0b-8489-474a-aea2-6c5f6b19a104,2025-06-08 10:22:00,37457,Woolworths,Crypto Purchase,371.0,Adelaide,Online,Utility bill,Low
+a00726d7-0978-4949-be01-5b51ae0f010d,2025-01-10 15:58:00,14989,TravelPay,Withdrawal,2366.41,Perth,Online,Travel expense,Medium
+8d307984-0a08-46f5-a5c2-9ed8edc83530,2025-03-21 13:41:00,45613,Netflix,Payment,529.99,Perth,Mobile,Online purchase,Low
+81c4986b-a15a-4165-bff9-ac6d082155ac,2025-08-31 02:05:00,20294,Coles,Withdrawal,195.53,Brisbane,Online,Grocery payment,Low
+511fb44f-02ce-4185-9daa-c95a9cedc15c,2025-01-25 12:24:00,11280,Qantas,Deposit,1913.84,Adelaide,Online,Subscription,Low
+7d4f7d00-710d-4f9c-a270-32cb572c69d2,2025-03-15 03:52:00,63590,Telstra,Crypto Purchase,418.32,Perth,Online,Grocery payment,Low
+61f2ecb2-301d-4067-9f92-298334e0d383,2025-02-09 20:52:00,58206,Western Transfers,Payment,6037.12,Dubai,Mobile,Foreign transfer,Medium
+42924fbe-e66a-46eb-9e75-1aadedc77143,2025-09-24 02:50:00,52185,Telstra,Deposit,837.7,Perth,Mobile,Online purchase,Low
+4e9d5823-3245-4b04-b298-a4e6d874d8c5,2025-06-06 11:19:00,47752,Eastern Union,Payment,16774.81,Dubai,ATM,Transfer to high-risk country,High
+4e41cefd-6427-4eb7-a6fa-9941e8c7ac46,2025-02-28 14:04:00,15764,Telstra,Payment,1510.76,Perth,Mobile,Utility bill,Low
+36066494-4de2-42ad-bb11-8ce6a6ee620d,2025-08-25 08:00:00,77548,ShopZone,Transfer,7889.43,Adelaide,ATM,Travel expense,Medium
+e4816a91-b2bc-4096-9586-93f39c03ea53,2025-04-30 12:21:00,81556,GlobalTrust Offshore,Deposit,9733.12,London,In-Person,Offshore layering transaction,High
+72ef8082-7d4b-48f1-9877-6b12f753daec,2025-01-28 11:00:00,40773,Qantas,Withdrawal,184.38,Perth,Online,Online purchase,Low
+96a8bb8b-01f7-4ac6-b9a5-067dfe07cc6f,2025-02-16 12:00:00,87107,Netflix,Transfer,1077.78,Brisbane,ATM,Salary deposit,Low
+044e20bd-fa3a-4d50-bb70-009463c61e64,2025-09-19 08:25:00,17214,EnergyAustralia,Payment,1502.84,Sydney,ATM,Utility bill,Low
+47ec38f1-f79e-4f1c-bafd-62c9342b104e,2025-06-06 07:14:00,69559,Woolworths,Transfer,1323.47,Brisbane,Online,Salary deposit,Low
+730c36fb-fc36-4b6f-8b1f-2e5d85366475,2025-01-07 00:33:00,20620,Netflix,Payment,1076.12,Sydney,ATM,Subscription,Low
+32ede57d-41f2-49f1-90f5-f4581be6c769,2025-10-12 15:03:00,67885,Spotify,Transfer,1883.76,Adelaide,ATM,Salary deposit,Low
+f7de9f1f-3134-4165-8b4d-e6842cc144db,2025-01-29 23:04:00,10969,TravelPay,Crypto Purchase,9615.2,Perth,Mobile,Multiple transfers this week,Medium
+5103bcb2-7d73-4ac5-b4a8-f441173029b1,2025-10-11 12:27:00,32616,Telstra,Payment,1362.59,Sydney,Mobile,Salary deposit,Low
+2fa11b16-b8c8-4aa4-afdb-b9a602c6c228,2025-01-29 17:03:00,18994,Eastern Union,Payment,22598.87,Singapore,ATM,Offshore layering transaction,High
+18785f55-5fcc-4066-908b-7520b80d0c31,2025-05-05 02:17:00,76383,Qantas,Deposit,653.59,Sydney,ATM,Online purchase,Low
+022d146a-beaf-4d5d-894e-ef5d29da959e,2025-01-21 11:23:00,14364,PayPal,Withdrawal,7185.38,London,In-Person,Gift to friend,Medium
+4ce46cdb-af33-4bb7-8ad0-8edcfa5ce6a4,2025-02-10 13:40:00,14571,EnergyAustralia,Transfer,1038.05,Brisbane,Mobile,Online purchase,Low
+0cb02727-c7ff-47db-b486-0d041402c7a1,2025-03-08 10:45:00,78216,Telstra,Deposit,1838.37,Sydney,In-Person,Subscription,Low
+e8e278e8-ad6c-44ca-aa18-8fb94c41407f,2025-01-04 02:45:00,27971,Woolworths,Deposit,465.59,Brisbane,In-Person,Grocery payment,Low
+b29e7745-b8d4-4e32-b4af-1575e72c73ca,2025-08-03 19:08:00,54191,Qantas,Withdrawal,851.85,Adelaide,In-Person,Salary deposit,Low
+ede3c224-1f49-4379-9a96-d54b685e195b,2025-04-30 08:51:00,27894,Netflix,Withdrawal,192.89,Adelaide,Online,Salary deposit,Low
+a4052db3-b7be-4302-b28f-96dc8a4a1c67,2025-03-09 06:00:00,38912,Netflix,Payment,34.29,Perth,Online,Salary deposit,Low
+5585a207-3e9e-4e1d-b84a-d2e64ad84d1e,2025-05-29 21:19:00,91853,Coles,Crypto Purchase,570.22,Perth,Online,Salary deposit,Low
+f5ab333f-0305-4a2f-acbe-1399bc8ed4ab,2025-03-10 21:46:00,76633,Spotify,Transfer,1756.99,Perth,Mobile,Salary deposit,Low
+cef4ccb9-08c0-408d-b70e-9bad23ac34d4,2025-04-30 13:41:00,69235,Coles,Crypto Purchase,1410.36,Melbourne,Online,Grocery payment,Low
+1a5f5321-7292-4ed2-b2d6-b95aa5a741cf,2025-02-21 12:17:00,42107,Optus,Transfer,1275.01,Melbourne,Mobile,Subscription,Low
+fd31cdc4-45fd-4f04-bc3e-d4909b6565c1,2025-02-15 11:10:00,18250,TravelPay,Crypto Purchase,2938.8,Hong Kong,ATM,Multiple transfers this week,Medium
+048d11ea-fd30-47cd-8384-cf5b04fd3af5,2025-06-23 06:38:00,46848,ShopZone,Crypto Purchase,2982.1,New York,Mobile,Multiple transfers this week,Medium
+91fe803c-d2ae-46c2-8691-eb3db6c2e75a,2025-10-10 23:55:00,15326,EnergyAustralia,Transfer,865.84,Perth,ATM,Utility bill,Low
+a5156fc2-9f55-445b-a236-dd62bb8ce561,2025-09-12 16:51:00,61700,Western Transfers,Crypto Purchase,3333.02,Singapore,In-Person,Foreign transfer,Medium
+cda3f79e-7918-4618-a265-73de03dde7b8,2025-09-28 22:23:00,43753,Coles,Payment,1835.32,Sydney,In-Person,Grocery payment,Low
+43df1db6-0eab-48c1-a0c5-5661ffc6ea8c,2025-05-13 05:37:00,11920,eBay,Withdrawal,3169.1,New York,Mobile,Multiple transfers this week,Medium
+8e16ba23-b88a-4f9a-8f8e-823888eb4d46,2025-08-25 09:49:00,19186,Qantas,Withdrawal,1010.78,Melbourne,In-Person,Salary deposit,Low
+c3cad31a-975b-4cdd-b014-39719a2f21d5,2025-03-02 23:14:00,75113,Optus,Withdrawal,1568.39,Sydney,ATM,Utility bill,Low
+e113951c-76bf-469f-81da-0ca0fcccc9fd,2025-06-25 11:11:00,90559,Optus,Transfer,853.65,Brisbane,ATM,Salary deposit,Low
+4781b93f-de3e-46ce-aab8-e0ae0e91dac9,2025-06-02 18:37:00,55122,Optus,Crypto Purchase,1731.87,Adelaide,Mobile,Salary deposit,Low
+b64da2a6-870e-4b7d-9c8e-4d65f217ae96,2025-09-12 19:51:00,69625,TravelPay,Transfer,3764.58,Dubai,ATM,Travel expense,Medium
+2408adca-cfb8-4e65-b830-45558bd558a6,2025-05-30 22:28:00,86547,GlobalTrust Offshore,Transfer,16974.26,Dubai,Mobile,Repeated deposits below threshold,High
+77e114d5-3056-459a-ae87-45512cb3b6f6,2025-02-22 11:49:00,93737,Qantas,Withdrawal,1947.94,Melbourne,In-Person,Utility bill,Low
+bbb40afc-4fa2-4b13-ab9c-22d33b7b8faa,2025-05-01 12:05:00,14619,Spotify,Transfer,456.83,Sydney,In-Person,Subscription,Low
+7193f2d3-2d3c-483f-bb12-b15f18c797c8,2025-06-11 09:32:00,65398,Qantas,Transfer,1978.35,Perth,Online,Online purchase,Low
+d5755fe8-64f6-4497-9163-ef6afbc68234,2025-06-22 19:08:00,79628,Qantas,Withdrawal,316.96,Adelaide,ATM,Utility bill,Low
+c72ebc08-4b9d-40b4-8e94-66cb3b580b56,2025-08-20 16:14:00,42477,Woolworths,Crypto Purchase,1457.21,Brisbane,Online,Online purchase,Low
+d8e71d14-7402-4e12-b01d-94e28ff21e90,2025-02-10 00:16:00,65379,EnergyAustralia,Payment,1671.58,Adelaide,ATM,Online purchase,Low
+4e7510e1-32ec-45be-a6ad-b51ba496599e,2025-06-21 09:29:00,83382,Optus,Crypto Purchase,1779.63,Adelaide,Mobile,Utility bill,Low
+4d5e37f1-3f5a-412a-b2f6-a7bc0433c227,2025-04-24 11:14:00,25330,Netflix,Transfer,846.74,Brisbane,Mobile,Subscription,Low
+efec7537-cac8-4400-98d5-cf8072680920,2025-03-25 01:17:00,11832,Western Transfers,Transfer,5356.11,Perth,Mobile,Foreign transfer,Medium
+0b946413-2cc4-458c-938b-0f4b294e0441,2025-03-02 20:53:00,30075,Telstra,Transfer,1001.77,Adelaide,ATM,Subscription,Low
+65d51924-9655-415d-b90c-13d7b7c2241b,2025-07-24 13:46:00,43179,Coles,Transfer,631.97,Brisbane,In-Person,Subscription,Low
+afba45f1-43a2-474c-bc4c-4bce26130196,2025-08-13 09:53:00,91411,Coles,Withdrawal,1639.74,Perth,Mobile,Salary deposit,Low
+c884561c-fd1d-43d6-ae0a-04526eb50e1f,2025-10-14 09:34:00,78252,Optus,Transfer,387.65,Adelaide,Mobile,Utility bill,Low
+b0c15a54-4f16-44a5-b1cf-676d94162341,2025-07-19 21:19:00,36624,Spotify,Payment,325.64,Adelaide,Online,Grocery payment,Low
+19f32dea-c8ff-4149-af7d-0332bde5752a,2025-08-04 15:08:00,89957,Spotify,Payment,1572.81,Brisbane,Online,Subscription,Low
+03efe2e4-2835-426f-8e0e-1ca3d3615353,2025-07-05 02:33:00,53013,Qantas,Withdrawal,1456.48,Adelaide,ATM,Online purchase,Low
+67e463db-17ee-425e-b5c8-f5ec71d69ba1,2025-09-24 09:26:00,34934,UAE Gold Brokers,Transfer,23172.53,London,Mobile,Unverified merchant - possible scam,High
+5fb50fe6-016a-40ee-989f-defd6b6486f1,2025-07-31 00:11:00,32593,Spotify,Transfer,1566.95,Melbourne,In-Person,Salary deposit,Low
+ba74f09e-98e7-48fa-8287-21f0aff07a9f,2025-08-29 16:41:00,93399,Optus,Crypto Purchase,1832.98,Adelaide,ATM,Utility bill,Low
+37b5fe21-fa8f-430a-aa1e-feb9d742f59e,2025-07-15 19:33:00,65798,Netflix,Deposit,912.89,Perth,Online,Online purchase,Low
+9fabed59-fb8f-4dda-bc03-8022118961aa,2025-08-02 02:15:00,62250,ShopZone,Transfer,7415.27,Perth,Online,Foreign transfer,Medium
+885ea33c-3bb5-45e8-8877-17725bd6e72b,2025-05-22 21:25:00,57419,EnergyAustralia,Withdrawal,832.32,Perth,Mobile,Online purchase,Low
+f698b6ba-ae98-4b19-9bc3-89476be7e1d5,2025-09-11 16:40:00,49432,GlobalTrust Offshore,Deposit,10343.52,New York,ATM,Offshore layering transaction,High
+db470081-c39d-4670-86b6-53b8d492f403,2025-04-09 03:21:00,26169,Telstra,Deposit,1464.93,Melbourne,Mobile,Subscription,Low
+0c4abb8d-aa7f-4b2b-b9b0-a5ea6b7b5219,2025-06-12 14:17:00,82434,EnergyAustralia,Payment,158.63,Melbourne,Online,Utility bill,Low
+4da59ebf-c8c8-4289-8276-49c616ee47f3,2025-09-08 19:28:00,38075,Telstra,Payment,1921.44,Adelaide,Mobile,Salary deposit,Low
+33111045-4cf2-4f43-bb70-ff80dd6fbf2e,2025-03-15 09:27:00,31973,Woolworths,Crypto Purchase,1233.47,Adelaide,In-Person,Utility bill,Low
+557f8616-feba-4f72-bebd-f8806ad587e3,2025-09-09 17:23:00,43929,eBay,Withdrawal,4531.92,Dubai,Mobile,Multiple transfers this week,Medium
+c2365348-7f20-4c99-ae18-fed703c0c186,2025-01-28 22:58:00,25910,PayPal,Transfer,4023.86,Singapore,Online,Multiple transfers this week,Medium
+a3ee31d9-daa9-42c7-bf4d-51b88282ad81,2025-10-23 23:53:00,26840,Western Transfers,Deposit,2434.61,Hong Kong,Online,Foreign transfer,Medium
+d3f2a2b4-bbac-416d-af19-f3deeb191b6a,2025-03-05 17:16:00,75642,Optus,Transfer,1406.72,Sydney,ATM,Utility bill,Low
+0a283f9d-30ba-45c3-b428-7bab154f298e,2025-06-01 00:53:00,77325,Qantas,Payment,556.22,Sydney,ATM,Online purchase,Low
+28428490-e9f9-44fe-8de6-1c058ffcfc9e,2025-03-16 20:15:00,80822,UAE Gold Brokers,Deposit,22473.44,Dubai,Mobile,Unverified merchant - possible scam,High
+77c4b206-2839-4ff9-8fa2-c46c7755157c,2025-09-17 03:55:00,78051,Netflix,Withdrawal,1684.92,Adelaide,In-Person,Online purchase,Low
+2621faa8-668c-40ba-ad14-98257ddcdb0e,2025-02-03 06:57:00,13916,ShopZone,Transfer,2698.47,Adelaide,Online,Multiple transfers this week,Medium
+e8387dba-9c43-4149-8608-e795c1da5c99,2025-09-07 17:06:00,59661,Telstra,Withdrawal,1294.65,Brisbane,In-Person,Grocery payment,Low
+e5fcf013-28ba-456c-a901-635743329c3d,2025-04-16 02:06:00,42004,Woolworths,Deposit,898.42,Melbourne,ATM,Grocery payment,Low
+611aa5a8-dcd0-46b9-b678-df122a4067de,2025-10-15 01:32:00,65524,Oceanic Holdings,Transfer,11672.74,Dubai,In-Person,Repeated deposits below threshold,High
+4f9956e0-3f86-44d2-b05d-38d0346efc96,2025-04-02 17:25:00,47236,Telstra,Deposit,1458.44,Sydney,Mobile,Utility bill,Low
+45d42f6b-877f-49e4-b543-7a34aae38051,2025-06-10 13:09:00,63826,Qantas,Payment,1384.1,Adelaide,ATM,Salary deposit,Low
+0397d0f5-a430-4c47-996c-9e0bcd2023bc,2025-04-23 04:30:00,39925,Telstra,Crypto Purchase,915.41,Brisbane,ATM,Online purchase,Low
+a4c333d3-8faf-46aa-8071-40babca9d6e2,2025-06-07 09:32:00,99075,Spotify,Transfer,1536.39,Brisbane,ATM,Grocery payment,Low
+dfcccde7-c791-4e67-98d0-729a27121e0b,2025-06-13 02:40:00,91518,PayPal,Transfer,8767.74,Hong Kong,In-Person,Foreign transfer,Medium
+b63e1004-9be9-4226-8242-e5cca9c4cb06,2025-07-16 16:37:00,38892,Netflix,Transfer,342.37,Brisbane,ATM,Grocery payment,Low
+ad7fb12c-f6f7-4554-933e-a49b803da9f3,2025-01-10 11:19:00,50481,Telstra,Withdrawal,1902.83,Perth,In-Person,Subscription,Low
+ab66f4f8-0851-4b7a-8c05-8438d13f6ad0,2025-09-15 09:21:00,81095,Coles,Payment,1607.86,Adelaide,Mobile,Subscription,Low
+5fc76fa5-e266-4e4e-be02-35d7b27569c5,2025-02-04 02:24:00,69177,Qantas,Crypto Purchase,1108.59,Adelaide,Online,Subscription,Low
+647530bc-f518-427a-9614-7d34a904182b,2025-01-29 09:22:00,20676,Spotify,Crypto Purchase,867.07,Adelaide,In-Person,Utility bill,Low
+955bc07c-722f-40a0-bfc0-be7c4f74398d,2025-04-11 20:25:00,88313,Oceanic Holdings,Crypto Purchase,22918.66,Hong Kong,In-Person,Unverified merchant - possible scam,High
+ad88052f-58ab-4fa3-b61b-feb23c461fea,2025-03-31 03:23:00,73487,Woolworths,Payment,1557.8,Perth,Online,Grocery payment,Low
+0f9f7d13-a26a-4dd6-a9f2-adf992a3ed88,2025-03-20 09:39:00,12440,TravelPay,Payment,2770.67,New York,ATM,Gift to friend,Medium
+33b828d0-c36d-4820-9f10-148c78fe27ba,2025-01-05 21:11:00,53680,UAE Gold Brokers,Payment,17892.65,New York,Online,Offshore layering transaction,High
+32fd1fa5-c9b6-4397-a543-5167720ecf96,2025-07-29 04:19:00,31839,Qantas,Withdrawal,375.92,Perth,In-Person,Online purchase,Low
+9c5d8f07-d5c4-450d-a017-ce73e56418ca,2025-08-08 04:55:00,86651,Optus,Transfer,371.64,Perth,In-Person,Subscription,Low
+cac97f68-ac4c-428d-b770-fbf90ce9c91a,2025-10-26 12:34:00,33719,Qantas,Payment,1091.85,Adelaide,Online,Subscription,Low
+05888d39-c1c8-481f-9495-31b9fa33a341,2025-05-04 08:42:00,24395,Telstra,Crypto Purchase,1433.32,Sydney,ATM,Salary deposit,Low
+0ef41d8d-994d-4f3c-8548-101a67168b8d,2025-04-09 21:01:00,68066,GlobalTrust Offshore,Deposit,18831.3,New York,ATM,Unverified merchant - possible scam,High
+31f87fdf-5f52-4fd8-91f1-3b0f063b36fc,2025-01-03 12:12:00,78658,Eastern Union,Withdrawal,10308.94,Singapore,ATM,Unverified merchant - possible scam,High
+9974ee5e-c3a7-48bc-bb4d-424fe2db802c,2025-08-31 13:12:00,14268,Coles,Crypto Purchase,202.89,Brisbane,ATM,Salary deposit,Low
+f89627a9-49fb-4abf-b46a-fc4069df860f,2025-08-09 04:19:00,26354,ShopZone,Crypto Purchase,5899.64,London,ATM,Gift to friend,Medium
+2255574e-88ca-416d-89bd-65147464f802,2025-09-16 04:31:00,77524,Woolworths,Crypto Purchase,1065.43,Adelaide,ATM,Grocery payment,Low
+15c21d53-4f36-45f3-a53b-482468d910e0,2025-06-21 07:34:00,98534,eBay,Withdrawal,7192.31,Hong Kong,Mobile,Travel expense,Medium
+9862f2fb-7109-4006-9c1a-af84e931974b,2025-02-09 11:43:00,22641,GlobalTrust Offshore,Crypto Purchase,15444.06,Hong Kong,Mobile,Unverified merchant - possible scam,High
+ccb5a033-1d08-46d1-a1d2-3499a3edfba5,2025-04-30 23:36:00,59056,Spotify,Transfer,1159.17,Melbourne,In-Person,Subscription,Low
+a1a95af9-faaf-43fc-91b7-64cf16430fff,2025-10-22 04:32:00,64072,Coles,Payment,817.32,Brisbane,Online,Grocery payment,Low
+5a235973-45fc-46c5-90bb-f451ca0158f8,2025-10-24 07:57:00,26839,TravelPay,Deposit,9570.02,Dubai,Online,Gift to friend,Medium
+3f59ba79-1c65-4db5-9811-cd13d6224125,2025-06-09 10:52:00,58213,EnergyAustralia,Crypto Purchase,1428.67,Sydney,In-Person,Online purchase,Low
+7428133e-3e44-4470-b2c0-d573905b5563,2025-07-18 14:40:00,22996,Qantas,Deposit,871.72,Perth,Online,Grocery payment,Low
+6b51f8c8-9242-43e4-aec2-5b54f7f1da6c,2025-04-20 02:32:00,42439,GlobalTrust Offshore,Deposit,13996.04,Dubai,Online,Crypto purchase from unknown wallet,High
+a842d99b-9a57-4db8-98ed-2c3aade05bef,2025-07-30 07:11:00,70354,TravelPay,Crypto Purchase,7533.39,New York,Online,Travel expense,Medium
+776c1cbc-1518-4801-84ed-ae175d7bab74,2025-06-19 07:00:00,83366,Woolworths,Crypto Purchase,1346.55,Adelaide,In-Person,Grocery payment,Low
+8eed8429-c05b-4a9c-bd06-9aec9698aed9,2025-05-28 19:19:00,10329,Spotify,Withdrawal,216.17,Melbourne,ATM,Online purchase,Low
+1b7a8146-fa62-4a1c-b8be-dac39540ee7e,2025-02-06 09:04:00,88666,EnergyAustralia,Withdrawal,1921.57,Sydney,ATM,Grocery payment,Low
+4020e707-2434-49a3-aab1-cfe94c58c825,2025-01-14 20:31:00,96431,Netflix,Crypto Purchase,526.26,Perth,Online,Salary deposit,Low
+0ee3637e-9a5d-4cb9-94b1-d600dc5c07b2,2025-07-15 22:22:00,94633,Optus,Payment,1093.59,Brisbane,Mobile,Salary deposit,Low
+40d88346-5af6-4afb-a5b4-88d70b1904fd,2025-04-03 02:31:00,67186,Spotify,Deposit,1265.76,Brisbane,Online,Utility bill,Low
+19136873-9b89-4c20-9970-c9d1e0b2fdbc,2025-07-15 11:11:00,60900,Optus,Transfer,98.79,Perth,In-Person,Salary deposit,Low
+3300ec69-8909-4950-90ce-c89889169a57,2025-02-18 20:28:00,93580,GlobalTrust Offshore,Crypto Purchase,10997.22,Singapore,Mobile,Repeated deposits below threshold,High
+e9df915b-bd1c-4d7f-a1f3-5f7610e3ab9b,2025-06-28 11:54:00,59605,Optus,Payment,1238.55,Adelaide,Online,Subscription,Low
+12822033-fdb3-411f-b539-66b0cddb9a40,2025-01-28 05:50:00,38150,Netflix,Transfer,1120.59,Melbourne,ATM,Online purchase,Low
+723b693c-a8db-4057-a436-6de0a19311f5,2025-08-13 07:59:00,71797,TravelPay,Payment,2325.59,Hong Kong,ATM,Gift to friend,Medium
+198748c5-2ad6-4aa1-9a57-555dc780d1c4,2025-06-22 17:36:00,93014,Telstra,Deposit,1136.62,Brisbane,Online,Salary deposit,Low
+26bb5e7f-bfc7-42d7-a15a-2ab959e1071e,2025-02-02 20:52:00,94537,Optus,Deposit,1819.68,Perth,In-Person,Subscription,Low
+0a299dd6-8b92-47c8-8368-3fb2a2028d30,2025-07-24 07:09:00,24195,Woolworths,Withdrawal,1786.39,Perth,In-Person,Grocery payment,Low
+d39c3557-ae31-4337-8906-e0fb07992967,2025-08-26 04:30:00,73784,UAE Gold Brokers,Crypto Purchase,9349.07,Dubai,ATM,Transfer to high-risk country,High
+feb5dbf4-b5c3-42cc-b42c-617db69be5a5,2025-02-24 18:49:00,60181,Coles,Crypto Purchase,1573.63,Brisbane,Mobile,Online purchase,Low
+72947774-d170-4da6-9b28-10d1ac813077,2025-09-22 08:24:00,56926,EnergyAustralia,Crypto Purchase,1037.58,Brisbane,ATM,Subscription,Low
+61cafd6c-8847-4d9b-a2e1-8c4234d78de5,2025-01-02 23:13:00,50235,Coles,Payment,100.13,Sydney,Online,Subscription,Low
+10509758-7d62-40cb-aa42-77c1fd251f60,2025-08-15 09:23:00,77379,Qantas,Deposit,527.02,Sydney,In-Person,Subscription,Low
+614398c8-efae-4681-8930-3bc697931852,2025-03-05 01:00:00,50670,Qantas,Withdrawal,1078.93,Brisbane,Mobile,Grocery payment,Low
+5ba4ef87-abe3-4774-9c3d-dd904652c7d7,2025-02-26 03:23:00,50900,GlobalTrust Offshore,Deposit,13633.45,Dubai,Mobile,Unverified merchant - possible scam,High
+38f413ec-02d7-4fea-a547-a18fd4b80ec2,2025-08-21 22:01:00,35894,eBay,Crypto Purchase,7130.98,New York,In-Person,Travel expense,Medium
+6ba61f15-aa74-40b4-9596-09928338b578,2025-10-16 07:36:00,25300,Qantas,Crypto Purchase,1357.3,Brisbane,In-Person,Online purchase,Low
+b63886cc-4443-477d-95ec-b18f9b1b598a,2025-01-13 16:52:00,67232,Spotify,Crypto Purchase,1033.48,Perth,Online,Online purchase,Low
+106ae817-c336-4cc4-9cba-b5267ab2d85d,2025-10-12 13:54:00,21720,Qantas,Deposit,400.17,Perth,In-Person,Utility bill,Low
+6d497251-fbbc-4588-85a7-2eb333bafa05,2025-08-20 10:04:00,30025,Netflix,Transfer,98.92,Sydney,Online,Grocery payment,Low
+30c91f93-3f9b-4e65-920a-99acfc1fbc08,2025-08-20 02:46:00,42286,Coles,Withdrawal,367.75,Adelaide,ATM,Online purchase,Low
+e4eddc94-43ac-4342-86ed-8921ad11c5e4,2025-01-27 06:15:00,64110,GlobalTrust Offshore,Payment,18376.47,Hong Kong,ATM,Offshore layering transaction,High
+41c2b704-06ee-433a-abc1-9a41a36ba54a,2025-08-12 19:32:00,42572,Coles,Transfer,776.54,Melbourne,Online,Online purchase,Low
+57bfe91f-0540-4b6f-9f93-63271613c5eb,2025-09-17 16:34:00,19357,Optus,Deposit,1420.39,Perth,Mobile,Subscription,Low
+1b314daa-2674-4151-a9aa-9d6204687d45,2025-02-08 07:12:00,95547,CryptoXchange Ltd,Deposit,14267.59,Singapore,ATM,Repeated deposits below threshold,High
+b142a45e-c216-4b53-acb0-68f948cd4b07,2025-03-19 14:04:00,32748,Optus,Payment,889.99,Brisbane,Online,Subscription,Low
+5248fdd0-f7ca-407a-a76d-063c408c4d78,2025-06-02 14:04:00,22226,Woolworths,Crypto Purchase,324.58,Perth,In-Person,Salary deposit,Low
+99aa470a-1f56-48c1-8694-46fef3cb4e4a,2025-08-17 11:25:00,68067,Optus,Withdrawal,1546.96,Adelaide,Mobile,Online purchase,Low
+12df2e73-3e9e-4ef6-9482-d136e8684b7b,2025-05-24 14:11:00,10629,Telstra,Transfer,1958.75,Sydney,In-Person,Utility bill,Low
+9f6eaf7f-0ca8-41b0-90e7-5d1d946c96c7,2025-10-01 12:13:00,64343,Qantas,Transfer,1651.45,Brisbane,Mobile,Salary deposit,Low
+4f393e69-c078-4674-b9a6-d6d5ae547f25,2025-04-02 07:49:00,69010,ShopZone,Crypto Purchase,2713.51,Adelaide,ATM,Travel expense,Medium
+fc624337-f2b0-4575-b976-ef4ccdd1969f,2025-04-10 09:28:00,45237,Telstra,Withdrawal,1967.07,Melbourne,Online,Grocery payment,Low
+efeadc29-f522-4fd5-90db-5955c8c11763,2025-03-26 14:22:00,85865,EnergyAustralia,Payment,1259.88,Perth,ATM,Utility bill,Low
+66511113-5122-4f4c-9ebd-1996fa570e46,2025-10-28 17:35:00,89363,Spotify,Crypto Purchase,1343.33,Brisbane,Online,Salary deposit,Low
+8aec5ab1-3bc4-4fc7-945e-219be4fcc335,2025-01-21 06:53:00,96034,Spotify,Crypto Purchase,305.16,Brisbane,Online,Utility bill,Low
+010636fc-22f0-47a3-b0f9-e14f18250865,2025-07-29 03:16:00,64152,EnergyAustralia,Crypto Purchase,383.21,Melbourne,In-Person,Salary deposit,Low
+a895105b-d731-456e-9455-f0c79f499521,2025-01-28 14:41:00,76923,Woolworths,Deposit,142.53,Brisbane,Online,Subscription,Low
+81f34f5e-b4ae-40bc-ad1d-8691430995a1,2025-05-27 07:38:00,59302,Spotify,Transfer,445.82,Adelaide,In-Person,Utility bill,Low
+ec3e7ebb-799a-42dc-8864-9179332614b0,2025-09-13 09:31:00,81230,Woolworths,Crypto Purchase,189.2,Adelaide,In-Person,Salary deposit,Low
+c33d18bb-9cbc-496d-9857-976574278ced,2025-09-11 13:49:00,84255,ShopZone,Withdrawal,3903.58,New York,In-Person,Multiple transfers this week,Medium
+1df6593c-9c57-48c3-8c74-d0f9e7e79432,2025-08-22 22:38:00,67838,ShopZone,Crypto Purchase,6985.99,London,ATM,Multiple transfers this week,Medium

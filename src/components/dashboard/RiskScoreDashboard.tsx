@@ -100,9 +100,9 @@ export function RiskScoreDashboard() {
 
       // Calculate stats
       const total = riskData.length;
-      const highRisk = riskData.filter(d => d.riskLevel === 'SMR').length;
-      const mediumRisk = riskData.filter(d => d.riskLevel === 'EDD').length;
-      const lowRisk = riskData.filter(d => d.riskLevel === 'NORMAL').length;
+      const highRisk = riskData.filter(d => d.riskLevel === 'HIGH').length;
+      const mediumRisk = riskData.filter(d => d.riskLevel === 'MEDIUM').length;
+      const lowRisk = riskData.filter(d => d.riskLevel === 'LOW').length;
       const avgScore = riskData.reduce((sum, d) => sum + d.riskScore, 0) / total || 0;
 
       setStats({
@@ -122,11 +122,11 @@ export function RiskScoreDashboard() {
 
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel) {
-      case 'SMR':
+      case 'HIGH':
         return '#ef4444'; // red
-      case 'EDD':
+      case 'MEDIUM':
         return '#f59e0b'; // orange
-      case 'NORMAL':
+      case 'LOW':
         return '#10b981'; // green
       default:
         return '#6b7280'; // gray
@@ -142,8 +142,8 @@ export function RiskScoreDashboard() {
           <p className="text-xs text-muted-foreground">Amount: ${data.amount.toLocaleString()}</p>
           <p className="text-xs text-muted-foreground">Risk Score: {data.riskScore}/100</p>
           <Badge className={
-            data.riskLevel === 'SMR' ? 'bg-red-500' :
-            data.riskLevel === 'EDD' ? 'bg-orange-500' :
+            data.riskLevel === 'HIGH' ? 'bg-red-500' :
+            data.riskLevel === 'MEDIUM' ? 'bg-orange-500' :
             'bg-green-500'
           }>
             {data.riskLevel}
@@ -216,7 +216,7 @@ export function RiskScoreDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">High Risk (SMR)</CardTitle>
+            <CardTitle className="text-sm font-medium">High Risk</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -229,7 +229,7 @@ export function RiskScoreDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Medium Risk (EDD)</CardTitle>
+            <CardTitle className="text-sm font-medium">Medium Risk</CardTitle>
             <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
@@ -290,26 +290,26 @@ export function RiskScoreDashboard() {
                 height={36}
                 formatter={(value) => {
                   switch(value) {
-                    case 'SMR': return 'High Risk (SMR)';
-                    case 'EDD': return 'Medium Risk (EDD)';
-                    case 'NORMAL': return 'Low Risk (Normal)';
+                    case 'HIGH': return 'High Risk';
+                    case 'MEDIUM': return 'Medium Risk';
+                    case 'LOW': return 'Low Risk';
                     default: return value;
                   }
                 }}
               />
-              <Scatter name="SMR" data={data.filter(d => d.riskLevel === 'SMR')}>
-                {data.filter(d => d.riskLevel === 'SMR').map((entry, index) => (
-                  <Cell key={`cell-smr-${index}`} fill={getRiskColor('SMR')} />
+              <Scatter name="HIGH" data={data.filter(d => d.riskLevel === 'HIGH')}>
+                {data.filter(d => d.riskLevel === 'HIGH').map((entry, index) => (
+                  <Cell key={`cell-high-${index}`} fill={getRiskColor('HIGH')} />
                 ))}
               </Scatter>
-              <Scatter name="EDD" data={data.filter(d => d.riskLevel === 'EDD')}>
-                {data.filter(d => d.riskLevel === 'EDD').map((entry, index) => (
-                  <Cell key={`cell-edd-${index}`} fill={getRiskColor('EDD')} />
+              <Scatter name="MEDIUM" data={data.filter(d => d.riskLevel === 'MEDIUM')}>
+                {data.filter(d => d.riskLevel === 'MEDIUM').map((entry, index) => (
+                  <Cell key={`cell-medium-${index}`} fill={getRiskColor('MEDIUM')} />
                 ))}
               </Scatter>
-              <Scatter name="NORMAL" data={data.filter(d => d.riskLevel === 'NORMAL')}>
-                {data.filter(d => d.riskLevel === 'NORMAL').map((entry, index) => (
-                  <Cell key={`cell-normal-${index}`} fill={getRiskColor('NORMAL')} />
+              <Scatter name="LOW" data={data.filter(d => d.riskLevel === 'LOW')}>
+                {data.filter(d => d.riskLevel === 'LOW').map((entry, index) => (
+                  <Cell key={`cell-low-${index}`} fill={getRiskColor('LOW')} />
                 ))}
               </Scatter>
             </ScatterChart>
@@ -317,12 +317,12 @@ export function RiskScoreDashboard() {
         </CardContent>
       </Card>
 
-      {/* AUSTRAC 8-Rule Compliance Info */}
+      {/* AUSTRAC 6-Factor Compliance Info */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-quantum-green" />
-            AUSTRAC 8-Rule Risk Scoring Engine
+            AUSTRAC 6-Factor Risk Scoring Engine
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -330,40 +330,38 @@ export function RiskScoreDashboard() {
             <div className="space-y-2">
               <h4 className="font-semibold text-sm">Detection Rules Applied:</h4>
               <ul className="text-xs text-muted-foreground space-y-1">
-                <li>✓ Rule 1: Large Transactions (≥$10,000)</li>
-                <li>✓ Rule 2: Structuring Detection ($9k-$10k)</li>
-                <li>✓ Rule 3: Round Amount Patterns</li>
-                <li>✓ Rule 4: High-Risk Jurisdictions</li>
+                <li>✓ Factor 1: High-Risk/Foreign Jurisdictions</li>
+                <li>✓ Factor 2: Large Transactions (≥$15,000)</li>
+                <li>✓ Factor 3: Structuring Patterns ($9k-$10k)</li>
               </ul>
             </div>
             <div className="space-y-2">
               <h4 className="font-semibold text-sm invisible">.</h4>
               <ul className="text-xs text-muted-foreground space-y-1">
-                <li>✓ Rule 5: Cash Transaction Detection</li>
-                <li>✓ Rule 6: Sanctions/PEP Screening</li>
-                <li>✓ Rule 7: Velocity Anomaly Detection</li>
-                <li>✓ Rule 8: KYC Inconsistency Checks</li>
+                <li>✓ Factor 4: Suspicious Merchant Names</li>
+                <li>✓ Factor 5: High-Risk Channels (Wire/ATM)</li>
+                <li>✓ Factor 6: Missing Counterparty Info</li>
               </ul>
             </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-glass-border">
             <div className="space-y-2">
-              <Badge className="bg-red-500">High Risk (SMR)</Badge>
+              <Badge className="bg-red-500">High Risk</Badge>
               <p className="text-sm text-muted-foreground">
-                Score ≥70 or mandatory flags. Suspicious Matter Report required within 3 business days per AUSTRAC regulations.
+                Score ≥67/100 (4+ factors). Suspicious Matter Report (SMR) required within 3 business days per AUSTRAC regulations.
               </p>
             </div>
             <div className="space-y-2">
-              <Badge className="bg-orange-500">Medium Risk (EDD)</Badge>
+              <Badge className="bg-orange-500">Medium Risk</Badge>
               <p className="text-sm text-muted-foreground">
-                Score 40-69. Enhanced Due Diligence procedures must be applied. Continuous monitoring and documentation required.
+                Score 34-66/100 (2-3 factors). Enhanced Due Diligence (EDD) procedures must be applied. Continuous monitoring required.
               </p>
             </div>
             <div className="space-y-2">
-              <Badge className="bg-green-500">Low Risk (Normal)</Badge>
+              <Badge className="bg-green-500">Low Risk</Badge>
               <p className="text-sm text-muted-foreground">
-                Score &lt;40. Standard Customer Due Diligence applies. Regular monitoring sufficient.
+                Score 0-33/100 (0-1 factors). Standard Customer Due Diligence applies. Regular monitoring sufficient.
               </p>
             </div>
           </div>

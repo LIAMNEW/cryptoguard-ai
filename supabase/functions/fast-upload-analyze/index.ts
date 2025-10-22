@@ -14,6 +14,10 @@ interface Transaction {
   timestamp: string;
   transaction_type?: string;
   currency?: string;
+  merchant?: string;
+  location?: string;
+  channel?: string;
+  notes?: string;
 }
 
 serve(async (req) => {
@@ -49,7 +53,7 @@ serve(async (req) => {
       throw new Error('No valid transactions found in file')
     }
     
-    // Clean and validate transactions
+    // Clean and validate transactions with extended fields
     const cleanedTransactions = transactions.map((tx, idx) => ({
       transaction_id: tx.transaction_id || `tx_${Date.now()}_${idx}`,
       from_address: tx.from_address || 'unknown',
@@ -57,7 +61,11 @@ serve(async (req) => {
       amount: parseFloat(String(tx.amount)) || 0,
       timestamp: tx.timestamp || new Date().toISOString(),
       transaction_type: tx.transaction_type || 'transfer',
-      currency: tx.currency || 'AUD'
+      currency: tx.currency || 'AUD',
+      merchant: tx.merchant,
+      location: tx.location,
+      channel: tx.channel,
+      notes: tx.notes
     }))
     
     // Bulk insert transactions
@@ -95,12 +103,12 @@ serve(async (req) => {
     const analysisResults = scorecards.map(sc => ({
       transaction_id: sc.transaction_id,
       risk_score: sc.final_score,
-      anomaly_detected: sc.final_score >= 30,
+      anomaly_detected: sc.risk_level === 'HIGH',
       anomaly_type: sc.mandatory_flags.join(','),
       network_cluster: `cluster_${sc.risk_level.toLowerCase()}`,
       austrac_score: sc.final_score,
       general_risk_score: 0,
-      risk_level: sc.risk_level === 'SMR' ? 'HIGH' : sc.risk_level === 'EDD' ? 'MEDIUM' : 'LOW'
+      risk_level: sc.risk_level
     }))
     
     await supabaseClient
@@ -110,7 +118,7 @@ serve(async (req) => {
     // Update network graph
     await updateNetworkGraph(storedTxs, supabaseClient)
     
-    const highRiskCount = scorecards.filter(s => s.risk_level === 'SMR').length
+    const highRiskCount = scorecards.filter(s => s.risk_level === 'HIGH').length
     const avgScore = scorecards.reduce((sum, s) => sum + s.final_score, 0) / scorecards.length
     
     console.log(`🎉 Complete: ${scorecards.length} analyzed, ${highRiskCount} high-risk, avg score ${avgScore.toFixed(1)}`)
@@ -158,15 +166,20 @@ function parseCSV(content: string): Transaction[] {
       tx[header] = values[idx]
     })
     
-    // Map common column names
+    // Map common column names with support for AUSTRAC training format
     transactions.push({
-      transaction_id: tx.transaction_id || tx.id || tx.txn_id || `tx_${i}`,
-      from_address: tx.from_address || tx.from || tx.sender || tx.source || 'unknown',
-      to_address: tx.to_address || tx.to || tx.recipient || tx.destination || 'unknown',
-      amount: parseFloat(tx.amount || tx.value || '0'),
+      transaction_id: tx.transaction_id || tx.transactionid || tx.id || tx.txn_id || `tx_${i}`,
+      from_address: tx.from_address || tx.from || tx.sender || tx.source || tx.customerid || tx.customer_id || 'unknown',
+      to_address: tx.to_address || tx.to || tx.recipient || tx.destination || tx.counterparty || tx.merchantname || tx.merchant || 'unknown',
+      amount: parseFloat(tx.amount || tx.amountaud || tx.value || '0'),
       timestamp: tx.timestamp || tx.date || tx.time || new Date().toISOString(),
-      transaction_type: tx.transaction_type || tx.type || 'transfer',
-      currency: tx.currency || 'AUD'
+      transaction_type: tx.transaction_type || tx.transactiontype || tx.type || 'transfer',
+      currency: tx.currency || 'AUD',
+      // Additional fields for enhanced risk analysis
+      merchant: tx.merchantname || tx.merchant || tx.to_address || tx.to,
+      location: tx.location || tx.country || 'Australia',
+      channel: tx.channel || 'online',
+      notes: tx.notes || ''
     })
   }
   
@@ -191,11 +204,17 @@ function parseJSON(content: string): Transaction[] {
 async function fastAUSTRACAnalysis(transactions: any[], supabase: any) {
   const scorecards = []
   
-  // Build address frequency map for velocity detection
-  const addressFreq = new Map<string, number>()
-  transactions.forEach(tx => {
-    addressFreq.set(tx.from_address, (addressFreq.get(tx.from_address) || 0) + 1)
-  })
+  // High-risk countries from AUSTRAC training data
+  const HIGH_RISK_COUNTRIES = new Set([
+    'Iran', 'Myanmar', 'Democratic People\'s Republic of Korea', 'DPRK',
+    'Bolivia', 'British Virgin Islands', 'UAE', 'London', 'Hong Kong'
+  ])
+  
+  // Suspicious merchant keywords from AUSTRAC guidance
+  const SUSPICIOUS_KEYWORDS = [
+    'Remit', 'Offshore', 'FastFunds', 'RemitHub', 'Phantom',
+    'Fake', 'Crypto', 'Gold Brokers', 'Investment'
+  ]
   
   for (const tx of transactions) {
     const amount = parseFloat(tx.amount)
@@ -204,116 +223,140 @@ async function fastAUSTRACAnalysis(transactions: any[], supabase: any) {
     const flags: string[] = []
     const explanations: string[] = []
     
-    // RULE 1: Large Transactions (≥ $10,000 AUD)
-    if (amount >= 10000) {
-      const points = Math.min(30, Math.floor((amount - 10000) / 1000))
-      score += points
-      explanations.push(`Large transaction: $${amount.toLocaleString()}`)
-      rulesTriggered.push({
-        rule_id: 'LARGE_TRANSACTION',
-        name: 'Large Transaction Detection',
-        severity: amount >= 100000 ? 'critical' : 'high',
-        weight: points
-      })
-    }
+    const location = (tx.location || 'Australia').toString().trim()
+    const merchant = (tx.merchant || tx.to_address || '').toString()
+    const channel = (tx.channel || 'online').toString().toLowerCase()
+    const txType = (tx.transaction_type || 'transfer').toString().toLowerCase()
+    const counterparty = tx.to_address || ''
     
-    // RULE 2: Structuring (just below $10k threshold)
-    if (amount >= 9000 && amount < 10000) {
-      score += 25
-      explanations.push('Possible structuring')
-      flags.push('STRUCTURING_SUSPECTED')
-      rulesTriggered.push({
-        rule_id: 'STRUCT_CASH',
-        name: 'Structuring Detection',
-        severity: 'critical',
-        weight: 25
-      })
-    }
-    
-    // RULE 3: Round Amounts
-    if (amount % 1000 === 0 || amount % 500 === 0) {
-      score += 10
-      explanations.push('Round amount')
-      rulesTriggered.push({
-        rule_id: 'ROUND_AMOUNT',
-        name: 'Round Amount Pattern',
-        severity: 'medium',
-        weight: 10
-      })
-    }
-    
-    // RULE 4: High-Risk Geographic Destinations
-    const highRiskCountries = ['KY', 'PA', 'VG', 'BM', 'LI', 'MC', 'BS', 'TC', 'KP', 'IR', 'SY']
-    const toAddress = tx.to_address?.toUpperCase() || ''
-    const isHighRisk = highRiskCountries.some(c => toAddress.includes(c))
-    
-    if (isHighRisk) {
-      score += 20
-      explanations.push('High-risk jurisdiction')
+    // RULE 1: High-risk or foreign country
+    if (HIGH_RISK_COUNTRIES.has(location)) {
+      score += 1
+      explanations.push(`Transaction involves high-risk country (${location})`)
       flags.push('HIGH_RISK_JURISDICTION')
       rulesTriggered.push({
-        rule_id: 'HIGH_RISK_JURISDICTION',
+        rule_id: 'HIGH_RISK_COUNTRY',
         name: 'High-Risk Jurisdiction',
         severity: 'high',
-        weight: 20
+        weight: 1
       })
-    }
-    
-    // RULE 5: Cash Transactions
-    if (tx.transaction_type?.toLowerCase().includes('cash')) {
-      score += 15
-      explanations.push('Cash transaction')
+    } else if (location && location !== 'Australia' && !['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide'].includes(location)) {
+      score += 1
+      explanations.push(`Foreign transaction (country: ${location})`)
       rulesTriggered.push({
-        rule_id: 'CASH_TRANSACTION',
-        name: 'Cash Transaction',
+        rule_id: 'FOREIGN_TRANSACTION',
+        name: 'Foreign Transaction',
         severity: 'medium',
-        weight: 15
+        weight: 1
       })
     }
     
-    // RULE 7: Velocity (using frequency map - no DB queries!)
-    const txCount = addressFreq.get(tx.from_address) || 0
-    if (txCount > 5) {
-      const velocityScore = Math.min(20, txCount * 3)
-      score += velocityScore
-      explanations.push(`High velocity: ${txCount} transactions`)
+    // RULE 2: Large transaction (≥15,000 AUD)
+    if (amount >= 15000) {
+      score += 1
+      explanations.push(`Large transaction amount (AUD ${amount.toLocaleString()})`)
       rulesTriggered.push({
-        rule_id: 'VELOCITY_SPIKE',
-        name: 'High Transaction Velocity',
+        rule_id: 'LARGE_TRANSACTION',
+        name: 'Large Transaction',
         severity: 'high',
-        weight: velocityScore
+        weight: 1
       })
     }
     
-    // RULE 8: KYC Inconsistencies
-    if (amount > 50000) {
-      score += 10
-      explanations.push('Large transfer requiring review')
+    // RULE 3: Possible structuring (9,000-9,999 AUD)
+    if (amount >= 9000 && amount < 10000) {
+      score += 1
+      explanations.push('Amount near AUD 10k threshold (possible structuring)')
+      flags.push('STRUCTURING_SUSPECTED')
       rulesTriggered.push({
-        rule_id: 'KYC_INCONSISTENCY',
-        name: 'KYC Review Required',
-        severity: 'medium',
-        weight: 10
+        rule_id: 'STRUCTURING',
+        name: 'Structuring Pattern',
+        severity: 'critical',
+        weight: 1
       })
     }
     
-    const finalScore = Math.min(score, 100)
-    const riskLevel = finalScore >= 70 ? 'SMR' : finalScore >= 40 ? 'EDD' : 'NORMAL'
+    // RULE 4: Suspicious merchant keywords
+    const lowerMerchant = merchant.toLowerCase()
+    let suspiciousKeywordFound = false
+    for (const keyword of SUSPICIOUS_KEYWORDS) {
+      if (lowerMerchant.includes(keyword.toLowerCase())) {
+        score += 1
+        explanations.push(`Suspicious merchant name contains '${keyword}'`)
+        flags.push('SUSPICIOUS_MERCHANT')
+        rulesTriggered.push({
+          rule_id: 'SUSPICIOUS_MERCHANT',
+          name: 'Suspicious Merchant Keyword',
+          severity: 'high',
+          weight: 1
+        })
+        suspiciousKeywordFound = true
+        break
+      }
+    }
+    
+    // RULE 5: High-risk channel (wire or ATM)
+    if (channel === 'wire' || channel === 'atm' || channel.includes('atm withdrawal')) {
+      score += 1
+      explanations.push(`Transaction via high-risk channel (${channel})`)
+      rulesTriggered.push({
+        rule_id: 'HIGH_RISK_CHANNEL',
+        name: 'High-Risk Channel',
+        severity: 'medium',
+        weight: 1
+      })
+    }
+    
+    // RULE 6: Transfer without counterparty
+    if (txType.includes('transfer') && (!counterparty || counterparty === 'unknown' || counterparty.trim() === '')) {
+      score += 1
+      explanations.push('Transfer without specified counterparty')
+      rulesTriggered.push({
+        rule_id: 'MISSING_COUNTERPARTY',
+        name: 'Missing Counterparty',
+        severity: 'medium',
+        weight: 1
+      })
+    }
+    
+    // Determine risk level based on AUSTRAC training guide
+    let riskLevel: string
+    let riskClass: string
+    if (score >= 4) {
+      riskLevel = 'HIGH'
+      riskClass = 'High'
+      flags.push('SMR_REQUIRED')
+    } else if (score >= 2) {
+      riskLevel = 'MEDIUM'
+      riskClass = 'Medium'
+    } else {
+      riskLevel = 'LOW'
+      riskClass = 'Low'
+    }
+    
+    // Convert to 0-100 scale for compatibility with existing UI
+    const finalScore = Math.min(score * 16.67, 100) // 6 points max → 100
     
     scorecards.push({
       transaction_id: tx.id,
       policy_score: score,
       ml_score: 0,
-      final_score: finalScore,
+      final_score: Math.round(finalScore),
       risk_level: riskLevel,
       mandatory_flags: flags,
       due_by_ts: null,
-      indicators: {},
+      indicators: {
+        amount,
+        location,
+        merchant,
+        channel
+      },
       rules_triggered: rulesTriggered,
-      rationale: explanations.join(' | '),
+      rationale: explanations.length > 0 ? explanations.join(' | ') : 'No risk indicators detected',
       austrac_compliance: {
-        reporting_required: riskLevel === 'SMR',
-        timeframe: riskLevel === 'SMR' ? '3_business_days' : null
+        reporting_required: riskLevel === 'HIGH',
+        timeframe: riskLevel === 'HIGH' ? '3_business_days' : null,
+        risk_class: riskClass
       }
     })
   }
