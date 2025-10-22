@@ -1,31 +1,26 @@
 project_id = "zytdnqlnsahydanaeupc"
 
-[functions.ai-chat]
-verify_jwt = false
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public"]
+max_rows = 1000
 
-[functions.send-risk-alert]
-verify_jwt = false
+[db]
+port = 54322
+major_version = 15
 
-[functions.fetch-blockchain-data]
-verify_jwt = false
+[studio]
+enabled = true
+port = 54323
 
-[functions.voice-chat]
-verify_jwt = false
-
-[functions.unified-analyze]
-verify_jwt = false
-
-[functions.generate-ai-graph]
-verify_jwt = false
-
-[functions.analyze-document]
-verify_jwt = false
-
-[functions.send-risk-alert-email]
-verify_jwt = false
-
-[functions.analyze-bank-transactions]
-verify_jwt = false
+[inbucket]
+enabled = true
+port = 54324
 
 [functions.austrac-analyze]
+verify_jwt = false
+
+[functions.get-analysis-data]
 verify_jwt = false
