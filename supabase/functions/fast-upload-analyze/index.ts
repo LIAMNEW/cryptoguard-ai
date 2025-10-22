@@ -53,7 +53,7 @@ serve(async (req) => {
       throw new Error('No valid transactions found in file')
     }
     
-    // Clean and validate transactions with extended fields
+    // Clean and validate transactions for database (only include columns that exist in DB)
     const cleanedTransactions = transactions.map((tx, idx) => ({
       transaction_id: tx.transaction_id || `tx_${Date.now()}_${idx}`,
       from_address: tx.from_address || 'unknown',
@@ -61,7 +61,12 @@ serve(async (req) => {
       amount: parseFloat(String(tx.amount)) || 0,
       timestamp: tx.timestamp || new Date().toISOString(),
       transaction_type: tx.transaction_type || 'transfer',
-      currency: tx.currency || 'AUD',
+      currency: tx.currency || 'AUD'
+    }))
+    
+    // Keep full transaction data with extra fields for risk analysis
+    const transactionsWithMetadata = transactions.map((tx, idx) => ({
+      ...cleanedTransactions[idx],
       merchant: tx.merchant,
       location: tx.location,
       channel: tx.channel,
@@ -86,9 +91,9 @@ serve(async (req) => {
     const storedTxs = insertedTxs || cleanedTransactions
     console.log(`✅ Stored ${storedTxs.length} transactions`)
     
-    // Fast batch AUSTRAC scoring
+    // Fast batch AUSTRAC scoring using transactions with metadata
     console.log('⚡ Running fast AUSTRAC analysis...')
-    const scorecards = await fastAUSTRACAnalysis(storedTxs, supabaseClient)
+    const scorecards = await fastAUSTRACAnalysis(transactionsWithMetadata, supabaseClient)
     
     // Bulk insert scorecards
     const { error: scorecardError } = await supabaseClient
@@ -115,7 +120,7 @@ serve(async (req) => {
       .from('analysis_results')
       .insert(analysisResults)
     
-    // Update network graph
+    // Update network graph using cleaned transactions (DB columns only)
     await updateNetworkGraph(storedTxs, supabaseClient)
     
     const highRiskCount = scorecards.filter(s => s.risk_level === 'HIGH').length
