@@ -1,0 +1,9 @@
+transaction_id,from_address,to_address,amount,timestamp,transaction_type,currency
+TX001,client_123,merchant_456,9500,2025-01-15 10:30:00,transfer,AUD
+TX002,client_789,offshore_KY_bank,15000,2025-01-15 11:00:00,wire,AUD
+TX003,client_123,merchant_789,500,2025-01-15 12:15:00,transfer,AUD
+TX004,client_456,panama_PA_corp,10000,2025-01-15 13:45:00,wire,AUD
+TX005,client_789,merchant_456,25000,2025-01-15 14:20:00,transfer,AUD
+TX006,client_123,atm_cash,9800,2025-01-15 15:00:00,cash,AUD
+TX007,client_456,merchant_123,100000,2025-01-15 16:30:00,transfer,AUD
+TX008,client_789,exchange_VG,50000,2025-01-15 17:45:00,wire,AUD

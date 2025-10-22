@@ -43,13 +43,13 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
 
   const handleFiles = async (files: File[]) => {
     const validFiles = files.filter(file => {
-      const validTypes = ['.csv', '.xlsx', '.json'];
+      const validTypes = ['.csv', '.json'];
       const extension = '.' + file.name.split('.').pop()?.toLowerCase();
       return validTypes.includes(extension) && file.size <= 50 * 1024 * 1024; // 50MB limit
     });
 
     if (validFiles.length === 0) {
-      alert("Please upload valid CSV, XLSX, or JSON files under 50MB");
+      alert("Please upload CSV or JSON files under 50MB");
       return;
     }
 
@@ -179,21 +179,24 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
               <Shield className="w-3 h-3 mr-1" />
               TLS 1.3 Encrypted
             </Badge>
+            <Badge variant="outline" className="border-quantum-blue text-quantum-blue">
+              ⚡ Ultra-Fast Processing
+            </Badge>
           </div>
           <p className="text-muted-foreground mb-2">
             Drag and drop your files here, or click to browse
           </p>
           <p className="text-sm text-muted-foreground mb-2">
-            Supports CSV, XLSX, and JSON files up to 50MB
+            Supports CSV and JSON files up to 50MB
           </p>
           <p className="text-xs text-quantum-green/70">
-            🔐 Secured with HTTPS/TLS 1.3 + quantum-ready infrastructure
+            🚀 Instant AUSTRAC analysis in seconds
           </p>
           <input
             id="file-input"
             type="file"
             multiple
-            accept=".csv,.xlsx,.json"
+            accept=".csv,.json"
             onChange={(e) => e.target.files && handleFiles(Array.from(e.target.files))}
             className="hidden"
           />
@@ -219,14 +222,12 @@ export function FileUpload({ onFileUpload }: FileUploadProps) {
                     <>
                       <div className="w-full bg-glass-border rounded-full h-1.5 mt-1">
                         <div 
-                          className="bg-quantum-green h-1.5 rounded-full transition-all duration-300"
+                          className="bg-quantum-green h-1.5 rounded-full transition-all duration-300 animate-pulse"
                           style={{ width: `${upload.progress}%` }}
                         />
                       </div>
-                      <p className="text-xs text-quantum-green mt-1">
-                        {upload.progress < 30 ? "📄 Parsing..." : 
-                         upload.progress < 85 ? "📤 Uploading..." : 
-                         "✅ Analyzing..."}
+                      <p className="text-xs text-quantum-green mt-1 animate-pulse">
+                        ⚡ Fast AUSTRAC Analysis...
                       </p>
                     </>
                   )}

@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.analyze-bank-transactions]
 verify_jwt = false
+
+[functions.fast-upload-analyze]
+verify_jwt = false

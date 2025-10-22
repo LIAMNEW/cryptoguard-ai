@@ -64,26 +64,17 @@ const Index = () => {
     const startTime = Date.now();
     
     try {
-      console.log('Processing file with unified analysis pipeline...');
+      console.log('🚀 Fast upload processing...');
       
       // Show initial toast
-      toast.info(`📄 Processing ${data.fileName}...`, { duration: 2000 });
+      const uploadToast = toast.loading(`⚡ Analyzing ${data.fileName}...`);
       
-      // Calculate estimated chunks
-      const estimatedChunks = Math.ceil(data.fileContent.length / 50000);
-      if (estimatedChunks > 1) {
-        toast.info(`📦 Large file detected - processing in ${estimatedChunks} chunks`, { duration: 3000 });
-      }
-      
-      // Show AI analysis progress
-      const analysisToast = toast.loading('🤖 QuantumGuard AI extracting transactions...', { duration: 30000 });
-      
-      // Extract transactions using LLM with chunking
-      const { data: extractResult, error: extractError } = await supabase.functions.invoke('llm-analyze-transactions', {
+      // Use fast direct upload
+      const { data: extractResult, error: extractError } = await supabase.functions.invoke('fast-upload-analyze', {
         body: data
       });
 
-      toast.dismiss(analysisToast);
+      toast.dismiss(uploadToast);
 
       if (extractError) throw extractError;
 
