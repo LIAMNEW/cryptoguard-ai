@@ -178,7 +178,8 @@ serve(async (req) => {
         to_address: tx.Merchant || 'merchant',
         amount,
         timestamp,
-        transaction_type: tx.Type || 'transfer'
+        transaction_type: tx.Type || 'transfer',
+        currency: 'AUD'
       }
       
       results.push(dbTransaction)
