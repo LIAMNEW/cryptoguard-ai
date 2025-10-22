@@ -1,4 +1,4 @@
-import { TransactionUpload } from "@/components/upload/TransactionUpload";
+import { AUSTRACUpload } from "@/components/upload/AUSTRACUpload";
 import { RiskScoreDashboard } from "@/components/dashboard/RiskScoreDashboard";
 import { AIChat } from "@/components/dashboard/AIChat";
 import { ReportGenerator } from "@/components/reports/ReportGenerator";
@@ -7,11 +7,10 @@ import { Shield } from "lucide-react";
 
 interface MainContentProps {
   activeSection: string;
-  hasData: boolean;
-  onFileUpload: (data: { fileContent: string; fileName: string }) => Promise<any>;
+  onSectionChange: (section: string) => void;
 }
 
-export function MainContent({ activeSection, hasData, onFileUpload }: MainContentProps) {
+export function MainContent({ activeSection, onSectionChange }: MainContentProps) {
   const renderContent = () => {
     switch (activeSection) {
       case "upload":
@@ -26,7 +25,7 @@ export function MainContent({ activeSection, hasData, onFileUpload }: MainConten
                 Our system extracts, scores, and flags high-risk transactions automatically.
               </p>
             </div>
-            <TransactionUpload onFileUpload={onFileUpload} />
+            <AUSTRACUpload onAnalysisComplete={() => onSectionChange('risk-score')} />
           </div>
         );
 

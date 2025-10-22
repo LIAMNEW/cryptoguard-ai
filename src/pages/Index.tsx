@@ -186,8 +186,7 @@ const Index = () => {
           
           <MainContent
             activeSection={activeSection}
-            hasData={hasData}
-            onFileUpload={handleFileUpload}
+            onSectionChange={setActiveSection}
           />
         </div>
       </div>
